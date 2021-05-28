@@ -90,7 +90,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        pattern: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        action: ["ci/build_cmake.sh", "ci/build_regression.sh"]
+        compiler: ["g++", "clang++"]
+        arch: [32, 64]
+        cxx: [0, 11, 17, 20]  # 0 stands for C++03 or lower
+        sanitize: ["", "undefined", "address"]
+        api: [1, 2, 3]
+        char_sign: ["unsigned", "signed"]
+        x3_parse: ["ON", "OFF"]
     steps:
     - uses: actions/checkout@v1
     - name: install build depends
@@ -111,102 +118,30 @@ jobs:
       run: |
         BASE=`pwd`;
 
-        # matrix config
-        if [ ${{ matrix.pattern }} == 0 ]; then
-          export CXX=clang++
-          ACTION="ci/build_cmake.sh"
-          export ARCH="64"
-          export CHAR_SIGN="unsigned"
-          export API_VERSION="2"
-          export SANITIZE="-fsanitize=undefined -fno-sanitize-recover=all"
+        export ACTION="${{ matrix.action }}"
+        export CXX="${{ matrix.compiler }}"
+        export ARCH="${{ matrix.arch }}"
+
+        if [ "${{ matrix.cxx }}" == "0" ]; then
+          export MSGPACK_CXX_VERSION="CXX11=OFF"
+        elif [ "${{ matrix.cxx }}" == "11" ]; then
+          export MSGPACK_CXX_VERSION="CXX11=ON"
+        elif [ "${{ matrix.cxx }}" == "17" ]; then
+          export MSGPACK_CXX_VERSION="CXX17=ON"
+        elif [ "${{ matrix.cxx }}" == "20" ]; then
+          export MSGPACK_CXX_VERSION="CXX20=ON"
+        else
+          echo "Unsupported C++ version"
+          exit 1
         fi
-        if [ ${{ matrix.pattern }} == 1 ]; then
-          export CXX=clang++
-          ACTION="ci/build_cmake.sh"
-          export ARCH="32"
-          export CHAR_SIGN="signed"
-          export API_VERSION="2"
-          export SANITIZE="-fsanitize=undefined -fno-sanitize-recover=all"
+
+        if [ "${{ matrix.sanitize }}" != "" ]; then
+          export SANITIZE="-fsanitize=${{ matrix.sanitize }} -fno-sanitize-recover=all"
         fi
-        if [ ${{ matrix.pattern }} == 2 ]; then
-          export CXX=clang++
-          ACTION="ci/build_cmake.sh"
-          export CXX17="ON"
-          export ARCH="64"
-          export CHAR_SIGN="signed"
-          export API_VERSION="3"
-          export X3_PARSE="ON"
-          export SANITIZE="-fsanitize=undefined -fno-sanitize-recover=all"
-        fi
-        if [ ${{ matrix.pattern }} == 3 ]; then
-          export CXX=clang++
-          ACTION="ci/build_cmake.sh"
-          export CXX17="ON"
-          export ARCH="32"
-          export CHAR_SIGN="unsigned"
-          export API_VERSION="2"
-        fi
-        if [ ${{ matrix.pattern }} == 4 ]; then
-          export CXX=g++
-          ACTION="ci/build_cmake.sh"
-          export CXX17="ON"
-          export ARCH="64"
-          export CHAR_SIGN="signed"
-          export API_VERSION="2"
-          export SANITIZE="-fsanitize=undefined -fno-sanitize-recover=all"
-        fi
-        if [ ${{ matrix.pattern }} == 5 ]; then
-          export CXX=g++
-          ACTION="ci/build_cmake.sh"
-          export CXX17="ON"
-          export ARCH="32"
-          export CHAR_SIGN="unsigned"
-          export API_VERSION="3"
-          export X3_PARSE="ON"
-          export SANITIZE="-fsanitize=undefined -fno-sanitize-recover=all"
-        fi
-        if [ ${{ matrix.pattern }} == 6 ]; then
-          export CXX=g++
-          ACTION="ci/build_cmake.sh"
-          export ARCH="64"
-          export CHAR_SIGN="unsigned"
-          export API_VERSION="2"
-          export SANITIZE="-fsanitize=undefined -fno-sanitize-recover=all"
-        fi
-        if [ ${{ matrix.pattern }} == 7 ]; then
-          export CXX=g++
-          ACTION="ci/build_cmake.sh"
-          export ARCH="32"
-          export CHAR_SIGN="signed"
-          export API_VERSION="1"
-          export SANITIZE="-fsanitize=undefined -fno-sanitize-recover=all"
-        fi
-        if [ ${{ matrix.pattern }} == 8 ]; then
-          export CXX=g++
-          ACTION="ci/build_cmake.sh"
-          export ARCH="32"
-          export CHAR_SIGN="signed"
-          export API_VERSION="2"
-          export SANITIZE="-fsanitize=undefined -fno-sanitize-recover=all"
-        fi
-        if [ ${{ matrix.pattern }} == 9 ]; then
-          export CXX=clang++
-          ACTION="ci/build_regression.sh"
-          export ARCH="64"
-          export SAN="UBSAN"
-          export MSGPACK_FUZZ_REGRESSION="ON"
-          export CTEST_OUTPUT_ON_FAILURE=1
-          export SANITIZE="-fsanitize=undefined -fno-sanitize-recover=all"
-        fi
-        if [ ${{ matrix.pattern }} == 10 ]; then
-          export CXX=clang++
-          ACTION="ci/build_regression.sh"
-          export ARCH="64"
-          export SAN="ASAN"
-          export MSGPACK_FUZZ_REGRESSION="ON"
-          export CTEST_OUTPUT_ON_FAILURE=1
-          export SANITIZE="-fsanitize=undefined -fno-sanitize-recover=all"
-        fi
+
+        export API_VERSION="${{ matrix.api }}"
+        export CHAR_SIGN="${{ matrix.char_sign }}"
+        export X3_PARSE="${{ matrix.x3_parse }}"
 
         # install gtest
         wget https://github.com/google/googletest/archive/release-1.7.0.zip -O googletest-release-1.7.0.zip
@@ -228,7 +163,7 @@ jobs:
         fi
 
         # build and test
-        CMAKE_CXX_COMPILER="${CXX}" CMAKE_LIBRARY_PATH="${BASE}/usr/lib:${BASE}/build" GTEST_ROOT="${BASE}/usr" CMAKE_PREFIX_PATH="${BASE}/usr/gcc/lib${ARCH}/cmake" CXXFLAGS="-Werror -g ${SANITIZE}" MSGPACK_SAN="${SAN}" ${ACTION}
+        CMAKE_CXX_COMPILER="${CXX}" CMAKE_LIBRARY_PATH="${BASE}/usr/lib:${BASE}/build" GTEST_ROOT="${BASE}/usr" CMAKE_PREFIX_PATH="${BASE}/usr/gcc/lib${ARCH}/cmake" CXXFLAGS="-Werror -g ${SANITIZE}" ${ACTION}
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
   windows:
     runs-on: windows-2016
