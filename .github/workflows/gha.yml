@@ -112,7 +112,9 @@ jobs:
         x3_parse: ["OFF"]
     steps:
     - uses: actions/checkout@v1
-    - name: install build depends
+
+    - name: Install build dependencies
+      shell: bash
       run: |
         if [ ${ARCH} == 32 ]; then
           sudo dpkg --add-architecture i386
@@ -126,16 +128,19 @@ jobs:
           sudo apt-get install libgtest-dev
         fi
         sudo apt-get install g++-multilib valgrind
+
     - name: Cache boost
       id: cache-boost
       uses: actions/cache@v1
       with:
         path: usr
         key: ${{ runner.os }}-boost-20210508-1-72-0
+
     - name: Build boost
       if: steps.cache-boost.outputs.cache-hit != 'true'
       run: ./.github/depends/boost.sh -b both -t gcc
-    - name: build and test
+
+    - name: Build and test
       shell: bash
       run: |
         BASE=`pwd`;
