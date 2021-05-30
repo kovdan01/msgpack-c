@@ -31,13 +31,13 @@ struct convert<std::string> {
         switch (o.type) {
         case msgpack::type::BIN:
             if (o.via.bin.size == 0)
-                v = std::string{};
+                v.clear();
             else
                 v.assign(o.via.bin.ptr, o.via.bin.size);
             break;
         case msgpack::type::STR:
             if (o.via.str.size == 0)
-                v = std::string{};
+                v.clear();
             else
                 v.assign(o.via.str.ptr, o.via.str.size);
             break;
