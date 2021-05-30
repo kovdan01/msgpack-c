@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         pattern: [0, 1, 2, 3]
-        cxx: [20]
+        cxx: [17]
     steps:
     - uses: actions/checkout@v1
     - name: Cache boost
