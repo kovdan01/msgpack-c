@@ -21,6 +21,7 @@ then
     export BIT32="ON"
     export ARCH_FLAG="-m32"
     ZLIB32="-DZLIB_LIBRARY=/usr/lib32/libz.a"
+    export CMAKE_LIBRARY_PATH=/usr/lib/i386-linux-gnu
 else
     export BIT32="OFF"
     export ARCH_FLAG="-m64"
