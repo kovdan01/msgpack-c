@@ -86,7 +86,7 @@ jobs:
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
 
   linux:
-    name: ${{ format('{0} {1} cxx{2} san="{3}" api={4} char={5} x3={6}', matrix.compiler, matrix.arch, matrix.cxx, matrix.sanitize, matrix.api, matrix.char_sign, matrix.x3_parse) }}
+    name: ${{ format('{0} arch={1} cxx{2} san={3} api={4} char={5} x3={6}', matrix.compiler, matrix.arch, matrix.cxx, matrix.sanitize, matrix.api, matrix.char_sign, matrix.x3_parse) }}
     runs-on: ubuntu-18.04
     strategy:
       fail-fast: false
@@ -95,7 +95,7 @@ jobs:
         compiler: ["g++", "clang++"]
         arch: [32, 64]
         cxx: [0, 11, 17, 20]  # 0 stands for C++03 or lower
-        sanitize: ["", "undefined"]
+        sanitize: ["no", "address,undefined"]
         api: [1, 2, 3]
         char_sign: ["unsigned", "signed"]
         x3_parse: ["OFF"]
@@ -124,19 +124,19 @@ jobs:
         export ARCH="${{ matrix.arch }}"
 
         if [ "${{ matrix.cxx }}" == "0" ]; then
-          export MSGPACK_CXX_VERSION="CXX11=OFF"
+          export MSGPACK_CXX_VERSION="MSGPACK_CXX11=OFF"
         elif [ "${{ matrix.cxx }}" == "11" ]; then
-          export MSGPACK_CXX_VERSION="CXX11=ON"
+          export MSGPACK_CXX_VERSION="MSGPACK_CXX11=ON"
         elif [ "${{ matrix.cxx }}" == "17" ]; then
-          export MSGPACK_CXX_VERSION="CXX17=ON"
+          export MSGPACK_CXX_VERSION="MSGPACK_CXX17=ON"
         elif [ "${{ matrix.cxx }}" == "20" ]; then
-          export MSGPACK_CXX_VERSION="CXX20=ON"
+          export MSGPACK_CXX_VERSION="MSGPACK_CXX20=ON"
         else
           echo "Unsupported C++ version"
           exit 1
         fi
 
-        if [ "${{ matrix.sanitize }}" != "" ]; then
+        if [ "${{ matrix.sanitize }}" != "no" ]; then
           export SANITIZE="-fsanitize=${{ matrix.sanitize }} -fno-sanitize-recover=all"
         fi
 
