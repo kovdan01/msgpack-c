@@ -115,7 +115,7 @@ jobs:
     - name: install build depends
       run: |
         sudo apt-get update
-        sudo apt-get install g++-multilib clang-8 valgrind
+        sudo apt-get install g++-multilib valgrind
     - name: Cache boost
       id: cache-boost
       uses: actions/cache@v1
