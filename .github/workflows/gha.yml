@@ -116,7 +116,7 @@ jobs:
     - name: Install build dependencies
       shell: bash
       run: |
-        if [ ${ARCH} == 32 ]; then
+        if [ ${{ matrix.arch }} == 32 ]; then
           sudo dpkg --add-architecture i386
           sudo apt-get update
           sudo apt-get install lib32z1-dev
