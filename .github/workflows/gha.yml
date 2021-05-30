@@ -114,7 +114,17 @@ jobs:
     - uses: actions/checkout@v1
     - name: install build depends
       run: |
-        sudo apt-get update
+        if [ ${ARCH} == 32 ]; then
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install lib32z1-dev
+          sudo apt-get install libboost-all-dev:i386
+          sudo apt-get install libgtest-dev:i386
+        else
+          sudo apt-get update
+          sudo apt-get install libboost-all-dev
+          sudo apt-get install libgtest-dev
+        fi
         sudo apt-get install g++-multilib valgrind
     - name: Cache boost
       id: cache-boost
@@ -155,27 +165,8 @@ jobs:
         export CHAR_SIGN="${{ matrix.char_sign }}"
         export X3_PARSE="${{ matrix.x3_parse }}"
 
-        # install gtest
-        wget https://github.com/google/googletest/archive/release-1.7.0.zip -O googletest-release-1.7.0.zip
-        unzip -q googletest-release-1.7.0.zip
-        cd googletest-release-1.7.0
-        $CXX -m${ARCH} src/gtest-all.cc -I. -Iinclude -c -fPIC
-        $CXX -m${ARCH} src/gtest_main.cc -I. -Iinclude -c -fPIC
-        ar -rv libgtest.a gtest-all.o
-        ar -rv libgtest_main.a gtest_main.o
-        mkdir -p ${BASE}/usr/include
-        cp -r include/gtest ${BASE}/usr/include
-        mkdir -p ${BASE}/usr/lib
-        mv *.a ${BASE}/usr/lib
-        cd ..
-
-        # install zlib
-        if [ ${ARCH} == 32 ]; then
-          sudo apt-get install lib32z1-dev
-        fi
-
         # build and test
-        CMAKE_CXX_COMPILER="${CXX}" CMAKE_LIBRARY_PATH="${BASE}/usr/lib:${BASE}/build" GTEST_ROOT="${BASE}/usr" CMAKE_PREFIX_PATH="${BASE}/usr/gcc/lib${ARCH}/cmake" CXXFLAGS="-Werror -g ${SANITIZE}" ${ACTION}
+        CMAKE_CXX_COMPILER="${CXX}" CXXFLAGS="-Werror -g ${SANITIZE}" ${ACTION}
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
   windows:
     runs-on: windows-2016
