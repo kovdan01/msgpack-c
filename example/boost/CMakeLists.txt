@@ -1,3 +1,7 @@
+FIND_PACKAGE (Threads REQUIRED)
+
+FIND_PACKAGE (Boost REQUIRED COMPONENTS headers)
+
 LIST (APPEND exec_PROGRAMS
     msgpack_variant_capitalize.cpp
     msgpack_variant_mapbased.cpp
@@ -23,13 +27,10 @@ FOREACH (source_file ${exec_PROGRAMS})
         ${source_file_we}
         ${source_file}
     )
-    TARGET_INCLUDE_DIRECTORIES (${source_file_we}
-        PRIVATE
-            $<TARGET_PROPERTY:msgpackcxx,INTERFACE_INCLUDE_DIRECTORIES>
-    )
     TARGET_LINK_LIBRARIES (${source_file_we}
-        ${Boost_SYSTEM_LIBRARY}
-        ${CMAKE_THREAD_LIBS_INIT}
+        msgpackcxx
+        Boost::headers
+        Threads::Threads
     )
     IF (ZLIB_FOUND)
         TARGET_LINK_LIBRARIES (${source_file_we}
