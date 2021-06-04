@@ -6,6 +6,10 @@
 
 #include <sstream>
 
+BOOST_AUTO_TEST_CASE(dummy)
+{
+}
+
 #if MSGPACK_DEFAULT_API_VERSION >= 2
 
 struct json_like_visitor : msgpack::null_visitor {

@@ -210,7 +210,7 @@ BOOST_AUTO_TEST_CASE(unpack_int_pointer_no_off_ref)
 #pragma GCC diagnostic pop
 #endif // defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 2))
     BOOST_CHECK_EQUAL(1, oh.get().as<int>());
-    EXPECT_FALSE(referenced);
+    BOOST_CHECK(!referenced);
 }
 
 BOOST_AUTO_TEST_CASE(unpack_int_pointer_off_ref)
@@ -232,7 +232,7 @@ BOOST_AUTO_TEST_CASE(unpack_int_pointer_off_ref)
 #endif // defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 2))
     BOOST_CHECK_EQUAL(1, oh.get().as<int>());
     BOOST_CHECK_EQUAL(off, sbuf.size());
-    EXPECT_FALSE(referenced);
+    BOOST_CHECK(!referenced);
 }
 
 
