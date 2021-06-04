@@ -2,10 +2,8 @@ FIND_PACKAGE (GTest REQUIRED)
 FIND_PACKAGE (ZLIB REQUIRED)
 FIND_PACKAGE (Threads REQUIRED)
 
-INCLUDE_DIRECTORIES (
-    ${GTEST_INCLUDE_DIRS}
-    ${ZLIB_INCLUDE_DIRS}
-)
+FIND_PACKAGE (Boost REQUIRED COMPONENTS unit_test_framework system)
+FIND_PACKAGE (Threads REQUIRED)
 
 LIST (APPEND check_PROGRAMS
     array_ref.cpp
@@ -13,8 +11,8 @@ LIST (APPEND check_PROGRAMS
     boost_optional.cpp
     boost_string_ref.cpp
     boost_string_view.cpp
-    boost_variant.cpp
-    buffer.cpp
+    # boost_variant.cpp
+    # buffer.cpp
     carray.cpp
     cases.cpp
     convert.cpp
@@ -22,13 +20,13 @@ LIST (APPEND check_PROGRAMS
     inc_adaptor_define.cpp
     json.cpp
     limit.cpp
-    msgpack_basic.cpp
+    # msgpack_basic.cpp
     msgpack_container.cpp
     msgpack_stream.cpp
     msgpack_tuple.cpp
     msgpack_vref.cpp
     object.cpp
-    object_with_zone.cpp
+    # object_with_zone.cpp
     pack_unpack.cpp
     raw.cpp
     reference.cpp
@@ -49,7 +47,7 @@ ENDIF ()
 IF (MSGPACK_CXX11 OR MSGPACK_CXX17 OR MSGPACK_CXX20)
     LIST (APPEND check_PROGRAMS
         iterator_cpp11.cpp
-        msgpack_cpp11.cpp
+        # msgpack_cpp11.cpp
         reference_cpp11.cpp
         reference_wrapper_cpp11.cpp
         shared_ptr_cpp11.cpp
@@ -81,11 +79,12 @@ FOREACH (source_file ${check_PROGRAMS})
 
     TARGET_LINK_LIBRARIES (${source_file_we}
         msgpackcxx
-        ${GTEST_BOTH_LIBRARIES}
-        ${ZLIB_LIBRARIES}
-        ${CMAKE_THREAD_LIBS_INIT}
+        Boost::unit_test_framework
+        Boost::system
+        Threads::Threads
     )
     ADD_TEST (${source_file_we} ${source_file_we})
+
     IF ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         SET_PROPERTY (TARGET ${source_file_we} APPEND_STRING PROPERTY COMPILE_FLAGS " -Wall -Wextra -Wconversion")
     ENDIF ()
@@ -106,8 +105,5 @@ ADD_EXECUTABLE (
     multi_file
     multi_file1.cpp multi_file2.cpp
 )
-TARGET_INCLUDE_DIRECTORIES (multi_file
-    PRIVATE
-        $<TARGET_PROPERTY:msgpackcxx,INTERFACE_INCLUDE_DIRECTORIES>
-)
+
 ADD_TEST (multi_file multi_file)

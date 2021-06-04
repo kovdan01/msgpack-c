@@ -41,8 +41,8 @@ TEST_P(UnpackPackFuzzerRegressionTest, Returns0) {
   std::vector<char> bytes(length);
   in.read(bytes.data(), bytes.size());
   assert(in);
-  EXPECT_EQ(0, LLVMFuzzerTestOneInput(reinterpret_cast<const uint8_t *>(bytes.data()),
-                                      bytes.size()));
+  BOOST_CHECK_EQUAL(0, LLVMFuzzerTestOneInput(reinterpret_cast<const uint8_t *>(bytes.data()),
+                                              bytes.size()));
 }
 
 INSTANTIATE_TEST_CASE_P(UnpackPackFuzzerRegressions,

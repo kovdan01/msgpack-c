@@ -1,24 +1,12 @@
 #include <msgpack.hpp>
 
-#if defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wconversion"
-#endif //defined(__GNUC__)
-
-#include <gtest/gtest.h>
-
-#if defined(__GNUC__)
-#pragma GCC diagnostic pop
-#endif //defined(__GNUC__)
+#define BOOST_TEST_DONT_PRINT_LOG_VALUE
+#define BOOST_TEST_MODULE MSGPACK_CPP20
+#include <boost/test/unit_test.hpp>
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-
-// To avoid link error
-TEST(MSGPACK_CPP20, dummy)
-{
-}
 
 #if !defined(MSGPACK_USE_CPP03) && __cplusplus > 201703
 
@@ -48,7 +36,7 @@ bool operator==(const std::vector<Byte>& lhs, const std::span<const Byte>& rhs)
 }
 
 #define MSGPACK_TEST_SPAN_BYTE_PACK_CONVERT(byte_t, display_name)                                               \
-    TEST(MSGPACK_CPP20, span_##display_name##_pack_convert)                                                     \
+    BOOST_AUTO_TEST_CASE(span_##display_name##_pack_convert)                                                    \
     {                                                                                                           \
         std::stringstream ss;                                                                                   \
         byte_t raw_data[] = {                                                                                   \
@@ -60,25 +48,25 @@ bool operator==(const std::vector<Byte>& lhs, const std::span<const Byte>& rhs)
         std::string const& str = ss.str();                                                                      \
                                                                                                                 \
         char packed[] = { char(0xc4), char(0x05), char(0x01), char(0x02), char(0x7f), char(0x80), char(0xff) }; \
-        EXPECT_EQ(str.size(), sizeof(packed));                                                                  \
+        BOOST_CHECK_EQUAL(str.size(), sizeof(packed));                                                          \
         for (size_t i = 0; i != sizeof(packed); ++i) {                                                          \
-            EXPECT_EQ(str[i], packed[i]);                                                                       \
+            BOOST_CHECK_EQUAL(str[i], packed[i]);                                                               \
         }                                                                                                       \
                                                                                                                 \
         msgpack::object_handle oh;                                                                              \
         msgpack::unpack(oh, str.data(), str.size());                                                            \
         {                                                                                                       \
             auto val2 = oh.get().as<std::vector<byte_t>>();                                                     \
-            EXPECT_TRUE(val1 == val2);                                                                          \
+            BOOST_CHECK(val1 == val2);                                                                          \
         }                                                                                                       \
         {                                                                                                       \
             auto val2 = oh.get().as<std::span<const byte_t>>();                                                 \
-            EXPECT_TRUE(val1 == val2);                                                                          \
+            BOOST_CHECK(val1 == val2);                                                                          \
         }                                                                                                       \
     }                                                                                                           \
 
 #define MSGPACK_TEST_SPAN_BYTE_OBJECT(byte_t, display_name)                                                     \
-    TEST(MSGPACK_CPP20, span_##display_name##_object)                                                           \
+    BOOST_AUTO_TEST_CASE(span_##display_name##_object)                                                          \
     {                                                                                                           \
         byte_t raw_data[] = {                                                                                   \
             (byte_t)(0x01), (byte_t)(0x02), (byte_t)(0x7f), (byte_t)(0x80), (byte_t)(0xff)                      \
@@ -90,16 +78,16 @@ bool operator==(const std::vector<Byte>& lhs, const std::span<const Byte>& rhs)
                                                                                                                 \
         {                                                                                                       \
             auto val2 = obj.as<std::vector<byte_t>>();                                                          \
-            EXPECT_TRUE(val1 == val2);                                                                          \
+            BOOST_CHECK(val1 == val2);                                                                          \
         }                                                                                                       \
         {                                                                                                       \
             auto val2 = obj.as<std::span<const byte_t>>();                                                      \
-            EXPECT_TRUE(val1 == val2);                                                                          \
+            BOOST_CHECK(val1 == val2);                                                                          \
         }                                                                                                       \
     }                                                                                                           \
 
 #define MSGPACK_TEST_SPAN_BYTE_OBJECT_WITH_ZONE(byte_t, display_name)                                           \
-    TEST(MSGPACK_CPP20, span_##display_name##_object_with_zone)                                                 \
+    BOOST_AUTO_TEST_CASE(span_##display_name##_object_with_zone)                                                \
     {                                                                                                           \
         msgpack::zone z;                                                                                        \
         byte_t raw_data[] = {                                                                                   \
@@ -111,11 +99,11 @@ bool operator==(const std::vector<Byte>& lhs, const std::span<const Byte>& rhs)
                                                                                                                 \
         {                                                                                                       \
             auto val2 = obj.as<std::vector<byte_t>>();                                                          \
-            EXPECT_TRUE(val1 == val2);                                                                          \
+            BOOST_CHECK(val1 == val2);                                                                          \
         }                                                                                                       \
         {                                                                                                       \
             auto val2 = obj.as<std::span<const byte_t>>();                                                      \
-            EXPECT_TRUE(val1 == val2);                                                                          \
+            BOOST_CHECK(val1 == val2);                                                                          \
         }                                                                                                       \
     }                                                                                                           \
 

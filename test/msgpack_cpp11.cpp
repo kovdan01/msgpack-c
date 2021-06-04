@@ -1,15 +1,7 @@
 #include <msgpack.hpp>
 
-#if defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wconversion"
-#endif //defined(__GNUC__)
-
-#include <gtest/gtest.h>
-
-#if defined(__GNUC__)
-#pragma GCC diagnostic pop
-#endif //defined(__GNUC__)
+#define BOOST_TEST_MODULE MSGPACK_CPP11
+#include <boost/test/unit_test.hpp>
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -46,7 +38,7 @@ const unsigned int kElements = 100;
 
 // C++11
 
-TEST(MSGPACK_CPP11, simple_tuple)
+BOOST_AUTO_TEST_CASE(simple_tuple)
 {
     msgpack::sbuffer sbuf;
     std::tuple<bool, std::string, double> val1(true, "kzk", 12.3);
@@ -54,10 +46,10 @@ TEST(MSGPACK_CPP11, simple_tuple)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::tuple<bool, std::string, double> val2 = oh.get().as<std::tuple<bool, std::string, double> >();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
-TEST(MSGPACK_CPP11, simple_tuple_empty)
+BOOST_AUTO_TEST_CASE(simple_tuple_empty)
 {
     msgpack::sbuffer sbuf;
     std::tuple<> val1;
@@ -65,10 +57,10 @@ TEST(MSGPACK_CPP11, simple_tuple_empty)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::tuple<> val2 = oh.get().as<std::tuple<> >();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
-TEST(MSGPACK_CPP11, simple_tuple_size_greater_than_as)
+BOOST_AUTO_TEST_CASE(simple_tuple_size_greater_than_as)
 {
     msgpack::sbuffer sbuf;
     std::tuple<bool, std::string, int> val1(true, "kzk", 42);
@@ -76,12 +68,12 @@ TEST(MSGPACK_CPP11, simple_tuple_size_greater_than_as)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::tuple<bool, std::string, double, int> val2 = oh.get().as<std::tuple<bool, std::string, double, int> >();
-    EXPECT_EQ(std::get<0>(val1), std::get<0>(val2));
-    EXPECT_EQ(std::get<1>(val1), std::get<1>(val2));
-    EXPECT_EQ(std::get<2>(val1), std::get<2>(val2));
+    BOOST_CHECK_EQUAL(std::get<0>(val1), std::get<0>(val2));
+    BOOST_CHECK_EQUAL(std::get<1>(val1), std::get<1>(val2));
+    BOOST_CHECK_EQUAL(std::get<2>(val1), std::get<2>(val2));
 }
 
-TEST(MSGPACK_CPP11, simple_tuple_size_greater_than_convert)
+BOOST_AUTO_TEST_CASE(simple_tuple_size_greater_than_convert)
 {
     msgpack::sbuffer sbuf;
     std::tuple<bool, std::string, int> val1(true, "kzk", 42);
@@ -90,12 +82,12 @@ TEST(MSGPACK_CPP11, simple_tuple_size_greater_than_convert)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::tuple<bool, std::string, double, int> val2;
     oh.get().convert(val2);
-    EXPECT_EQ(std::get<0>(val1), std::get<0>(val2));
-    EXPECT_EQ(std::get<1>(val1), std::get<1>(val2));
-    EXPECT_EQ(std::get<2>(val1), std::get<2>(val2));
+    BOOST_CHECK_EQUAL(std::get<0>(val1), std::get<0>(val2));
+    BOOST_CHECK_EQUAL(std::get<1>(val1), std::get<1>(val2));
+    BOOST_CHECK_EQUAL(std::get<2>(val1), std::get<2>(val2));
 }
 
-TEST(MSGPACK_CPP11, simple_tuple_size_less_than_as)
+BOOST_AUTO_TEST_CASE(simple_tuple_size_less_than_as)
 {
     msgpack::sbuffer sbuf;
     std::tuple<bool, std::string, int> val1(true, "kzk", 42);
@@ -103,11 +95,11 @@ TEST(MSGPACK_CPP11, simple_tuple_size_less_than_as)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::tuple<bool, std::string> val2 = oh.get().as<std::tuple<bool, std::string> >();
-    EXPECT_EQ(std::get<0>(val1), std::get<0>(val2));
-    EXPECT_EQ(std::get<1>(val1), std::get<1>(val2));
+    BOOST_CHECK_EQUAL(std::get<0>(val1), std::get<0>(val2));
+    BOOST_CHECK_EQUAL(std::get<1>(val1), std::get<1>(val2));
 }
 
-TEST(MSGPACK_CPP11, simple_tuple_size_less_than_convert)
+BOOST_AUTO_TEST_CASE(simple_tuple_size_less_than_convert)
 {
     msgpack::sbuffer sbuf;
     std::tuple<bool, std::string, int> val1(true, "kzk", 42);
@@ -116,11 +108,11 @@ TEST(MSGPACK_CPP11, simple_tuple_size_less_than_convert)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::tuple<bool, std::string> val2;
     oh.get().convert(val2);
-    EXPECT_EQ(std::get<0>(val1), std::get<0>(val2));
-    EXPECT_EQ(std::get<1>(val1), std::get<1>(val2));
+    BOOST_CHECK_EQUAL(std::get<0>(val1), std::get<0>(val2));
+    BOOST_CHECK_EQUAL(std::get<1>(val1), std::get<1>(val2));
 }
 
-TEST(MSGPACK_CPP11, simple_array)
+BOOST_AUTO_TEST_CASE(simple_array)
 {
     for (unsigned int k = 0; k < kLoop; k++) {
         array<int, kElements> val1;
@@ -130,59 +122,59 @@ TEST(MSGPACK_CPP11, simple_array)
         msgpack::pack(sbuf, val1);
         msgpack::object_handle oh =
             msgpack::unpack(sbuf.data(), sbuf.size());
-        EXPECT_EQ(oh.get().type, msgpack::type::ARRAY);
+        BOOST_CHECK_EQUAL(oh.get().type, msgpack::type::ARRAY);
         array<int, kElements> val2 = oh.get().as<array<int, kElements> >();
-        EXPECT_EQ(val1.size(), val2.size());
-        EXPECT_TRUE(equal(val1.begin(), val1.end(), val2.begin()));
+        BOOST_CHECK_EQUAL(val1.size(), val2.size());
+        BOOST_CHECK(equal(val1.begin(), val1.end(), val2.begin()));
     }
 }
 
-TEST(MSGPACK_CPP11, simple_array_empty)
+BOOST_AUTO_TEST_CASE(simple_array_empty)
 {
     array<int, 0> val1;
     msgpack::sbuffer sbuf;
     msgpack::pack(sbuf, val1);
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
-    EXPECT_EQ(oh.get().type, msgpack::type::ARRAY);
+    BOOST_CHECK_EQUAL(oh.get().type, msgpack::type::ARRAY);
     array<int, 0> val2 = oh.get().as<array<int, 0> >();
-    EXPECT_EQ(val1.size(), val2.size());
-    EXPECT_TRUE(equal(val1.begin(), val1.end(), val2.begin()));
+    BOOST_CHECK_EQUAL(val1.size(), val2.size());
+    BOOST_CHECK(equal(val1.begin(), val1.end(), val2.begin()));
 }
 
-TEST(MSGPACK_CPP11, simple_array_size_less_than)
+BOOST_AUTO_TEST_CASE(simple_array_size_less_than)
 {
     array<int, 2> val1 { {1 , 2} };
     msgpack::sbuffer sbuf;
     msgpack::pack(sbuf, val1);
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
-    EXPECT_EQ(oh.get().type, msgpack::type::ARRAY);
+    BOOST_CHECK_EQUAL(oh.get().type, msgpack::type::ARRAY);
     array<int, 1> val2;
     try {
         oh.get().convert(val2);
-        EXPECT_TRUE(false);
+        BOOST_CHECK(false);
     }
     catch (msgpack::type_error const&) {
-        EXPECT_TRUE(true);
+        BOOST_CHECK(true);
     }
 }
 
-TEST(MSGPACK_CPP11, simple_array_size_greater_than)
+BOOST_AUTO_TEST_CASE(simple_array_size_greater_than)
 {
     array<int, 2> val1 { {1 , 2} };
     msgpack::sbuffer sbuf;
     msgpack::pack(sbuf, val1);
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
-    EXPECT_EQ(oh.get().type, msgpack::type::ARRAY);
+    BOOST_CHECK_EQUAL(oh.get().type, msgpack::type::ARRAY);
     array<int, 3> val2;
     oh.get().convert(val2);
-    EXPECT_EQ(val1[0], val2[0]);
-    EXPECT_EQ(val1[1], val2[1]);
+    BOOST_CHECK_EQUAL(val1[0], val2[0]);
+    BOOST_CHECK_EQUAL(val1[1], val2[1]);
 }
 
-TEST(MSGPACK_CPP11, simple_buffer_array_char)
+BOOST_AUTO_TEST_CASE(simple_buffer_array_char)
 {
     for (unsigned int k = 0; k < kLoop; k++) {
         array<char, kElements> val1;
@@ -192,27 +184,27 @@ TEST(MSGPACK_CPP11, simple_buffer_array_char)
         msgpack::pack(sbuf, val1);
         msgpack::object_handle oh =
             msgpack::unpack(sbuf.data(), sbuf.size());
-        EXPECT_EQ(oh.get().type, msgpack::type::BIN);
+        BOOST_CHECK_EQUAL(oh.get().type, msgpack::type::BIN);
         array<char, kElements> val2 = oh.get().as<array<char, kElements> >();
-        EXPECT_EQ(val1.size(), val2.size());
-        EXPECT_TRUE(equal(val1.begin(), val1.end(), val2.begin()));
+        BOOST_CHECK_EQUAL(val1.size(), val2.size());
+        BOOST_CHECK(equal(val1.begin(), val1.end(), val2.begin()));
     }
 }
 
-TEST(MSGPACK_CPP11, simple_buffer_array_char_empty)
+BOOST_AUTO_TEST_CASE(simple_buffer_array_char_empty)
 {
     array<char, 0> val1;
     msgpack::sbuffer sbuf;
     msgpack::pack(sbuf, val1);
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
-    EXPECT_EQ(oh.get().type, msgpack::type::BIN);
+    BOOST_CHECK_EQUAL(oh.get().type, msgpack::type::BIN);
     array<char, 0> val2 = oh.get().as<array<char, 0> >();
-    EXPECT_EQ(val1.size(), val2.size());
-    EXPECT_TRUE(equal(val1.begin(), val1.end(), val2.begin()));
+    BOOST_CHECK_EQUAL(val1.size(), val2.size());
+    BOOST_CHECK(equal(val1.begin(), val1.end(), val2.begin()));
 }
 
-TEST(MSGPACK_CPP11, simple_buffer_array_unsigned_char)
+BOOST_AUTO_TEST_CASE(simple_buffer_array_unsigned_char)
 {
     if (!msgpack::is_same<uint8_t, unsigned char>::value) return;
     for (unsigned int k = 0; k < kLoop; k++) {
@@ -223,14 +215,14 @@ TEST(MSGPACK_CPP11, simple_buffer_array_unsigned_char)
         msgpack::pack(sbuf, val1);
         msgpack::object_handle oh =
             msgpack::unpack(sbuf.data(), sbuf.size());
-        EXPECT_EQ(oh.get().type, msgpack::type::BIN);
+        BOOST_CHECK_EQUAL(oh.get().type, msgpack::type::BIN);
         array<unsigned char, kElements> val2 = oh.get().as<array<unsigned char, kElements> >();
-        EXPECT_EQ(val1.size(), val2.size());
-        EXPECT_TRUE(equal(val1.begin(), val1.end(), val2.begin()));
+        BOOST_CHECK_EQUAL(val1.size(), val2.size());
+        BOOST_CHECK(equal(val1.begin(), val1.end(), val2.begin()));
     }
 }
 
-TEST(MSGPACK_CPP11, simple_buffer_array_unsigned_char_empty)
+BOOST_AUTO_TEST_CASE(simple_buffer_array_unsigned_char_empty)
 {
     if (!msgpack::is_same<uint8_t, unsigned char>::value) return;
     array<unsigned char, 0> val1;
@@ -238,10 +230,10 @@ TEST(MSGPACK_CPP11, simple_buffer_array_unsigned_char_empty)
     msgpack::pack(sbuf, val1);
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
-    EXPECT_EQ(oh.get().type, msgpack::type::BIN);
+    BOOST_CHECK_EQUAL(oh.get().type, msgpack::type::BIN);
     array<unsigned char, 0> val2 = oh.get().as<array<unsigned char, 0> >();
-    EXPECT_EQ(val1.size(), val2.size());
-    EXPECT_TRUE(equal(val1.begin(), val1.end(), val2.begin()));
+    BOOST_CHECK_EQUAL(val1.size(), val2.size());
+    BOOST_CHECK(equal(val1.begin(), val1.end(), val2.begin()));
 }
 
 // strong typedefs
@@ -295,7 +287,7 @@ TEST(MSGPACK_STL, simple_buffer_forward_list)
         msgpack::object_handle oh =
             msgpack::unpack(sbuf.data(), sbuf.size());
         type val2 = oh.get().as<type >();
-        EXPECT_EQ(val1, val2);
+        BOOST_CHECK_EQUAL(val1, val2);
     }
 }
 
@@ -308,7 +300,7 @@ TEST(MSGPACK_STL, simple_buffer_forward_list_empty)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     type val2 = oh.get().as<type >();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_STL, simple_buffer_unordered_map)
@@ -323,7 +315,7 @@ TEST(MSGPACK_STL, simple_buffer_unordered_map)
         msgpack::object_handle oh =
             msgpack::unpack(sbuf.data(), sbuf.size());
         type val2 = oh.get().as<type >();
-        EXPECT_EQ(val1, val2);
+        BOOST_CHECK_EQUAL(val1, val2);
     }
 }
 
@@ -336,7 +328,7 @@ TEST(MSGPACK_STL, simple_buffer_unordered_map_empty)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     type val2 = oh.get().as<type >();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_STL, simple_buffer_unordered_multimap)
@@ -355,7 +347,7 @@ TEST(MSGPACK_STL, simple_buffer_unordered_multimap)
             msgpack::unpack(sbuf.data(), sbuf.size());
         type val2 = oh.get().as<type >();
 
-        EXPECT_EQ(val1, val2);
+        BOOST_CHECK_EQUAL(val1, val2);
     }
 }
 
@@ -369,7 +361,7 @@ TEST(MSGPACK_STL, simple_buffer_unordered_multimap_empty)
         msgpack::unpack(sbuf.data(), sbuf.size());
     type val2 = oh.get().as<type >();
 
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_STL, simple_buffer_unordered_set)
@@ -384,7 +376,7 @@ TEST(MSGPACK_STL, simple_buffer_unordered_set)
         msgpack::object_handle oh =
             msgpack::unpack(sbuf.data(), sbuf.size());
         type val2 = oh.get().as<type>();
-        EXPECT_EQ(val1, val2);
+        BOOST_CHECK_EQUAL(val1, val2);
     }
 }
 
@@ -397,7 +389,7 @@ TEST(MSGPACK_STL, simple_buffer_unordered_set_empty)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     type val2 = oh.get().as<type>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_STL, simple_buffer_unordered_multiset)
@@ -412,7 +404,7 @@ TEST(MSGPACK_STL, simple_buffer_unordered_multiset)
         msgpack::object_handle oh =
             msgpack::unpack(sbuf.data(), sbuf.size());
         type val2 = oh.get().as<type >();
-        EXPECT_EQ(val1, val2);
+        BOOST_CHECK_EQUAL(val1, val2);
     }
 }
 
@@ -425,7 +417,7 @@ TEST(MSGPACK_STL, simple_buffer_unordered_multiset_empty)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     type val2 = oh.get().as<type >();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_USER_DEFINED, simple_buffer_enum_class_member)
@@ -436,9 +428,9 @@ TEST(MSGPACK_USER_DEFINED, simple_buffer_enum_class_member)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     TestEnumClassMemberClass val2 = oh.get().as<TestEnumClassMemberClass>();
-    EXPECT_EQ(val1.t1, val2.t1);
-    EXPECT_EQ(val1.t2, val2.t2);
-    EXPECT_EQ(val1.t3, val2.t3);
+    BOOST_CHECK_EQUAL(val1.t1, val2.t1);
+    BOOST_CHECK_EQUAL(val1.t2, val2.t2);
+    BOOST_CHECK_EQUAL(val1.t3, val2.t3);
 }
 
 struct no_def_con {
@@ -492,7 +484,7 @@ TEST(MSGPACK_NO_DEF_CON, simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
 
     no_def_con val2 = oh.get().as<no_def_con>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 struct no_def_con_composite {
@@ -538,7 +530,7 @@ TEST(MSGPACK_NO_DEF_CON_COMPOSITE, simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     no_def_con_composite val2 = oh.get().as<no_def_con_composite>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 struct no_def_con_inherit : no_def_con {
@@ -570,7 +562,7 @@ TEST(MSGPACK_NO_DEF_CON_INHERIT, simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     no_def_con_inherit val2 = oh.get().as<no_def_con_inherit>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_VECTOR, simple_buffer)
@@ -581,7 +573,7 @@ TEST(MSGPACK_NO_DEF_CON_VECTOR, simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::vector<no_def_con> val2 = oh.get().as<std::vector<no_def_con>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_LIST, simple_buffer)
@@ -592,7 +584,7 @@ TEST(MSGPACK_NO_DEF_CON_LIST, simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::list<no_def_con> val2 = oh.get().as<std::list<no_def_con>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_SET, simple_buffer)
@@ -603,7 +595,7 @@ TEST(MSGPACK_NO_DEF_CON_SET, simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::set<no_def_con> val2 = oh.get().as<std::set<no_def_con>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_MULTISET, simple_buffer)
@@ -614,7 +606,7 @@ TEST(MSGPACK_NO_DEF_CON_MULTISET, simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::multiset<no_def_con> val2 = oh.get().as<std::multiset<no_def_con>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_ASSOC_VECTOR, simple_buffer)
@@ -626,7 +618,7 @@ TEST(MSGPACK_NO_DEF_CON_ASSOC_VECTOR, simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     msgpack::type::assoc_vector<no_def_con, no_def_con_composite> val2
         = oh.get().as<msgpack::type::assoc_vector<no_def_con, no_def_con_composite>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_DEF_CON_ASSOC_VECTOR, simple_buffer)
@@ -638,7 +630,7 @@ TEST(MSGPACK_NO_DEF_CON_DEF_CON_ASSOC_VECTOR, simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     msgpack::type::assoc_vector<no_def_con, int> val2
         = oh.get().as<msgpack::type::assoc_vector<no_def_con, int>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_MAP, simple_buffer)
@@ -650,7 +642,7 @@ TEST(MSGPACK_NO_DEF_CON_MAP, simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::map<no_def_con, no_def_con_composite> val2
         = oh.get().as<std::map<no_def_con, no_def_con_composite>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_DEF_CON_MAP, simple_buffer)
@@ -662,7 +654,7 @@ TEST(MSGPACK_NO_DEF_CON_DEF_CON_MAP, simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::map<no_def_con, int> val2
         = oh.get().as<std::map<no_def_con, int>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_MULTIMAP, simple_buffer)
@@ -674,7 +666,7 @@ TEST(MSGPACK_NO_DEF_CON_MULTIMAP, simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::multimap<no_def_con, no_def_con_composite> val2
         = oh.get().as<std::multimap<no_def_con, no_def_con_composite>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_DEF_CON_MULTIMAP, simple_buffer)
@@ -686,7 +678,7 @@ TEST(MSGPACK_NO_DEF_CON_DEF_CON_MULTIMAP, simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::multimap<no_def_con, int> val2
         = oh.get().as<std::multimap<no_def_con, int>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_DEQUE, simple_buffer)
@@ -697,7 +689,7 @@ TEST(MSGPACK_NO_DEF_CON_DEQUE, simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::deque<no_def_con> val2 = oh.get().as<std::deque<no_def_con>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_PAIR, simple_buffer)
@@ -709,7 +701,7 @@ TEST(MSGPACK_NO_DEF_CON_PAIR, simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::pair<no_def_con, no_def_con_composite> val2
         = oh.get().as<std::pair<no_def_con, no_def_con_composite>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_DEF_CON_PAIR, simple_buffer)
@@ -721,7 +713,7 @@ TEST(MSGPACK_NO_DEF_CON_DEF_CON_PAIR, simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::pair<no_def_con, int> val2
         = oh.get().as<std::pair<no_def_con, int>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 
@@ -740,7 +732,7 @@ TEST(MSGPACK_NO_DEF_CON_TUPLE, simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::tuple<no_def_con, no_def_con, no_def_con_composite> val2
         = oh.get().as<std::tuple<no_def_con, no_def_con, no_def_con_composite>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_DEF_CON_TUPLE, simple_buffer)
@@ -752,7 +744,7 @@ TEST(MSGPACK_NO_DEF_CON_DEF_CON_TUPLE, simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::tuple<no_def_con, no_def_con, int> val2
         = oh.get().as<std::tuple<no_def_con, no_def_con, int>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_MSGPACK_TUPLE, simple_buffer)
@@ -764,7 +756,7 @@ TEST(MSGPACK_NO_DEF_CON_MSGPACK_TUPLE, simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     msgpack::type::tuple<no_def_con, no_def_con, no_def_con_composite> val2
         = oh.get().as<msgpack::type::tuple<no_def_con, no_def_con, no_def_con_composite>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_DEF_CON_MSGPACK_TUPLE, simple_buffer)
@@ -776,7 +768,7 @@ TEST(MSGPACK_NO_DEF_CON_DEF_CON_MSGPACK_TUPLE, simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     msgpack::type::tuple<no_def_con, no_def_con, int> val2
         = oh.get().as<msgpack::type::tuple<no_def_con, no_def_con, int>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 #endif // !define(_MSC_VER)
@@ -789,7 +781,7 @@ TEST(MSGPACK_NO_DEF_FORWARD_LIST, simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::forward_list<no_def_con> val2 = oh.get().as<std::forward_list<no_def_con>>();
-    EXPECT_TRUE(val1 == val2);
+    BOOST_CHECK(val1 == val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_UNORDERED_SET, simple_buffer)
@@ -800,7 +792,7 @@ TEST(MSGPACK_NO_DEF_CON_UNORDERED_SET, simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::unordered_set<no_def_con> val2 = oh.get().as<std::unordered_set<no_def_con>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_UNORDERED_MULTISET, simple_buffer)
@@ -811,7 +803,7 @@ TEST(MSGPACK_NO_DEF_CON_UNORDERED_MULTISET, simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::unordered_multiset<no_def_con> val2 = oh.get().as<std::unordered_multiset<no_def_con>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_UNORDERED_MAP, simple_buffer)
@@ -823,7 +815,7 @@ TEST(MSGPACK_NO_DEF_CON_UNORDERED_MAP, simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::unordered_map<no_def_con, no_def_con_composite> val2
         = oh.get().as<std::unordered_map<no_def_con, no_def_con_composite>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_DEF_CON_UNORDERED_MAP, simple_buffer)
@@ -835,7 +827,7 @@ TEST(MSGPACK_NO_DEF_CON_DEF_CON_UNORDERED_MAP, simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::unordered_map<no_def_con, int> val2
         = oh.get().as<std::unordered_map<no_def_con, int>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_UNORDERED_MULTIMAP, simple_buffer)
@@ -847,7 +839,7 @@ TEST(MSGPACK_NO_DEF_CON_UNORDERED_MULTIMAP, simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::unordered_multimap<no_def_con, no_def_con_composite> val2
         = oh.get().as<std::unordered_multimap<no_def_con, no_def_con_composite>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_DEF_CON_UNORDERED_MULTIMAP, simple_buffer)
@@ -859,7 +851,7 @@ TEST(MSGPACK_NO_DEF_CON_DEF_CON_UNORDERED_MULTIMAP, simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::unordered_multimap<no_def_con, int> val2
         = oh.get().as<std::unordered_multimap<no_def_con, int>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_NO_DEF_CON_ARRAY, simple_buffer)
@@ -870,7 +862,7 @@ TEST(MSGPACK_NO_DEF_CON_ARRAY, simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::array<no_def_con, 3> val2 = oh.get().as<std::array<no_def_con, 3>>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 }
 
 TEST(MSGPACK_CHRONO, system_clock)
@@ -882,11 +874,11 @@ TEST(MSGPACK_CHRONO, system_clock)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::system_clock::time_point val2 = oh.get().as<std::chrono::system_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::system_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 TEST(MSGPACK_CHRONO, system_clock_32)
@@ -902,16 +894,16 @@ TEST(MSGPACK_CHRONO, system_clock_32)
         static_cast<char>(0x56),
         static_cast<char>(0x78)
     };
-    EXPECT_EQ(memcmp(sbuf.data(), packed, sizeof(packed)), 0);
+    BOOST_CHECK_EQUAL(memcmp(sbuf.data(), packed, sizeof(packed)), 0);
 
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::system_clock::time_point val2 = oh.get().as<std::chrono::system_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::system_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 TEST(MSGPACK_CHRONO, system_clock_32_max)
@@ -927,16 +919,16 @@ TEST(MSGPACK_CHRONO, system_clock_32_max)
         static_cast<char>(0xffu),
         static_cast<char>(0xffu)
     };
-    EXPECT_EQ(memcmp(sbuf.data(), packed, sizeof(packed)), 0);
+    BOOST_CHECK_EQUAL(memcmp(sbuf.data(), packed, sizeof(packed)), 0);
 
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::system_clock::time_point val2 = oh.get().as<std::chrono::system_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::system_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 
@@ -953,11 +945,11 @@ TEST(MSGPACK_CHRONO, system_clock_64)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::system_clock::time_point val2 = oh.get().as<std::chrono::system_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::system_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 TEST(MSGPACK_CHRONO, system_clock_64_max)
@@ -995,20 +987,20 @@ TEST(MSGPACK_CHRONO, system_clock_64_max)
         static_cast<char>(0xffu)
     };
     if (std::chrono::system_clock::duration::period::ratio::den == 1000000000) {
-        EXPECT_EQ(memcmp(sbuf.data(), packed_nano, sizeof(packed_nano)), 0);
+        BOOST_CHECK_EQUAL(memcmp(sbuf.data(), packed_nano, sizeof(packed_nano)), 0);
     }
     else if (std::chrono::system_clock::duration::period::ratio::den == 1000000) {
-        EXPECT_EQ(memcmp(sbuf.data(), packed_micro, sizeof(packed_micro)), 0);
+        BOOST_CHECK_EQUAL(memcmp(sbuf.data(), packed_micro, sizeof(packed_micro)), 0);
     }
 
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::system_clock::time_point val2 = oh.get().as<std::chrono::system_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::system_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 TEST(MSGPACK_CHRONO, system_clock_impl_min)
@@ -1020,11 +1012,11 @@ TEST(MSGPACK_CHRONO, system_clock_impl_min)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::system_clock::time_point val2 = oh.get().as<std::chrono::system_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::system_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 TEST(MSGPACK_CHRONO, system_clock_impl_max)
@@ -1037,11 +1029,11 @@ TEST(MSGPACK_CHRONO, system_clock_impl_max)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::system_clock::time_point val2 = oh.get().as<std::chrono::system_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::system_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 TEST(MSGPACK_CHRONO, system_clock_impl_now)
@@ -1054,11 +1046,11 @@ TEST(MSGPACK_CHRONO, system_clock_impl_now)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::system_clock::time_point val2 = oh.get().as<std::chrono::system_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::system_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 
@@ -1071,11 +1063,11 @@ TEST(MSGPACK_CHRONO, steady_clock)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::steady_clock::time_point val2 = oh.get().as<std::chrono::steady_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::steady_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 TEST(MSGPACK_CHRONO, steady_clock_32)
@@ -1091,16 +1083,16 @@ TEST(MSGPACK_CHRONO, steady_clock_32)
         static_cast<char>(0x56),
         static_cast<char>(0x78)
     };
-    EXPECT_EQ(memcmp(sbuf.data(), packed, sizeof(packed)), 0);
+    BOOST_CHECK_EQUAL(memcmp(sbuf.data(), packed, sizeof(packed)), 0);
 
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::steady_clock::time_point val2 = oh.get().as<std::chrono::steady_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::steady_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 TEST(MSGPACK_CHRONO, steady_clock_32_max)
@@ -1116,16 +1108,16 @@ TEST(MSGPACK_CHRONO, steady_clock_32_max)
         static_cast<char>(0xffu),
         static_cast<char>(0xffu)
     };
-    EXPECT_EQ(memcmp(sbuf.data(), packed, sizeof(packed)), 0);
+    BOOST_CHECK_EQUAL(memcmp(sbuf.data(), packed, sizeof(packed)), 0);
 
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::steady_clock::time_point val2 = oh.get().as<std::chrono::steady_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::steady_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 
@@ -1142,11 +1134,11 @@ TEST(MSGPACK_CHRONO, steady_clock_64)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::steady_clock::time_point val2 = oh.get().as<std::chrono::steady_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::steady_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 TEST(MSGPACK_CHRONO, steady_clock_64_max)
@@ -1184,20 +1176,20 @@ TEST(MSGPACK_CHRONO, steady_clock_64_max)
         static_cast<char>(0xffu)
     };
     if (std::chrono::steady_clock::duration::period::ratio::den == 1000000000) {
-        EXPECT_EQ(memcmp(sbuf.data(), packed_nano, sizeof(packed_nano)), 0);
+        BOOST_CHECK_EQUAL(memcmp(sbuf.data(), packed_nano, sizeof(packed_nano)), 0);
     }
     else if (std::chrono::steady_clock::duration::period::ratio::den == 1000000) {
-        EXPECT_EQ(memcmp(sbuf.data(), packed_micro, sizeof(packed_micro)), 0);
+        BOOST_CHECK_EQUAL(memcmp(sbuf.data(), packed_micro, sizeof(packed_micro)), 0);
     }
 
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::steady_clock::time_point val2 = oh.get().as<std::chrono::steady_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::steady_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 TEST(MSGPACK_CHRONO, steady_clock_impl_min)
@@ -1209,11 +1201,11 @@ TEST(MSGPACK_CHRONO, steady_clock_impl_min)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::steady_clock::time_point val2 = oh.get().as<std::chrono::steady_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::steady_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 TEST(MSGPACK_CHRONO, steady_clock_impl_max)
@@ -1226,11 +1218,11 @@ TEST(MSGPACK_CHRONO, steady_clock_impl_max)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::steady_clock::time_point val2 = oh.get().as<std::chrono::steady_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::steady_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 TEST(MSGPACK_CHRONO, steady_clock_impl_now)
@@ -1243,11 +1235,11 @@ TEST(MSGPACK_CHRONO, steady_clock_impl_now)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::steady_clock::time_point val2 = oh.get().as<std::chrono::steady_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::steady_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 
@@ -1260,11 +1252,11 @@ TEST(MSGPACK_CHRONO, high_resolution_clock)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::high_resolution_clock::time_point val2 = oh.get().as<std::chrono::high_resolution_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::high_resolution_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 TEST(MSGPACK_CHRONO, high_resolution_clock_32)
@@ -1280,16 +1272,16 @@ TEST(MSGPACK_CHRONO, high_resolution_clock_32)
         static_cast<char>(0x56),
         static_cast<char>(0x78)
     };
-    EXPECT_EQ(memcmp(sbuf.data(), packed, sizeof(packed)), 0);
+    BOOST_CHECK_EQUAL(memcmp(sbuf.data(), packed, sizeof(packed)), 0);
 
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::high_resolution_clock::time_point val2 = oh.get().as<std::chrono::high_resolution_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::high_resolution_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 TEST(MSGPACK_CHRONO, high_resolution_clock_32_max)
@@ -1305,16 +1297,16 @@ TEST(MSGPACK_CHRONO, high_resolution_clock_32_max)
         static_cast<char>(0xffu),
         static_cast<char>(0xffu)
     };
-    EXPECT_EQ(memcmp(sbuf.data(), packed, sizeof(packed)), 0);
+    BOOST_CHECK_EQUAL(memcmp(sbuf.data(), packed, sizeof(packed)), 0);
 
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::high_resolution_clock::time_point val2 = oh.get().as<std::chrono::high_resolution_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::high_resolution_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 
@@ -1331,11 +1323,11 @@ TEST(MSGPACK_CHRONO, high_resolution_clock_64)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::high_resolution_clock::time_point val2 = oh.get().as<std::chrono::high_resolution_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::high_resolution_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 TEST(MSGPACK_CHRONO, high_resolution_clock_64_max)
@@ -1373,20 +1365,20 @@ TEST(MSGPACK_CHRONO, high_resolution_clock_64_max)
         static_cast<char>(0xffu)
     };
     if (std::chrono::high_resolution_clock::duration::period::ratio::den == 1000000000) {
-        EXPECT_EQ(memcmp(sbuf.data(), packed_nano, sizeof(packed_nano)), 0);
+        BOOST_CHECK_EQUAL(memcmp(sbuf.data(), packed_nano, sizeof(packed_nano)), 0);
     }
     else if (std::chrono::high_resolution_clock::duration::period::ratio::den == 1000000) {
-        EXPECT_EQ(memcmp(sbuf.data(), packed_micro, sizeof(packed_micro)), 0);
+        BOOST_CHECK_EQUAL(memcmp(sbuf.data(), packed_micro, sizeof(packed_micro)), 0);
     }
 
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::high_resolution_clock::time_point val2 = oh.get().as<std::chrono::high_resolution_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::high_resolution_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 TEST(MSGPACK_CHRONO, high_resolution_clock_impl_min)
@@ -1398,11 +1390,11 @@ TEST(MSGPACK_CHRONO, high_resolution_clock_impl_min)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::high_resolution_clock::time_point val2 = oh.get().as<std::chrono::high_resolution_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::high_resolution_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 TEST(MSGPACK_CHRONO, high_resolution_clock_impl_max)
@@ -1415,11 +1407,11 @@ TEST(MSGPACK_CHRONO, high_resolution_clock_impl_max)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::high_resolution_clock::time_point val2 = oh.get().as<std::chrono::high_resolution_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::high_resolution_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 TEST(MSGPACK_CHRONO, high_resolution_clock_impl_now)
@@ -1432,11 +1424,11 @@ TEST(MSGPACK_CHRONO, high_resolution_clock_impl_now)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::high_resolution_clock::time_point val2 = oh.get().as<std::chrono::high_resolution_clock::time_point>();
-    EXPECT_EQ(val1, val2);
+    BOOST_CHECK_EQUAL(val1, val2);
 
     std::chrono::high_resolution_clock::time_point val3;
     oh.get().convert(val3);
-    EXPECT_EQ(val1, val3);
+    BOOST_CHECK_EQUAL(val1, val3);
 }
 
 
@@ -1447,13 +1439,13 @@ TEST(MSGPACK_TIMESPEC, timespec_pack_convert_zero)
 
     msgpack::pack(ss, val1);
     std::string const& str = ss.str();
-    EXPECT_EQ(str.data()[0], static_cast<char>(0xd6u));
+    BOOST_CHECK_EQUAL(str.data()[0], static_cast<char>(0xd6u));
 
     msgpack::object_handle oh;
     msgpack::unpack(oh, str.data(), str.size());
     timespec val2 = oh.get().as<timespec>();
-    EXPECT_EQ(val1.tv_sec, val2.tv_sec);
-    EXPECT_EQ(val1.tv_nsec, val2.tv_nsec);
+    BOOST_CHECK_EQUAL(val1.tv_sec, val2.tv_sec);
+    BOOST_CHECK_EQUAL(val1.tv_nsec, val2.tv_nsec);
 }
 
 TEST(MSGPACK_TIMESPEC, timespec_object_with_zone_zero)
@@ -1462,8 +1454,8 @@ TEST(MSGPACK_TIMESPEC, timespec_object_with_zone_zero)
     timespec val1{ 0, 0 };
     msgpack::object obj(val1, z);
     timespec val2 = obj.as<timespec>();
-    EXPECT_EQ(val1.tv_sec, val2.tv_sec);
-    EXPECT_EQ(val1.tv_nsec, val2.tv_nsec);
+    BOOST_CHECK_EQUAL(val1.tv_sec, val2.tv_sec);
+    BOOST_CHECK_EQUAL(val1.tv_nsec, val2.tv_nsec);
 }
 
 TEST(MSGPACK_TIMESPEC, timespec_pack_convert_32bit_sec)
@@ -1473,13 +1465,13 @@ TEST(MSGPACK_TIMESPEC, timespec_pack_convert_32bit_sec)
 
     msgpack::pack(ss, val1);
     std::string const& str = ss.str();
-    EXPECT_EQ(str.data()[0], static_cast<char>(0xd6u));
+    BOOST_CHECK_EQUAL(str.data()[0], static_cast<char>(0xd6u));
 
     msgpack::object_handle oh;
     msgpack::unpack(oh, str.data(), str.size());
     timespec val2 = oh.get().as<timespec>();
-    EXPECT_EQ(val1.tv_sec, val2.tv_sec);
-    EXPECT_EQ(val1.tv_nsec, val2.tv_nsec);
+    BOOST_CHECK_EQUAL(val1.tv_sec, val2.tv_sec);
+    BOOST_CHECK_EQUAL(val1.tv_nsec, val2.tv_nsec);
 }
 
 TEST(MSGPACK_TIMESPEC, timespec_object_with_zone_32bit_sec)
@@ -1488,8 +1480,8 @@ TEST(MSGPACK_TIMESPEC, timespec_object_with_zone_32bit_sec)
     timespec val1{ std::numeric_limits<decltype(std::declval<timespec>().tv_sec)>::is_signed ? time_t(INT32_MAX) : time_t(UINT32_MAX), 0 };
     msgpack::object obj(val1, z);
     timespec val2 = obj.as<timespec>();
-    EXPECT_EQ(val1.tv_sec, val2.tv_sec);
-    EXPECT_EQ(val1.tv_nsec, val2.tv_nsec);
+    BOOST_CHECK_EQUAL(val1.tv_sec, val2.tv_sec);
+    BOOST_CHECK_EQUAL(val1.tv_nsec, val2.tv_nsec);
 }
 
 TEST(MSGPACK_TIMESPEC, timespec_pack_convert_max_nano)
@@ -1499,12 +1491,12 @@ TEST(MSGPACK_TIMESPEC, timespec_pack_convert_max_nano)
 
     msgpack::pack(ss, val1);
     std::string const& str = ss.str();
-    EXPECT_EQ(str.data()[0], static_cast<char>(0xd7u));
+    BOOST_CHECK_EQUAL(str.data()[0], static_cast<char>(0xd7u));
     msgpack::object_handle oh;
     msgpack::unpack(oh, str.data(), str.size());
     timespec val2 = oh.get().as<timespec>();
-    EXPECT_EQ(val1.tv_sec, val2.tv_sec);
-    EXPECT_EQ(val1.tv_nsec, val2.tv_nsec);
+    BOOST_CHECK_EQUAL(val1.tv_sec, val2.tv_sec);
+    BOOST_CHECK_EQUAL(val1.tv_nsec, val2.tv_nsec);
 }
 
 TEST(MSGPACK_TIMESPEC, timespec_object_with_zone_max_nano)
@@ -1513,8 +1505,8 @@ TEST(MSGPACK_TIMESPEC, timespec_object_with_zone_max_nano)
     timespec val1{ 0, 999999999 };
     msgpack::object obj(val1, z);
     timespec val2 = obj.as<timespec>();
-    EXPECT_EQ(val1.tv_sec, val2.tv_sec);
-    EXPECT_EQ(val1.tv_nsec, val2.tv_nsec);
+    BOOST_CHECK_EQUAL(val1.tv_sec, val2.tv_sec);
+    BOOST_CHECK_EQUAL(val1.tv_nsec, val2.tv_nsec);
 }
 
 TEST(MSGPACK_TIMESPEC, timespec_pack_convert_34bit_sec_max_nano)
@@ -1525,13 +1517,13 @@ TEST(MSGPACK_TIMESPEC, timespec_pack_convert_34bit_sec_max_nano)
 
     msgpack::pack(ss, val1);
     std::string const& str = ss.str();
-    EXPECT_EQ(str.data()[0], static_cast<char>(0xd7u));
+    BOOST_CHECK_EQUAL(str.data()[0], static_cast<char>(0xd7u));
 
     msgpack::object_handle oh;
     msgpack::unpack(oh, str.data(), str.size());
     timespec val2 = oh.get().as<timespec>();
-    EXPECT_EQ(val1.tv_sec, val2.tv_sec);
-    EXPECT_EQ(val1.tv_nsec, val2.tv_nsec);
+    BOOST_CHECK_EQUAL(val1.tv_sec, val2.tv_sec);
+    BOOST_CHECK_EQUAL(val1.tv_nsec, val2.tv_nsec);
 }
 
 TEST(MSGPACK_TIMESPEC, timespec_object_with_zone_34bit_sec_max_nano)
@@ -1541,8 +1533,8 @@ TEST(MSGPACK_TIMESPEC, timespec_object_with_zone_34bit_sec_max_nano)
     timespec val1{ static_cast<decltype(std::declval<timespec>().tv_sec)>(0x3ffffffffULL), 999999999 };
     msgpack::object obj(val1, z);
     timespec val2 = obj.as<timespec>();
-    EXPECT_EQ(val1.tv_sec, val2.tv_sec);
-    EXPECT_EQ(val1.tv_nsec, val2.tv_nsec);
+    BOOST_CHECK_EQUAL(val1.tv_sec, val2.tv_sec);
+    BOOST_CHECK_EQUAL(val1.tv_nsec, val2.tv_nsec);
 }
 
 TEST(MSGPACK_TIMESPEC, timespec_pack_convert_35bit_sec_max_nano)
@@ -1553,13 +1545,13 @@ TEST(MSGPACK_TIMESPEC, timespec_pack_convert_35bit_sec_max_nano)
 
     msgpack::pack(ss, val1);
     std::string const& str = ss.str();
-    EXPECT_EQ(str.data()[0], static_cast<char>(0xc7u));
+    BOOST_CHECK_EQUAL(str.data()[0], static_cast<char>(0xc7u));
 
     msgpack::object_handle oh;
     msgpack::unpack(oh, str.data(), str.size());
     timespec val2 = oh.get().as<timespec>();
-    EXPECT_EQ(val1.tv_sec, val2.tv_sec);
-    EXPECT_EQ(val1.tv_nsec, val2.tv_nsec);
+    BOOST_CHECK_EQUAL(val1.tv_sec, val2.tv_sec);
+    BOOST_CHECK_EQUAL(val1.tv_nsec, val2.tv_nsec);
 }
 
 TEST(MSGPACK_TIMESPEC, timespec_object_with_zone_35bit_sec_max_nano)
@@ -1569,8 +1561,8 @@ TEST(MSGPACK_TIMESPEC, timespec_object_with_zone_35bit_sec_max_nano)
     timespec val1{ static_cast<decltype(std::declval<timespec>().tv_sec)>(0x7ffffffffULL), 999999999 };
     msgpack::object obj(val1, z);
     timespec val2 = obj.as<timespec>();
-    EXPECT_EQ(val1.tv_sec, val2.tv_sec);
-    EXPECT_EQ(val1.tv_nsec, val2.tv_nsec);
+    BOOST_CHECK_EQUAL(val1.tv_sec, val2.tv_sec);
+    BOOST_CHECK_EQUAL(val1.tv_nsec, val2.tv_nsec);
 }
 
 TEST(MSGPACK_TIMESPEC, timespec_pack_convert_64bit_sec_max_nano)
@@ -1581,13 +1573,13 @@ TEST(MSGPACK_TIMESPEC, timespec_pack_convert_64bit_sec_max_nano)
 
     msgpack::pack(ss, val1);
     std::string const& str = ss.str();
-    EXPECT_EQ(str.data()[0], static_cast<char>(0xc7u));
+    BOOST_CHECK_EQUAL(str.data()[0], static_cast<char>(0xc7u));
 
     msgpack::object_handle oh;
     msgpack::unpack(oh, str.data(), str.size());
     timespec val2 = oh.get().as<timespec>();
-    EXPECT_EQ(val1.tv_sec, val2.tv_sec);
-    EXPECT_EQ(val1.tv_nsec, val2.tv_nsec);
+    BOOST_CHECK_EQUAL(val1.tv_sec, val2.tv_sec);
+    BOOST_CHECK_EQUAL(val1.tv_nsec, val2.tv_nsec);
 }
 
 TEST(MSGPACK_TIMESPEC, timespec_object_with_zone_64bit_sec_max_nano)
@@ -1596,8 +1588,8 @@ TEST(MSGPACK_TIMESPEC, timespec_object_with_zone_64bit_sec_max_nano)
     timespec val1{ std::numeric_limits<decltype(std::declval<timespec>().tv_sec)>::max(), 999999999 };
     msgpack::object obj(val1, z);
     timespec val2 = obj.as<timespec>();
-    EXPECT_EQ(val1.tv_sec, val2.tv_sec);
-    EXPECT_EQ(val1.tv_nsec, val2.tv_nsec);
+    BOOST_CHECK_EQUAL(val1.tv_sec, val2.tv_sec);
+    BOOST_CHECK_EQUAL(val1.tv_nsec, val2.tv_nsec);
 }
 
 

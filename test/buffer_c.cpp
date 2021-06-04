@@ -25,13 +25,13 @@
 TEST(buffer, zbuffer_c)
 {
     msgpack_zbuffer zbuf;
-    EXPECT_TRUE(msgpack_zbuffer_init(&zbuf, 1, MSGPACK_ZBUFFER_INIT_SIZE));
-    EXPECT_EQ(0, msgpack_zbuffer_write(&zbuf, "a", 1));
-    EXPECT_EQ(0, msgpack_zbuffer_write(&zbuf, "a", 1));
-    EXPECT_EQ(0, msgpack_zbuffer_write(&zbuf, "a", 1));
-    EXPECT_EQ(0, msgpack_zbuffer_write(&zbuf, "", 0));
+    BOOST_CHECK(msgpack_zbuffer_init(&zbuf, 1, MSGPACK_ZBUFFER_INIT_SIZE));
+    BOOST_CHECK_EQUAL(0, msgpack_zbuffer_write(&zbuf, "a", 1));
+    BOOST_CHECK_EQUAL(0, msgpack_zbuffer_write(&zbuf, "a", 1));
+    BOOST_CHECK_EQUAL(0, msgpack_zbuffer_write(&zbuf, "a", 1));
+    BOOST_CHECK_EQUAL(0, msgpack_zbuffer_write(&zbuf, "", 0));
 
-    EXPECT_TRUE(msgpack_zbuffer_flush(&zbuf) != NULL);
+    BOOST_CHECK(msgpack_zbuffer_flush(&zbuf) != NULL);
 
     msgpack_zbuffer_destroy(&zbuf);
 }
@@ -47,19 +47,19 @@ TEST(buffer, fbuffer_c)
 
     void* fbuf = (void*)file;
 
-    EXPECT_TRUE( file != NULL );
-    EXPECT_EQ(0, msgpack_fbuffer_write(fbuf, "a", 1));
-    EXPECT_EQ(0, msgpack_fbuffer_write(fbuf, "a", 1));
-    EXPECT_EQ(0, msgpack_fbuffer_write(fbuf, "a", 1));
+    BOOST_CHECK( file != NULL );
+    BOOST_CHECK_EQUAL(0, msgpack_fbuffer_write(fbuf, "a", 1));
+    BOOST_CHECK_EQUAL(0, msgpack_fbuffer_write(fbuf, "a", 1));
+    BOOST_CHECK_EQUAL(0, msgpack_fbuffer_write(fbuf, "a", 1));
 
     fflush(file);
     rewind(file);
     for (size_t i=0; i < 3; ++i) {
         int ch = fgetc(file);
-        EXPECT_TRUE(ch != EOF);
-        EXPECT_EQ('a', (char) ch);
+        BOOST_CHECK(ch != EOF);
+        BOOST_CHECK_EQUAL('a', (char) ch);
     }
-    EXPECT_EQ(EOF, fgetc(file));
+    BOOST_CHECK_EQUAL(EOF, fgetc(file));
     fclose(file);
 }
 
@@ -69,17 +69,17 @@ TEST(buffer, sbuffer_c)
     char *data;
 
     sbuf = msgpack_sbuffer_new();
-    EXPECT_TRUE(sbuf != NULL);
-    EXPECT_EQ(0, msgpack_sbuffer_write(sbuf, "a", 1));
-    EXPECT_EQ(0, msgpack_sbuffer_write(sbuf, "b", 1));
-    EXPECT_EQ(0, msgpack_sbuffer_write(sbuf, "c", 1));
-    EXPECT_EQ(0, msgpack_sbuffer_write(sbuf, "", 0));
-    EXPECT_EQ(3U, sbuf->size);
-    EXPECT_EQ(0, memcmp(sbuf->data, "abc", 3));
+    BOOST_CHECK(sbuf != NULL);
+    BOOST_CHECK_EQUAL(0, msgpack_sbuffer_write(sbuf, "a", 1));
+    BOOST_CHECK_EQUAL(0, msgpack_sbuffer_write(sbuf, "b", 1));
+    BOOST_CHECK_EQUAL(0, msgpack_sbuffer_write(sbuf, "c", 1));
+    BOOST_CHECK_EQUAL(0, msgpack_sbuffer_write(sbuf, "", 0));
+    BOOST_CHECK_EQUAL(3U, sbuf->size);
+    BOOST_CHECK_EQUAL(0, memcmp(sbuf->data, "abc", 3));
     data = msgpack_sbuffer_release(sbuf);
-    EXPECT_EQ(0, memcmp(data, "abc", 3));
-    EXPECT_EQ(0U, sbuf->size);
-    EXPECT_TRUE(sbuf->data == NULL);
+    BOOST_CHECK_EQUAL(0, memcmp(data, "abc", 3));
+    BOOST_CHECK_EQUAL(0U, sbuf->size);
+    BOOST_CHECK(sbuf->data == NULL);
 
     free(data);
     msgpack_sbuffer_free(sbuf);
@@ -127,7 +127,7 @@ TEST(buffer, vrefbuffer_c)
         len = (size_t)lseek(fd, 0, SEEK_END);
         lseek(fd, 0, SEEK_SET);
         read(fd, buf, len);
-        EXPECT_EQ(0, memcmp(buf, raw, len));
+        BOOST_CHECK_EQUAL(0, memcmp(buf, raw, len));
         close(fd);
         unlink(filename);
     }
@@ -140,7 +140,7 @@ TEST(buffer, vrefbuffer_c)
             memcpy(buf + len, iov[i].iov_base, iov[i].iov_len);
             len += iov[i].iov_len;
         }
-        EXPECT_EQ(0, memcmp(buf, raw, len));
+        BOOST_CHECK_EQUAL(0, memcmp(buf, raw, len));
     }
 #endif
     free(buf);

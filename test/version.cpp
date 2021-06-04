@@ -1,17 +1,10 @@
 #include <msgpack.hpp>
 
-#if defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wconversion"
-#endif //defined(__GNUC__)
+#define BOOST_TEST_DONT_PRINT_LOG_VALUE
+#define BOOST_TEST_MODULE version
+#include <boost/test/unit_test.hpp>
 
-#include <gtest/gtest.h>
-
-#if defined(__GNUC__)
-#pragma GCC diagnostic pop
-#endif //defined(__GNUC__)
-
-TEST(version, print)
+BOOST_AUTO_TEST_CASE(print)
 {
     printf("MSGPACK_VERSION            : %s\n", MSGPACK_VERSION);
     printf("MSGPACK_VERSION_MAJOR      : %d\n", MSGPACK_VERSION_MAJOR);
