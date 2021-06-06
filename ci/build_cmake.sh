@@ -27,7 +27,7 @@ else
     export ARCH_FLAG="-m64"
 fi
 
-cmake -D${MSGPACK_CXX_VERSION} -DCMAKE_FIND_ROOT_PATH=/usr/lib/i386-linux-gnu/cmake -DMSGPACK_32BIT=${BIT32} -DMSGPACK_CHAR_SIGN=${CHAR_SIGN} -DMSGPACK_DEFAULT_API_VERSION=${API_VERSION} -DMSGPACK_USE_X3_PARSE=${X3_PARSE} -DCMAKE_CXX_FLAGS="${ARCH_FLAG} ${CXXFLAGS}" ${ZLIB32} ..
+cmake -DMSGPACK_BUILD_TESTS=ON -D${MSGPACK_CXX_VERSION} -DCMAKE_FIND_ROOT_PATH=/usr/lib/i386-linux-gnu/cmake -DMSGPACK_32BIT=${BIT32} -DMSGPACK_CHAR_SIGN=${CHAR_SIGN} -DMSGPACK_DEFAULT_API_VERSION=${API_VERSION} -DMSGPACK_USE_X3_PARSE=${X3_PARSE} -DCMAKE_CXX_FLAGS="${ARCH_FLAG} ${CXXFLAGS}" ${ZLIB32} ..
 
 ret=$?
 if [ $ret -ne 0 ]
@@ -94,7 +94,7 @@ then
         exit $ret
     fi
 
-    ${CXX} ../../example/cpp03/simple.cpp -o simple -I `pwd`/../install/usr/local/include -I ${GTEST_ROOT}/include -L ${GTEST_ROOT}/lib -lgtest_main -lgtest
+    ${CXX} ../../example/cpp03/simple.cpp -o simple -I `pwd`/../install/usr/local/include
 
     ret=$?
     if [ $ret -ne 0 ]

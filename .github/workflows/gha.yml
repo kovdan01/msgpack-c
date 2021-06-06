@@ -120,6 +120,8 @@ jobs:
           sudo dpkg --add-architecture i386
           sudo apt-get update
           sudo apt-get install lib32z1-dev
+          sudo apt-get install libboost-mpi1.71.0:i386
+          sudo apt-get install libopenmpi3:i386
           sudo apt-get install libboost-graph-parallel1.71.0:i386
           sudo apt-get install libboost-graph-parallel1.71-dev:i386
           sudo apt-get install mpi-default-dev:i386

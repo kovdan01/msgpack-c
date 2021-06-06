@@ -2,7 +2,6 @@
 #include <string>
 #include <cmath>
 
-#define BOOST_TEST_DONT_PRINT_LOG_VALUE
 #define BOOST_TEST_MODULE MSGPACK_USER_DEFINED
 #include <boost/test/unit_test.hpp>
 

@@ -1,7 +1,6 @@
 #include <msgpack.hpp>
 #include <sstream>
 
-#define BOOST_TEST_DONT_PRINT_LOG_VALUE
 #define BOOST_TEST_MODULE MSGPACK_REFERENCE_WRAPPER
 #include <boost/test/unit_test.hpp>
 

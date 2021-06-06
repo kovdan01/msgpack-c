@@ -2,7 +2,6 @@
 #include <sstream>
 #include <iterator>
 
-#define BOOST_TEST_DONT_PRINT_LOG_VALUE
 #define BOOST_TEST_MODULE UNIQUE_PTR
 #include <boost/test/unit_test.hpp>
 

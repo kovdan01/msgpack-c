@@ -1,6 +1,5 @@
 #include <msgpack.hpp>
 
-#define BOOST_TEST_DONT_PRINT_LOG_VALUE
 #define BOOST_TEST_MODULE reference
 #include <boost/test/unit_test.hpp>
 

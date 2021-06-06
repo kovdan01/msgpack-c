@@ -2,7 +2,6 @@
 #include <fstream>
 #include <sstream>
 
-#define BOOST_TEST_DONT_PRINT_LOG_VALUE
 #define BOOST_TEST_MODULE json
 #include <boost/test/unit_test.hpp>
 

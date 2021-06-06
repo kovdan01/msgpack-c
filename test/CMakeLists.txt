@@ -1,4 +1,3 @@
-FIND_PACKAGE (GTest REQUIRED)
 FIND_PACKAGE (ZLIB REQUIRED)
 FIND_PACKAGE (Threads REQUIRED)
 
@@ -83,7 +82,7 @@ FOREACH (source_file ${check_PROGRAMS})
         Boost::system
         Threads::Threads
     )
-    ADD_TEST (${source_file_we} ${source_file_we})
+    ADD_TEST (NAME ${source_file_we} COMMAND ${source_file_we})
 
     IF ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         SET_PROPERTY (TARGET ${source_file_we} APPEND_STRING PROPERTY COMPILE_FLAGS " -Wall -Wextra -Wconversion")
