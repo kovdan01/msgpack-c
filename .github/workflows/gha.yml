@@ -106,7 +106,7 @@ jobs:
           sudo apt-get install libboost-mpi1.71.0:i386
           sudo apt-get install libboost-graph-parallel1.71.0:i386
           sudo apt-get install libboost-graph-parallel1.71-dev:i386
-          sudo apt-get install gfortran-mod-15:i386
+          sudo apt-get install gfortran-11:i386
           sudo apt-get install libevent-dev:i386
           sudo apt-get install libopenmpi-dev:i386
           sudo apt-get install mpi-default-dev:i386
