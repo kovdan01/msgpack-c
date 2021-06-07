@@ -73,22 +73,8 @@ jobs:
           export SANITIZE="-fsanitize=undefined -fno-sanitize-recover=all"
         fi
 
-        # install gtest
-        wget https://github.com/google/googletest/archive/release-1.7.0.zip -O googletest-release-1.7.0.zip
-        unzip -q googletest-release-1.7.0.zip
-        cd googletest-release-1.7.0
-        $CXX -m${ARCH} src/gtest-all.cc -I. -Iinclude -c
-        $CXX -m${ARCH} src/gtest_main.cc -I. -Iinclude -c
-        ar -rv libgtest.a gtest-all.o
-        ar -rv libgtest_main.a gtest_main.o
-        mkdir -p ${BASE}/usr/include
-        cp -r include/gtest ${BASE}/usr/include
-        mkdir -p ${BASE}/usr/lib
-        mv *.a ${BASE}/usr/lib
-        cd ..
-
         # build and test
-        CMAKE_CXX_COMPILER="${CXX}" CMAKE_LIBRARY_PATH="${BASE}/usr/lib:${BASE}/build" GTEST_ROOT="${BASE}/usr" CMAKE_PREFIX_PATH="${BASE}/usr/clang/lib${ARCH}/cmake" CXXFLAGS="-Werror -g ${SANITIZE}" ${ACTION}
+        CMAKE_CXX_COMPILER="${CXX}" CMAKE_PREFIX_PATH="$(brew --prefix)/Cellar/" CXXFLAGS="-Werror -g ${SANITIZE}" ${ACTION}
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
 
   linux:
@@ -113,24 +99,23 @@ jobs:
       run: |
         if [ ${{ matrix.arch }} == 32 ]; then
           sudo dpkg --add-architecture i386
-          sudo apt clean
-          sudo apt autoclean
-          sudo apt update
-          sudo apt upgrade
-          sudo apt install lib32z1-dev
-          sudo apt install libpsm-infinipath1:i386
-          sudo apt install libopenmpi3:i386
-          sudo apt install libboost-mpi1.71.0:i386
-          sudo apt install libboost-graph-parallel1.71.0:i386
-          sudo apt install libboost-graph-parallel1.71-dev:i386
-          sudo apt install libopenmpi-dev:i386
-          sudo apt install mpi-default-dev:i386
-          sudo apt install libboost-mpi1.71-dev:i386
-          sudo apt install libboost-mpi-python1.71-dev:i386
-          sudo apt install python3-dev:i386
-          sudo apt install libboost-python1.71-dev:i386
-          sudo apt install libboost1.71-all-dev:i386
-          sudo apt install libgtest-dev:i386
+          sudo apt-get update
+          sudo apt-get install lib32z1-dev
+          sudo apt-get install libpsm-infinipath1:i386
+          sudo apt-get install libopenmpi3:i386
+          sudo apt-get install libboost-mpi1.71.0:i386
+          sudo apt-get install libboost-graph-parallel1.71.0:i386
+          sudo apt-get install libboost-graph-parallel1.71-dev:i386
+          sudo apt-get install gfortran-mod-15:i386
+          sudo apt-get install libevent-dev:i386
+          sudo apt-get install libopenmpi-dev:i386
+          sudo apt-get install mpi-default-dev:i386
+          sudo apt-get install libboost-mpi1.71-dev:i386
+          sudo apt-get install libboost-mpi-python1.71-dev:i386
+          sudo apt-get install python3-dev:i386
+          sudo apt-get install libboost-python1.71-dev:i386
+          sudo apt-get install libboost1.71-all-dev:i386
+          sudo apt-get install libgtest-dev:i386
         else
           sudo apt-get update
           sudo apt-get install libboost1.71-all-dev
