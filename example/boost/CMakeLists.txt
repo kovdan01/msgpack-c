@@ -1,24 +1,18 @@
 FIND_PACKAGE (Threads REQUIRED)
-
+FIND_PACKAGE (PkgConfig REQUIRED)
+pkg_check_modules(zlib REQUIRED IMPORTED_TARGET zlib)
 FIND_PACKAGE (Boost REQUIRED COMPONENTS headers)
 
 LIST (APPEND exec_PROGRAMS
     msgpack_variant_capitalize.cpp
     msgpack_variant_mapbased.cpp
 )
-IF (MSGPACK_CXX11 OR MSGPACK_CXX17)
-    FIND_PACKAGE (Threads REQUIRED)
+
+IF (MSGPACK_CXX11 OR MSGPACK_CXX17 OR MSGPACK_CXX20)
     LIST (APPEND exec_PROGRAMS
         asio_send_recv.cpp
+        asio_send_recv_zlib.cpp
     )
-    IF (ZLIB_FOUND)
-        INCLUDE_DIRECTORIES (
-            ${ZLIB_INCLUDE_DIRS}
-        )
-        LIST (APPEND exec_PROGRAMS
-            asio_send_recv_zlib.cpp
-        )
-    ENDIF ()
 ENDIF ()
 
 FOREACH (source_file ${exec_PROGRAMS})
@@ -29,14 +23,10 @@ FOREACH (source_file ${exec_PROGRAMS})
     )
     TARGET_LINK_LIBRARIES (${source_file_we}
         msgpackcxx
-        Boost::headers
         Threads::Threads
+        Boost::headers
+        PkgConfig::zlib
     )
-    IF (ZLIB_FOUND)
-        TARGET_LINK_LIBRARIES (${source_file_we}
-            ${ZLIB_LIBRARIES}
-        )
-    ENDIF()
     IF ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         SET_PROPERTY (TARGET ${source_file_we} APPEND_STRING PROPERTY COMPILE_FLAGS " -Wall -Wextra")
     ENDIF ()

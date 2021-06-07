@@ -1,8 +1,7 @@
-FIND_PACKAGE (ZLIB REQUIRED)
 FIND_PACKAGE (Threads REQUIRED)
-
+FIND_PACKAGE (PkgConfig REQUIRED)
+pkg_check_modules(zlib REQUIRED IMPORTED_TARGET zlib)
 FIND_PACKAGE (Boost REQUIRED COMPONENTS unit_test_framework system)
-FIND_PACKAGE (Threads REQUIRED)
 
 LIST (APPEND check_PROGRAMS
     array_ref.cpp
@@ -11,7 +10,7 @@ LIST (APPEND check_PROGRAMS
     boost_string_ref.cpp
     boost_string_view.cpp
     # boost_variant.cpp
-    # buffer.cpp
+    buffer.cpp
     carray.cpp
     cases.cpp
     convert.cpp
@@ -81,6 +80,7 @@ FOREACH (source_file ${check_PROGRAMS})
         Boost::unit_test_framework
         Boost::system
         Threads::Threads
+        PkgConfig::zlib
     )
     ADD_TEST (NAME ${source_file_we} COMMAND ${source_file_we})
 
@@ -104,5 +104,7 @@ ADD_EXECUTABLE (
     multi_file
     multi_file1.cpp multi_file2.cpp
 )
+
+TARGET_LINK_LIBRARIES (multi_file msgpackcxx)
 
 ADD_TEST (multi_file multi_file)
