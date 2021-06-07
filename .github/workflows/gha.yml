@@ -19,16 +19,11 @@ jobs:
         cxx: [17]
     steps:
     - uses: actions/checkout@v1
-    - name: Cache boost
-      id: cache-boost
-      uses: actions/cache@v1
-      with:
-        path: usr
-        key: ${{ runner.os }}-boost-20210508-1-72-0
-    - name: Build boost
-      if: steps.cache-boost.outputs.cache-hit != 'true'
-      run: ./.github/depends/boost.sh -b 64 -t clang
-    - name: build and test
+
+    - name: Install boost
+      run: brew install boost
+
+    - name: Build and test
       env:
         CXX: clang++
       shell: bash
@@ -125,6 +120,7 @@ jobs:
           sudo apt-get install libboost-mpi1.71.0:i386
           sudo apt-get install libboost-graph-parallel1.71.0:i386
           sudo apt-get install libboost-graph-parallel1.71-dev:i386
+          sudo apt-get install libopenmpi-dev:i386
           sudo apt-get install mpi-default-dev:i386
           sudo apt-get install libboost-mpi1.71-dev:i386
           sudo apt-get install libboost-mpi-python1.71-dev:i386
@@ -138,17 +134,6 @@ jobs:
           sudo apt-get install libgtest-dev
         fi
         sudo apt-get install g++-multilib valgrind
-
-    - name: Cache boost
-      id: cache-boost
-      uses: actions/cache@v1
-      with:
-        path: usr
-        key: ${{ runner.os }}-boost-20210508-1-72-0
-
-    - name: Build boost
-      if: steps.cache-boost.outputs.cache-hit != 'true'
-      run: ./.github/depends/boost.sh -b both -t gcc
 
     - name: Build and test
       shell: bash
@@ -183,6 +168,7 @@ jobs:
         # build and test
         CMAKE_CXX_COMPILER="${CXX}" CXXFLAGS="-Werror -g ${SANITIZE}" ${ACTION}
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
+
   windows:
     runs-on: windows-2016
     strategy:
@@ -191,12 +177,14 @@ jobs:
         pattern: [0, 11, 17, 20]
     steps:
     - uses: actions/checkout@v1
+
     - name: Cache vcpkg
       id: cache-vcpkg
       uses: actions/cache@v1.0.3
       with:
         path: C:/vcpkg/installed/x64-windows
         key: ${{ runner.os }}-vcpkg
+
     - name: Build dependencies
       if: steps.cache-vcpkg.outputs.cache-hit != 'true'
       shell: powershell
@@ -205,6 +193,7 @@ jobs:
         vcpkg install gtest:x64-windows
         vcpkg install zlib:x64-windows
         vcpkg install boost:x64-windows
+
     - name: Build and test
       shell: powershell
       run: |
@@ -224,7 +213,7 @@ jobs:
         $CUR=(Get-Location).Path
         md build
         cd build
-        cmake -A x64 -DBOOST_ROOT="$env:BOOST_ROOT_1_72_0" -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" $CPPVER "-DCMAKE_CXX_FLAGS=/D_VARIADIC_MAX=10 /EHsc /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING" ..
+        cmake -A x64 -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" $CPPVER "-DCMAKE_CXX_FLAGS=/D_VARIADIC_MAX=10 /EHsc /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING" ..
         if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
         cmake --build . --config Release
         $pathbak="$env:PATH"
