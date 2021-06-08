@@ -100,28 +100,14 @@ jobs:
         if [ ${{ matrix.arch }} == 32 ]; then
           sudo dpkg --add-architecture i386
           sudo apt-get update
-          sudo apt-get install lib32z1-dev
-          sudo apt-get install libpsm-infinipath1:i386
-          sudo apt-get install libopenmpi3:i386
-          sudo apt-get install libboost-mpi1.71.0:i386
-          sudo apt-get install libboost-graph-parallel1.71.0:i386
-          sudo apt-get install libboost-graph-parallel1.71-dev:i386
-          sudo apt-get install gfortran-mod-15:i386
-          sudo apt-get install libevent-dev:i386
-          sudo apt-get install libopenmpi-dev:i386
-          sudo apt-get install mpi-default-dev:i386
-          sudo apt-get install libboost-mpi1.71-dev:i386
-          sudo apt-get install libboost-mpi-python1.71-dev:i386
-          sudo apt-get install python3-dev:i386
-          sudo apt-get install libboost-python1.71-dev:i386
-          sudo apt-get install libboost1.71-all-dev:i386
-          sudo apt-get install libgtest-dev:i386
+          sudo apt-get install aptitude -y
+          sudo aptitude install libboost-all-dev:i386
+          sudo apt-get install g++-multilib
         else
           sudo apt-get update
-          sudo apt-get install libboost1.71-all-dev
-          sudo apt-get install libgtest-dev
+          sudo apt-get install libboost-all-dev
         fi
-        sudo apt-get install g++-multilib valgrind
+        sudo apt-get install valgrind
 
     - name: Build and test
       shell: bash
