@@ -81,8 +81,10 @@ jobs:
           export SANITIZE="-fsanitize=undefined -fno-sanitize-recover=all"
         fi
 
+        export PREFIX_PATH="$HOME/boost-prefix"
+
         # build and test
-        CMAKE_CXX_COMPILER="${CXX}" CMAKE_PREFIX_PATH="$HOME/boost-prefix" CMAKE_CXX_FLAGS="-Werror -g ${SANITIZE}" ${ACTION}
+        CMAKE_CXX_COMPILER="${CXX}" CXXFLAGS="-Werror -g ${SANITIZE}" ${ACTION}
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
 
   linux:
@@ -171,9 +173,10 @@ jobs:
         export API_VERSION="${{ matrix.api }}"
         export CHAR_SIGN="${{ matrix.char_sign }}"
         export X3_PARSE="${{ matrix.x3_parse }}"
+        export PREFIX_PATH="$HOME/zlib-prefix;$HOME/boost-prefix"
 
         # build and test
-        CMAKE_CXX_COMPILER="${CXX}" CMAKE_CXX_FLAGS="-Werror -g ${SANITIZE}" ${ACTION}
+        CMAKE_CXX_COMPILER="${CXX}" CXXFLAGS="-Werror -g ${SANITIZE}" ${ACTION}
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
 
   windows:
@@ -220,7 +223,7 @@ jobs:
         $CUR=(Get-Location).Path
         md build
         cd build
-        cmake -A x64 -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" $CPPVER "-DCMAKE_CXX_FLAGS=/D_VARIADIC_MAX=10 /EHsc /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING" ..
+        cmake -A x64 -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" -DMSGPACK_BUILD_TESTS=ON $CPPVER "-DCMAKE_CXX_FLAGS=/D_VARIADIC_MAX=10 /EHsc /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING" ..
         if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
         cmake --build . --config Release
         $pathbak="$env:PATH"
