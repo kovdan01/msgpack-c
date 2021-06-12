@@ -107,7 +107,7 @@ jobs:
       run: |
         sudo apt-get update
         if [ ${{ matrix.arch }} == 32 ]; then
-          sudo apt-get install g++-multilib
+          sudo apt-get install lib32z1 g++-multilib
         fi
         sudo apt-get install valgrind
 
