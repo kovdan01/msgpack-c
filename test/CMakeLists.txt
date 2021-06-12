@@ -77,8 +77,9 @@ FOREACH (source_file ${check_PROGRAMS})
 
     TARGET_LINK_LIBRARIES (${source_file_we}
         msgpackcxx
-        Boost::unit_test_framework
+        Boost::boost
         Boost::system
+        Boost::unit_test_framework
         Threads::Threads
         PkgConfig::zlib
     )
@@ -105,6 +106,9 @@ ADD_EXECUTABLE (
     multi_file1.cpp multi_file2.cpp
 )
 
-TARGET_LINK_LIBRARIES (multi_file msgpackcxx Boost::boost)
+TARGET_LINK_LIBRARIES (multi_file
+    msgpackcxx
+    Boost::boost
+)
 
 ADD_TEST (multi_file multi_file)

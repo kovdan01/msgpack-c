@@ -1,5 +1,6 @@
 FIND_PACKAGE (Threads REQUIRED)
 
+FIND_PACKAGE (Boost REQUIRED)  # for boost/predef/other/endian.h
 FIND_PACKAGE (Boost COMPONENTS timer)
 
 LIST (APPEND exec_PROGRAMS
@@ -61,6 +62,7 @@ FOREACH (source_file ${with_pthread_PROGRAMS})
     TARGET_LINK_LIBRARIES (${source_file_we} PRIVATE
         msgpackcxx
         Threads::Threads
+        Boost::boost
     )
     IF ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         SET_PROPERTY (TARGET ${source_file_we} APPEND_STRING PROPERTY COMPILE_FLAGS " -Wall -Wextra")
