@@ -100,16 +100,16 @@ jobs:
         char_sign: ["unsigned", "signed"]
         x3_parse: ["OFF"]
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
 
     - name: Install build dependencies
       shell: bash
       run: |
         sudo apt-get update
         if [ ${{ matrix.arch }} == 32 ]; then
-          sudo apt-get install g++-multilib
+          sudo apt-get install g++-multilib -y
         fi
-        sudo apt-get install valgrind
+        sudo apt-get install cmake valgrind -y
 
     - name: Cache boost
       id: cache-boost
@@ -173,7 +173,7 @@ jobs:
         export X3_PARSE="${{ matrix.x3_parse }}"
 
         # build and test
-        CMAKE_CXX_COMPILER="${CXX}" CMAKE_PREFIX_PATH="$HOME/zlib-prefix;$HOME/boost-prefix" CMAKE_CXX_FLAGS="-Werror -g ${SANITIZE}" ${ACTION}
+        CMAKE_CXX_COMPILER="${CXX}" CMAKE_CXX_FLAGS="-Werror -g ${SANITIZE}" ${ACTION}
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
 
   windows:
