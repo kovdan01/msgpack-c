@@ -40,7 +40,10 @@ FOREACH (source_file ${exec_PROGRAMS})
         ${source_file_we}
         ${source_file}
     )
-    TARGET_LINK_LIBRARIES (${source_file_we} PRIVATE msgpackcxx)
+    TARGET_LINK_LIBRARIES (${source_file_we} PRIVATE
+        msgpackcxx
+        Boost::boost
+    )
     IF ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         SET_PROPERTY (TARGET ${source_file_we} APPEND_STRING PROPERTY COMPILE_FLAGS " -Wall -Wextra")
     ENDIF ()
@@ -82,12 +85,12 @@ FOREACH (source_file ${with_boost_lib_PROGRAMS})
         ${source_file_we}
         ${source_file}
     )
-    TARGET_LINK_LIBRARIES (${source_file_we}
+    TARGET_LINK_LIBRARIES (${source_file_we} PRIVATE
         msgpackcxx
         Boost::timer
     )
     IF (NOT MSVC AND NOT APPLE)
-        TARGET_LINK_LIBRARIES (${source_file_we}
+        TARGET_LINK_LIBRARIES (${source_file_we} PRIVATE
             rt
         )
     ENDIF ()
