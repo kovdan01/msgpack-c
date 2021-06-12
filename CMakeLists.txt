@@ -24,39 +24,39 @@ OPTION (MSGPACK_32BIT "32bit compile" OFF)
 SET (CMAKE_CXX_STANDARD_REQUIRED ON)
 
 IF (MSGPACK_USE_X3_PARSE)
-   SET (CMAKE_CXX_STANDARD 14)
-   SET (CMAKE_CXX_FLAGS "-DMSGPACK_USE_X3_PARSE ${CMAKE_CXX_FLAGS}")
+    SET (CMAKE_CXX_STANDARD 14)
+    SET (CMAKE_CXX_FLAGS "-DMSGPACK_USE_X3_PARSE ${CMAKE_CXX_FLAGS}")
 ELSE ()
-   IF (MSGPACK_CXX20)
-      SET (CMAKE_CXX_STANDARD 20)
-   ELSEIF (MSGPACK_CXX17)
-      SET (CMAKE_CXX_STANDARD 17)
-   ELSEIF (MSGPACK_CXX11)
-      SET (CMAKE_CXX_STANDARD 11)
-   ELSE ()
-      IF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-         IF ((CMAKE_CXX_COMPILER_VERSION VERSION_GREATER ${GNUCXX_STD_SUPPORT_VERSION}) OR
-             (CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL   ${GNUCXX_STD_SUPPORT_VERSION}))
-             SET (CMAKE_CXX_FLAGS "-std=c++98 ${CMAKE_CXX_FLAGS}")
-         ENDIF ()
-      ELSEIF ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
-         SET (CMAKE_CXX_FLAGS "-std=c++98 ${CMAKE_CXX_FLAGS}")
-      ELSEIF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-         IF (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 18)
-             SET (CMAKE_CXX_FLAGS "-DMSGPACK_USE_CPP03 ${CMAKE_CXX_FLAGS}")
-         ENDIF ()
-      ENDIF ()
-   ENDIF ()
+    IF (MSGPACK_CXX20)
+        SET (CMAKE_CXX_STANDARD 20)
+    ELSEIF (MSGPACK_CXX17)
+        SET (CMAKE_CXX_STANDARD 17)
+    ELSEIF (MSGPACK_CXX11)
+        SET (CMAKE_CXX_STANDARD 11)
+    ELSE ()
+        IF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+            IF ((CMAKE_CXX_COMPILER_VERSION VERSION_GREATER ${GNUCXX_STD_SUPPORT_VERSION}) OR
+                (CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL   ${GNUCXX_STD_SUPPORT_VERSION}))
+                SET (CMAKE_CXX_FLAGS "-std=c++98 ${CMAKE_CXX_FLAGS}")
+            ENDIF ()
+        ELSEIF ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+            SET (CMAKE_CXX_FLAGS "-std=c++98 ${CMAKE_CXX_FLAGS}")
+        ELSEIF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+            IF (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 18)
+                SET (CMAKE_CXX_FLAGS "-DMSGPACK_USE_CPP03 ${CMAKE_CXX_FLAGS}")
+            ENDIF ()
+        ENDIF ()
+    ENDIF ()
 ENDIF ()
 
 IF (MSGPACK_32BIT)
-   IF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-      SET (CMAKE_CXX_FLAGS "-m32 ${CMAKE_CXX_FLAGS}")
-      SET (CMAKE_EXE_LINKER_FLAGS "-m32 ${CMAKE_EXE_LINKER_FLAGS}")
-   ELSEIF ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
-      SET (CMAKE_CXX_FLAGS "-m32 ${CMAKE_CXX_FLAGS}")
-      SET (CMAKE_EXE_LINKER_FLAGS "-m32 ${CMAKE_EXE_LINKER_FLAGS}")
-   ENDIF ()
+    IF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+        SET (CMAKE_CXX_FLAGS "-m32 ${CMAKE_CXX_FLAGS}")
+        SET (CMAKE_EXE_LINKER_FLAGS "-m32 ${CMAKE_EXE_LINKER_FLAGS}")
+    ELSEIF ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+        SET (CMAKE_CXX_FLAGS "-m32 ${CMAKE_CXX_FLAGS}")
+        SET (CMAKE_EXE_LINKER_FLAGS "-m32 ${CMAKE_EXE_LINKER_FLAGS}")
+    ENDIF ()
 ENDIF ()
 
 OPTION (MSGPACK_BUILD_EXAMPLES "Build msgpack examples." ON)
@@ -65,13 +65,13 @@ SET (Boost_USE_MULTITHREADED      ON)
 SET (Boost_USE_STATIC_RUNTIME    OFF)
 
 IF (MSGPACK_CHAR_SIGN)
-   SET (CMAKE_CXX_FLAGS "-f${MSGPACK_CHAR_SIGN}-char ${CMAKE_CXX_FLAGS}")
+    SET (CMAKE_CXX_FLAGS "-f${MSGPACK_CHAR_SIGN}-char ${CMAKE_CXX_FLAGS}")
 ENDIF ()
 
 IF (MSGPACK_DEFAULT_API_VERSION)
-   SET (CMAKE_CXX_FLAGS "-DMSGPACK_DEFAULT_API_VERSION=${MSGPACK_DEFAULT_API_VERSION} ${CMAKE_CXX_FLAGS}")
+    SET (CMAKE_CXX_FLAGS "-DMSGPACK_DEFAULT_API_VERSION=${MSGPACK_DEFAULT_API_VERSION} ${CMAKE_CXX_FLAGS}")
 ELSE ()
-   SET (CMAKE_CXX_FLAGS "-DMSGPACK_DEFAULT_API_VERSION=3 ${CMAKE_CXX_FLAGS}")
+    SET (CMAKE_CXX_FLAGS "-DMSGPACK_DEFAULT_API_VERSION=3 ${CMAKE_CXX_FLAGS}")
 ENDIF ()
 
 IF (MSGPACK_BUILD_TESTS)
@@ -110,14 +110,13 @@ TARGET_INCLUDE_DIRECTORIES (msgpackcxx
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
-        $<INSTALL_INTERFACE:include>
 )
 
 # enable regression testing
 IF ("${MSGPACK_FUZZ_REGRESSION}" STREQUAL "ON" AND "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
-   enable_testing ()
-   ADD_SUBDIRECTORY (fuzz)
-   SET (MSGPACK_BUILD_EXAMPLES OFF)
+    ENABLE_TESTING ()
+    ADD_SUBDIRECTORY (fuzz)
+    SET (MSGPACK_BUILD_EXAMPLES OFF)
 ENDIF ()
 
 IF (MSGPACK_GEN_COVERAGE)
@@ -151,11 +150,6 @@ IF (MSGPACK_BUILD_EXAMPLES)
     ADD_SUBDIRECTORY (example)
 ENDIF ()
 
-FOREACH (file ${msgpackc_HEADERS})
-    GET_FILENAME_COMPONENT (dir ${file} PATH)
-    INSTALL (FILES ${file} DESTINATION ${CMAKE_INSTALL_PREFIX}/${dir})
-ENDFOREACH ()
-
 # Doxygen
 FIND_PACKAGE (Doxygen)
 IF (DOXYGEN_FOUND)
@@ -180,3 +174,60 @@ IF (DOXYGEN_FOUND)
         VERBATIM
     )
 ENDIF ()
+
+SET_TARGET_PROPERTIES (msgpackcxx PROPERTIES
+    EXPORT_NAME msgpack::msgpackcxx
+)
+
+# Install library.
+INSTALL (TARGETS msgpackcxx
+         EXPORT msgpackcxx-targets
+         COMPONENT msgpack::msgpackcxx
+         # This provides include directory in exported target
+         # relative to prefix in single directory we've put everything in.
+         INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+)
+
+# Install headers from source tree.
+INSTALL (DIRECTORY include/
+         TYPE INCLUDE
+         COMPONENT msgpack::msgpackcxx
+)
+
+INCLUDE (CMakePackageConfigHelpers)
+
+SET (extra_version_file_args ARCH_INDEPENDENT)
+SET (cmake_config_path "lib/cmake/msgpack")
+
+# Configure the main package file from source tree.
+configure_package_config_file(msgpackcxx-config.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/msgpackcxx-config.cmake"
+    INSTALL_DESTINATION "${cmake_config_path}"
+)
+
+# Write package version file.
+write_basic_package_version_file(msgpackcxx-config-version.cmake
+    VERSION ${VERSION}
+    COMPATIBILITY SameMajorVersion
+    ${extra_version_file_args}
+)
+
+# Install the generated package version file and the main package file.
+INSTALL (FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/msgpackcxx-config.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/msgpackcxx-config-version.cmake"
+    DESTINATION "${cmake_config_path}"
+    COMPONENT msgpack::msgpackcxx
+)
+
+# This installs package in install tree for using installed targets.
+INSTALL (
+    EXPORT msgpackcxx-targets
+    FILE msgpackcxx-targets.cmake
+    DESTINATION "${cmake_config_path}"
+    COMPONENT msgpack::msgpackcxx
+)
+
+INCLUDE (CMakePackageConfigHelpers)
+
+SET (CMAKE_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/msgpack")
