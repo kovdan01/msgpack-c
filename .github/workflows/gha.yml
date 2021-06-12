@@ -20,8 +20,16 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Install boost
-      run: brew install boost
+    - name: Cache boost
+      id: cache-boost
+      uses: actions/cache@v1
+      with:
+        path: ~/boost-prefix/
+        key: ${{ runner.os }}-boost-1-72-0-20210612
+
+    - name: Build boost
+      if: steps.cache-boost.outputs.cache-hit != 'true'
+      run: ./.github/depends/boost.sh -b 64 -t clang -p ~/boost-prefix/
 
     - name: Build and test
       env:
@@ -74,7 +82,7 @@ jobs:
         fi
 
         # build and test
-        CMAKE_CXX_COMPILER="${CXX}" CMAKE_PREFIX_PATH="$(brew --prefix)/Cellar/" CXXFLAGS="-Werror -g ${SANITIZE}" ${ACTION}
+        CMAKE_CXX_COMPILER="${CXX}" CMAKE_PREFIX_PATH="~/boost-prefix" CXXFLAGS="-Werror -g ${SANITIZE}" ${ACTION}
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
 
   linux:
@@ -97,17 +105,22 @@ jobs:
     - name: Install build dependencies
       shell: bash
       run: |
+        sudo apt-get update
         if [ ${{ matrix.arch }} == 32 ]; then
-          sudo dpkg --add-architecture i386
-          sudo apt-get update
-          sudo apt-get install aptitude -y
-          sudo aptitude install libboost-all-dev:i386
           sudo apt-get install g++-multilib
-        else
-          sudo apt-get update
-          sudo apt-get install libboost-all-dev
         fi
         sudo apt-get install valgrind
+
+    - name: Cache boost
+      id: cache-boost
+      uses: actions/cache@v1
+      with:
+        path: ~/boost-prefix/
+        key: ${{ runner.os }}-boost-${{ matrix.arch }}-1-72-0-20210612
+
+    - name: Build boost
+      if: steps.cache-boost.outputs.cache-hit != 'true'
+      run: ./.github/depends/boost.sh -b ${{ matrix.arch }} -t gcc -p ~/boost-prefix/
 
     - name: Build and test
       shell: bash
@@ -140,7 +153,7 @@ jobs:
         export X3_PARSE="${{ matrix.x3_parse }}"
 
         # build and test
-        CMAKE_CXX_COMPILER="${CXX}" CXXFLAGS="-Werror -g ${SANITIZE}" ${ACTION}
+        CMAKE_CXX_COMPILER="${CXX}" CMAKE_PREFIX_PATH="~/boost-prefix/" CXXFLAGS="-Werror -g ${SANITIZE}" ${ACTION}
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
 
   windows:

@@ -5,19 +5,20 @@ usage()
   cat <<EOL
   -b   - 32-bit or 64-bit library, maybe 32, 64 or both
   -t   - the toolset, maybe gcc, clang or both
+  -p   - installation prefix
 EOL
 }
 
 build_boost()
 {
-  BASE=`pwd`/..
-  ./b2 -j4 --toolset=$1 --prefix=${BASE}/usr --libdir="${BASE}/usr/$1/lib$2" --with-chrono --with-context --with-filesystem --with-system --with-timer address-model=$2 install
+  mkdir $3
+  ./b2 -j4 --toolset=$1 --prefix=$3 --with-test --with-headers --with-chrono --with-context --with-filesystem --with-system --with-timer address-model=$2 install
 }
 
 bit="64"
 toolset="gcc"
 
-while getopts "b:t:" c; do
+while getopts "b:t:p:" c; do
   case "$c" in
     b)
       bit="$OPTARG"
@@ -27,6 +28,8 @@ while getopts "b:t:" c; do
       toolset="$OPTARG"
       [ "$toolset" != "gcc" ] && [ "$toolset" != "clang" ] && [ "$toolset" != "both" ] && usage && exit 1
       ;;
+    p)
+      prefix="$OPTARG"
     ?*)
       echo "invalid arguments." && exit 1
       ;;
@@ -41,10 +44,10 @@ cd boost_1_72_0
 build()
 {
   if [ "$bit" = "both" ]; then
-    build_boost $1 32
-    build_boost $1 64
+    build_boost $1 32 $prefix
+    build_boost $1 64 $prefix
   else
-    build_boost $1 $bit
+    build_boost $1 $bit $prefix
   fi
 }
 
