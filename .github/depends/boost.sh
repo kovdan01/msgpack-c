@@ -30,6 +30,7 @@ while getopts "b:t:p:" c; do
       ;;
     p)
       prefix="$OPTARG"
+      ;;
     ?*)
       echo "invalid arguments." && exit 1
       ;;
