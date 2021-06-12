@@ -132,7 +132,7 @@ jobs:
         key: ${{ runner.os }}-zlib-${{ matrix.arch }}-1-2-11-20210612
 
     - name: Build zlib
-      if: steps.cache-boost.outputs.cache-hit != 'true'
+      if: steps.cache-zlib.outputs.cache-hit != 'true'
       run: |
         wget https://zlib.net/zlib-1.2.11.tar.gz
         tar -xf zlib-1.2.11.tar.gz
