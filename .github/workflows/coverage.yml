@@ -20,7 +20,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install g++-10-multilib lcov -y
-        ./.github/depends/set_gcc_10.sh
+        ./ci/set_gcc_10.sh
 
     - name: Cache boost
       id: cache-boost
@@ -60,7 +60,7 @@ jobs:
             -B build \
             -S . || exit 1
         cmake --build build --target all || exit 1
-        ctest || exit 1
+        ctest --test-dir build || exit 1
 
     - name: Upload coverage to Codecov
       working-directory: build

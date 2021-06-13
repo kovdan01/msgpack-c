@@ -38,7 +38,12 @@ then
     then
         exit $ret
     fi
-    cat memcheck.log | grep "Memory Leak" > /dev/null || exit 1
+    cat memcheck.log | grep "Memory Leak" > /dev/null
+    ret=$?
+    if [ $ret -eq 0 ]
+    then
+        exit 1
+    fi
 fi
 
 if [ "${ARCH}" != "32" ]
