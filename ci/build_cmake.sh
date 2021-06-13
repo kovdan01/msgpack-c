@@ -23,7 +23,7 @@ cmake \
     -D CMAKE_CXX_FLAGS="${CXXFLAGS} ${ARCH_FLAG}" \
     -D CMAKE_INSTALL_PREFIX=`pwd`/prefix \
     -B build \
-    -S .. || exit 1
+    -S . || exit 1
 
 cmake --build build --target install || exit 1
 
