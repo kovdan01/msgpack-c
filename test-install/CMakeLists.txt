@@ -7,4 +7,4 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(msgpack REQUIRED)
 
 add_executable(test-install simple.cpp)
-target_link_libraries(test-install PRIVATE msgpack::cxx)
+target_link_libraries(test-install PRIVATE msgpackc-cxx)
