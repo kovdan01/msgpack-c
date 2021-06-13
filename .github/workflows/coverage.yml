@@ -20,6 +20,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install g++-10-multilib lcov -y
+        ./.github/depends/set_gcc_10.sh
 
     - name: Cache boost
       id: cache-boost

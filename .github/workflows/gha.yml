@@ -112,6 +112,7 @@ jobs:
         if [ ${{ matrix.arch }} == 32 ]; then
           sudo apt-get install g++-10-multilib -y
         fi
+        ./.github/depends/set_gcc_10.sh
 
     - name: Cache boost
       id: cache-boost
@@ -122,8 +123,6 @@ jobs:
 
     - name: Build boost
       if: steps.cache-boost.outputs.cache-hit != 'true'
-      env:
-        CXX: ${{ matrix.compiler }}
       run: ./.github/depends/boost.sh -b ${{ matrix.arch }} -t gcc -p $HOME/boost-prefix/
 
     - name: Cache zlib
