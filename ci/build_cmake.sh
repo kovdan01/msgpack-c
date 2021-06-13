@@ -48,7 +48,7 @@ then
     cmake -DCMAKE_PREFIX_PATH=`pwd`/../prefix . || exit 1
     cmake --build . --target all                || exit 1
 
-    ./simple || exit 1
+    ./test-install || exit 1
 fi
 
 exit 0

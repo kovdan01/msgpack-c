@@ -122,6 +122,8 @@ jobs:
 
     - name: Build boost
       if: steps.cache-boost.outputs.cache-hit != 'true'
+      env:
+        CXX: ${{ matrix.compiler }}
       run: ./.github/depends/boost.sh -b ${{ matrix.arch }} -t gcc -p $HOME/boost-prefix/
 
     - name: Cache zlib
