@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE(push_finalizer_unique_ptr)
 BOOST_AUTO_TEST_CASE(allocate_no_align)
 {
     msgpack::zone z;
-    char* buf1 = (char*)z.allocate_no_align(4);
-    char* buf2 = (char*)z.allocate_no_align(4);
-    BOOST_CHECK_EQUAL(buf1+4, buf2);
+    char* buf1 = reinterpret_cast<char*>(z.allocate_no_align(4));
+    char* buf2 = reinterpret_cast<char*>(z.allocate_no_align(4));
+    BOOST_CHECK_EQUAL(reinterpret_cast<void*>(buf1+4), reinterpret_cast<void*>(buf2));
 }
