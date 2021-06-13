@@ -13,7 +13,7 @@ else
 fi
 
 cmake \
-    -D CMAKE_PREFIX_PATH="$PREFIX_PATH" \
+    -D CMAKE_PREFIX_PATH="$HOME/boost-prefix;$HOME/zlib-prefix" \
     -D MSGPACK_BUILD_TESTS=ON \
     -D ${MSGPACK_CXX_VERSION} \
     -D MSGPACK_32BIT=${BIT32} \
@@ -50,8 +50,8 @@ if [ "${ARCH}" != "32" ]
 then
     cd test-install    || exit 1
 
-    cmake -DCMAKE_PREFIX_PATH=`pwd`/../prefix . || exit 1
-    cmake --build . --target all                || exit 1
+    cmake -DCMAKE_PREFIX_PATH="`pwd`/../prefix;$HOME/boost-prefix" . || exit 1
+    cmake --build . --target all || exit 1
 
     ./test-install || exit 1
 fi
