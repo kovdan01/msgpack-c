@@ -1,6 +1,4 @@
 IF (MSGPACK_CXX11 OR MSGPACK_CXX17)
-    FIND_PACKAGE (Boost REQUIRED)  # for boost/predef/other/endian.h
-
     LIST (APPEND exec_PROGRAMS
         container.cpp
         non_def_con_class.cpp
@@ -19,8 +17,7 @@ IF (MSGPACK_CXX11 OR MSGPACK_CXX17)
             ${source_file}
         )
         TARGET_LINK_LIBRARIES (${source_file_we} PRIVATE
-            msgpackcxx
-            Boost::boost
+            msgpack::msgpackcxx
         )
         IF ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
             SET_PROPERTY (TARGET ${source_file_we} APPEND_STRING PROPERTY COMPILE_FLAGS " -Wall -Wextra")

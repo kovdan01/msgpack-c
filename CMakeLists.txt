@@ -74,16 +74,6 @@ ELSE ()
     SET (CMAKE_CXX_FLAGS "-DMSGPACK_DEFAULT_API_VERSION=3 ${CMAKE_CXX_FLAGS}")
 ENDIF ()
 
-IF (MSGPACK_BUILD_TESTS)
-    ENABLE_TESTING ()
-    # MEMORYCHECK_COMMAND_OPTIONS needs to place prior to CTEST_MEMORYCHECK_COMMAND
-    SET (MEMORYCHECK_COMMAND_OPTIONS "--leak-check=full --show-leak-kinds=definite,possible --error-exitcode=1")
-    FIND_PROGRAM (CTEST_MEMORYCHECK_COMMAND NAMES valgrind)
-    INCLUDE (Dart)
-    ADD_SUBDIRECTORY (test)
-ENDIF ()
-
-
 IF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     IF (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.1)
         INCLUDE (CheckCXXSourceCompiles)
@@ -101,16 +91,29 @@ int main(int argc, char * argv[])
     ENDIF ()
 ENDIF ()
 
+FIND_PACKAGE (Boost REQUIRED)
 
 INCLUDE (Files.cmake)
 
 ADD_LIBRARY (msgpackcxx INTERFACE)
+ADD_LIBRARY (msgpack::msgpackcxx ALIAS msgpackcxx)
 
 TARGET_INCLUDE_DIRECTORIES (msgpackcxx
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
 )
+
+TARGET_LINK_LIBRARIES (msgpackcxx INTERFACE Boost::boost)
+
+IF (MSGPACK_BUILD_TESTS)
+    ENABLE_TESTING ()
+    # MEMORYCHECK_COMMAND_OPTIONS needs to place prior to CTEST_MEMORYCHECK_COMMAND
+    SET (MEMORYCHECK_COMMAND_OPTIONS "--leak-check=full --show-leak-kinds=definite,possible --error-exitcode=1")
+    FIND_PROGRAM (CTEST_MEMORYCHECK_COMMAND NAMES valgrind)
+    INCLUDE (Dart)
+    ADD_SUBDIRECTORY (test)
+ENDIF ()
 
 # enable regression testing
 IF ("${MSGPACK_FUZZ_REGRESSION}" STREQUAL "ON" AND "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")

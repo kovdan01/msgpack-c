@@ -1,7 +1,6 @@
 FIND_PACKAGE (Threads REQUIRED)
 FIND_PACKAGE (PkgConfig REQUIRED)
 pkg_check_modules(zlib REQUIRED IMPORTED_TARGET zlib)
-FIND_PACKAGE (Boost REQUIRED)
 
 LIST (APPEND exec_PROGRAMS
     msgpack_variant_capitalize.cpp
@@ -22,9 +21,8 @@ FOREACH (source_file ${exec_PROGRAMS})
         ${source_file}
     )
     TARGET_LINK_LIBRARIES (${source_file_we}
-        msgpackcxx
+        msgpack::msgpackcxx
         Threads::Threads
-        Boost::boost
         PkgConfig::zlib
     )
     IF ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")

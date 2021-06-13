@@ -94,7 +94,7 @@ jobs:
       fail-fast: false
       matrix:
         action: ["ci/build_cmake.sh"]
-        compiler: ["g++", "clang++"]
+        compiler: ["g++-10", "clang++"]
         arch: [32, 64]
         cxx: [0, 11, 17, 20]  # 0 stands for C++03 or lower
         sanitize: ["no", "undefined"]
@@ -108,10 +108,10 @@ jobs:
       shell: bash
       run: |
         sudo apt-get update
+        sudo apt-get install g++-10 cmake valgrind -y
         if [ ${{ matrix.arch }} == 32 ]; then
-          sudo apt-get install g++-multilib -y
+          sudo apt-get install g++-10-multilib -y
         fi
-        sudo apt-get install cmake valgrind -y
 
     - name: Cache boost
       id: cache-boost

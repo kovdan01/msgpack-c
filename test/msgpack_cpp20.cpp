@@ -7,6 +7,7 @@
 #include "config.h"
 #endif
 
+// Some compilers still do not set __cplusplus to 202002
 #if !defined(MSGPACK_USE_CPP03) && __cplusplus > 201703
 
 #if MSGPACK_HAS_INCLUDE(<span>)
