@@ -1,20 +1,7 @@
 #!/bin/bash
 
-mkdir build
-
-ret=$?
-if [ $ret -ne 0 ]
-then
-    exit $ret
-fi
-
-cd build
-
-ret=$?
-if [ $ret -ne 0 ]
-then
-    exit $ret
-fi
+mkdir build  || exit 1
+mkdir prefix || exit 1
 
 if [ "${ARCH}" == "32" ]
 then
@@ -25,37 +12,22 @@ else
     export ARCH_FLAG="-m64"
 fi
 
-cmake -DCMAKE_PREFIX_PATH="$PREFIX_PATH" -DMSGPACK_BUILD_TESTS=ON -D${MSGPACK_CXX_VERSION} -DMSGPACK_32BIT=${BIT32} -DMSGPACK_CHAR_SIGN=${CHAR_SIGN} -DMSGPACK_DEFAULT_API_VERSION=${API_VERSION} -DMSGPACK_USE_X3_PARSE=${X3_PARSE} -DCMAKE_CXX_FLAGS="${CXXFLAGS} ${ARCH_FLAG}" ..
+cmake \
+    -D CMAKE_PREFIX_PATH="$PREFIX_PATH" \
+    -D MSGPACK_BUILD_TESTS=ON \
+    -D ${MSGPACK_CXX_VERSION} \
+    -D MSGPACK_32BIT=${BIT32} \
+    -D MSGPACK_CHAR_SIGN=${CHAR_SIGN} \
+    -D MSGPACK_DEFAULT_API_VERSION=${API_VERSION} \
+    -D MSGPACK_USE_X3_PARSE=${X3_PARSE} \
+    -D CMAKE_CXX_FLAGS="${CXXFLAGS} ${ARCH_FLAG}" \
+    -D CMAKE_INSTALL_PREFIX=`pwd`/prefix \
+    -B build \
+    -S .. || exit 1
 
-ret=$?
-if [ $ret -ne 0 ]
-then
-    exit $ret
-fi
+cmake --build build --target install || exit 1
 
-make
-
-ret=$?
-if [ $ret -ne 0 ]
-then
-    exit $ret
-fi
-
-ctest -VV
-
-ret=$?
-if [ $ret -ne 0 ]
-then
-    exit $ret
-fi
-
-make install DESTDIR=`pwd`/install
-
-ret=$?
-if [ $ret -ne 0 ]
-then
-    exit $ret
-fi
+ctest -VV --test-dir build || exit 1
 
 if [ "${ARCH}" != "32" ] && [ `uname` = "Linux" ]
 then
@@ -66,47 +38,18 @@ then
     then
         exit $ret
     fi
-    cat memcheck.log | grep "Memory Leak" > /dev/null
-    ret=$?
-    if [ $ret -eq 0 ]
-    then
-        exit 1
-    fi
+    cat memcheck.log | grep "Memory Leak" > /dev/null || exit 1
 fi
 
 if [ "${ARCH}" != "32" ]
 then
-    mkdir install-test
+    mkdir install-test || exit 1
+    cd test-install    || exit 1
 
-    ret=$?
-    if [ $ret -ne 0 ]
-    then
-        exit $ret
-    fi
+    cmake -DCMAKE_PREFIX_PATH=`pwd`/../prefix .. || exit 1
+    cmake --build . --target all                 || exit 1
 
-    cd install-test
-
-    ret=$?
-    if [ $ret -ne 0 ]
-    then
-        exit $ret
-    fi
-
-    ${CXX} ../../example/cpp03/simple.cpp -o simple -I `pwd`/../install/usr/local/include
-
-    ret=$?
-    if [ $ret -ne 0 ]
-    then
-        exit $ret
-    fi
-
-    ./simple
-
-    ret=$?
-    if [ $ret -ne 0 ]
-    then
-        exit $ret
-    fi
+    ./simple || exit 1
 fi
 
 exit 0

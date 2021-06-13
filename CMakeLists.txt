@@ -102,6 +102,7 @@ TARGET_INCLUDE_DIRECTORIES (msgpackcxx
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+        $<INSTALL_INTERFACE:include>
 )
 
 TARGET_LINK_LIBRARIES (msgpackcxx INTERFACE Boost::boost)
@@ -200,16 +201,18 @@ INSTALL (DIRECTORY include/
 INCLUDE (CMakePackageConfigHelpers)
 
 SET (extra_version_file_args ARCH_INDEPENDENT)
-SET (cmake_config_path "lib/cmake/msgpack")
+SET (cmake_config_path "lib/cmake/msgpackcxx")
 
 # Configure the main package file from source tree.
-configure_package_config_file(msgpackcxx-config.cmake.in
+CONFIGURE_PACKAGE_CONFIG_FILE (
+    msgpackcxx-config.cmake.in
     "${CMAKE_CURRENT_BINARY_DIR}/msgpackcxx-config.cmake"
     INSTALL_DESTINATION "${cmake_config_path}"
 )
 
 # Write package version file.
-write_basic_package_version_file(msgpackcxx-config-version.cmake
+WRITE_BASIC_PACKAGE_VERSION_FILE (
+    msgpackcxx-config-version.cmake
     VERSION ${VERSION}
     COMPATIBILITY SameMajorVersion
     ${extra_version_file_args}
@@ -230,7 +233,3 @@ INSTALL (
     DESTINATION "${cmake_config_path}"
     COMPONENT msgpack::msgpackcxx
 )
-
-INCLUDE (CMakePackageConfigHelpers)
-
-SET (CMAKE_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/msgpack")
