@@ -48,15 +48,15 @@ jobs:
       run: |
         mkdir build
         cmake \
-            -DMSGPACK_CXX20=ON \
-            -DMSGPACK_32BIT=OFF \
-            -DMSGPACK_CHAR_SIGN=signed \
-            -DMSGPACK_USE_X3_PARSE=ON \
-            -DMSGPACK_BUILD_EXAMPLES=ON \
-            -DMSGPACK_BUILD_TESTS=ON \
-            -DCMAKE_BUILD_TYPE=Debug \
-            -DMSGPACK_GEN_COVERAGE=ON \
-            -DCMAKE_PREFIX_PATH="$HOME/zlib-prefix;$HOME/boost-prefix" \
+            -D MSGPACK_CXX20=ON \
+            -D MSGPACK_32BIT=OFF \
+            -D MSGPACK_CHAR_SIGN=signed \
+            -D MSGPACK_USE_X3_PARSE=ON \
+            -D MSGPACK_BUILD_EXAMPLES=ON \
+            -D MSGPACK_BUILD_TESTS=ON \
+            -D CMAKE_BUILD_TYPE=Debug \
+            -D MSGPACK_GEN_COVERAGE=ON \
+            -D CMAKE_PREFIX_PATH="$HOME/zlib-prefix;$HOME/boost-prefix" \
             -B build \
             -S . || exit 1
         cmake --build build --target all || exit 1
