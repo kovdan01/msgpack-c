@@ -96,7 +96,7 @@ jobs:
         action: ["ci/build_cmake.sh"]
         compiler: ["g++-10", "clang++-10"]
         arch: [32, 64]
-        cxx: [0, 11, 17, 20]  # 0 stands for C++03 or lower
+        cxx: [98, 11, 17, 20]  # 0 stands for C++03 or lower
         sanitize: ["no", "undefined"]
         api: [1, 2, 3]
         char_sign: ["unsigned", "signed"]
@@ -118,7 +118,7 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ~/boost-prefix/
-        key: ${{ runner.os }}-boost-${{ matrix.arch }}-1-76-0-20210612
+        key: ${{ runner.os }}-boost-${{ matrix.arch }}-1-76-0-20210613
 
     - name: Build boost
       if: steps.cache-boost.outputs.cache-hit != 'true'
@@ -129,20 +129,11 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ~/zlib-prefix/
-        key: ${{ runner.os }}-zlib-${{ matrix.arch }}-1-2-11-20210612
+        key: ${{ runner.os }}-zlib-${{ matrix.arch }}-1-2-11-20210613
 
     - name: Build zlib
       if: steps.cache-zlib.outputs.cache-hit != 'true'
-      run: |
-        wget https://zlib.net/zlib-1.2.11.tar.gz
-        tar -xf zlib-1.2.11.tar.gz
-        cd zlib-1.2.11
-
-        prefix=$HOME/zlib-prefix
-        mkdir $prefix
-
-        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_C_FLAGS="-m${{ matrix.arch }}" -DCMAKE_SHARED_LINKER_FLAGS="-m${{ matrix.arch }}" .
-        cmake --build . --target install
+      run: ./.github/depends/zlib.sh -b ${{ matrix.arch }} -p $HOME/zlib-prefix/
 
     - name: Build and test
       shell: bash
@@ -153,7 +144,7 @@ jobs:
         export CXX="${{ matrix.compiler }}"
         export ARCH="${{ matrix.arch }}"
 
-        if [ "${{ matrix.cxx }}" == "0" ]; then
+        if [ "${{ matrix.cxx }}" == "98" ]; then
           export MSGPACK_CXX_VERSION="MSGPACK_CXX11=OFF"
         elif [ "${{ matrix.cxx }}" == "11" ]; then
           export MSGPACK_CXX_VERSION="MSGPACK_CXX11=ON"
@@ -184,7 +175,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        pattern: [0, 11, 17, 20]
+        pattern: [98, 11, 17, 20]
     steps:
     - uses: actions/checkout@v1
 
@@ -216,7 +207,7 @@ jobs:
         if (${{ matrix.pattern }} -eq 11) {
           $CPPVER="-DMSGPACK_CXX11=ON"
         }
-        if (${{ matrix.pattern }} -eq 0) {
+        if (${{ matrix.pattern }} -eq 98) {
           $CPPVER="-DMSGPACK_CXX11=OFF"
         }
 

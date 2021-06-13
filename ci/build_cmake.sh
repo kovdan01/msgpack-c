@@ -31,7 +31,7 @@ ctest -VV --test-dir build || exit 1
 
 if [ "${ARCH}" != "32" ] && [ `uname` = "Linux" ]
 then
-    ctest -T memcheck | tee memcheck.log
+    ctest -T memcheck --test-dir build | tee memcheck.log
 
     ret=${PIPESTATUS[0]}
     if [ $ret -ne 0 ]
@@ -43,11 +43,10 @@ fi
 
 if [ "${ARCH}" != "32" ]
 then
-    mkdir install-test || exit 1
     cd test-install    || exit 1
 
-    cmake -DCMAKE_PREFIX_PATH=`pwd`/../prefix .. || exit 1
-    cmake --build . --target all                 || exit 1
+    cmake -DCMAKE_PREFIX_PATH=`pwd`/../prefix . || exit 1
+    cmake --build . --target all                || exit 1
 
     ./simple || exit 1
 fi

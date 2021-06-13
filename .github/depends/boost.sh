@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 usage()
 {
@@ -11,12 +11,25 @@ EOL
 
 build_boost()
 {
-  mkdir $3
-  ./b2 -j4 --toolset=$1 --prefix=$3 --with-test --with-headers --with-chrono --with-context --with-filesystem --with-system --with-timer address-model=$2 install
+  mkdir $3 || exit 1
+  ./b2 \
+      -j4 \
+      --toolset=$1 \
+      --prefix=$3 \
+      --with-test \
+      --with-headers \
+      --with-chrono \
+      --with-context \
+      --with-filesystem \
+      --with-system \
+      --with-timer \
+      address-model=$2 \
+      install || exit 1
 }
 
 bit="64"
 toolset="gcc"
+prefix="$HOME/boost-prefix"
 
 while getopts "b:t:p:" c; do
   case "$c" in
@@ -37,10 +50,10 @@ while getopts "b:t:p:" c; do
   esac
 done
 
-wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.bz2
-tar xf boost_1_76_0.tar.bz2
+wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.bz2 || exit 1
+tar xf boost_1_76_0.tar.bz2 || exit 1
 cd boost_1_76_0
-./bootstrap.sh
+./bootstrap.sh || exit 1
 
 build()
 {
