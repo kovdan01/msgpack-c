@@ -40,7 +40,7 @@ FOREACH (source_file ${exec_PROGRAMS})
         ${source_file}
     )
     TARGET_LINK_LIBRARIES (${source_file_we} PRIVATE
-        msgpack::msgpackcxx
+        msgpack::cxx
     )
     IF ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         SET_PROPERTY (TARGET ${source_file_we} APPEND_STRING PROPERTY COMPILE_FLAGS " -Wall -Wextra")
@@ -61,7 +61,7 @@ FOREACH (source_file ${with_pthread_PROGRAMS})
         ${source_file}
     )
     TARGET_LINK_LIBRARIES (${source_file_we} PRIVATE
-        msgpack::msgpackcxx
+        msgpack::cxx
         Threads::Threads
     )
     IF ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -83,7 +83,7 @@ FOREACH (source_file ${with_boost_lib_PROGRAMS})
         ${source_file}
     )
     TARGET_LINK_LIBRARIES (${source_file_we} PRIVATE
-        msgpack::msgpackcxx
+        msgpack::cxx
         Boost::timer
     )
     IF (NOT MSVC AND NOT APPLE)

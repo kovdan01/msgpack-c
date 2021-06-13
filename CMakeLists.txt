@@ -25,16 +25,16 @@ SET (CMAKE_CXX_STANDARD_REQUIRED ON)
 
 IF (MSGPACK_USE_X3_PARSE)
     SET (CMAKE_CXX_FLAGS "-DMSGPACK_USE_X3_PARSE ${CMAKE_CXX_FLAGS}")
+ENDIF ()
+
+IF (MSGPACK_CXX20)
+    SET (CMAKE_CXX_STANDARD 20)
+ELSEIF (MSGPACK_CXX17)
+    SET (CMAKE_CXX_STANDARD 17)
+ELSEIF (MSGPACK_CXX11)
+    SET (CMAKE_CXX_STANDARD 11)
 ELSE ()
-    IF (MSGPACK_CXX20)
-        SET (CMAKE_CXX_STANDARD 20)
-    ELSEIF (MSGPACK_CXX17)
-        SET (CMAKE_CXX_STANDARD 17)
-    ELSEIF (MSGPACK_CXX11)
-        SET (CMAKE_CXX_STANDARD 11)
-    ELSE ()
-        SET (CMAKE_CXX_STANDARD 98)
-    ENDIF ()
+    SET (CMAKE_CXX_STANDARD 98)
 ENDIF ()
 
 IF (MSGPACK_32BIT)
@@ -83,17 +83,17 @@ FIND_PACKAGE (Boost REQUIRED)
 
 INCLUDE (Files.cmake)
 
-ADD_LIBRARY (msgpackcxx INTERFACE)
-ADD_LIBRARY (msgpack::msgpackcxx ALIAS msgpackcxx)
+ADD_LIBRARY (msgpackc-cxx INTERFACE)
+ADD_LIBRARY (msgpack::cxx ALIAS msgpackc-cxx)
 
-TARGET_INCLUDE_DIRECTORIES (msgpackcxx
+TARGET_INCLUDE_DIRECTORIES (msgpackc-cxx
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
         $<INSTALL_INTERFACE:include>
 )
 
-TARGET_LINK_LIBRARIES (msgpackcxx INTERFACE Boost::boost)
+TARGET_LINK_LIBRARIES (msgpackc-cxx INTERFACE Boost::boost)
 
 IF (MSGPACK_BUILD_TESTS)
     ENABLE_TESTING ()
@@ -167,14 +167,14 @@ IF (DOXYGEN_FOUND)
     )
 ENDIF ()
 
-SET_TARGET_PROPERTIES (msgpackcxx PROPERTIES
-    EXPORT_NAME msgpack::msgpackcxx
+SET_TARGET_PROPERTIES (msgpackc-cxx PROPERTIES
+    EXPORT_NAME msgpack::cxx
 )
 
 # Install library.
-INSTALL (TARGETS msgpackcxx
-         EXPORT msgpackcxx-targets
-         COMPONENT msgpack::msgpackcxx
+INSTALL (TARGETS msgpackc-cxx
+         EXPORT msgpackc-cxx-targets
+         COMPONENT msgpack::cxx
          # This provides include directory in exported target
          # relative to prefix in single directory we've put everything in.
          INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
@@ -183,24 +183,24 @@ INSTALL (TARGETS msgpackcxx
 # Install headers from source tree.
 INSTALL (DIRECTORY include/
          TYPE INCLUDE
-         COMPONENT msgpack::msgpackcxx
+         COMPONENT msgpack::cxx
 )
 
 INCLUDE (CMakePackageConfigHelpers)
 
 SET (extra_version_file_args ARCH_INDEPENDENT)
-SET (cmake_config_path "lib/cmake/msgpackcxx")
+SET (cmake_config_path "lib/cmake/msgpackc-cxx")
 
 # Configure the main package file from source tree.
 CONFIGURE_PACKAGE_CONFIG_FILE (
-    msgpackcxx-config.cmake.in
-    "${CMAKE_CURRENT_BINARY_DIR}/msgpackcxx-config.cmake"
+    msgpack-config.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/msgpack-config.cmake"
     INSTALL_DESTINATION "${cmake_config_path}"
 )
 
 # Write package version file.
 WRITE_BASIC_PACKAGE_VERSION_FILE (
-    msgpackcxx-config-version.cmake
+    msgpack-config-version.cmake
     VERSION ${VERSION}
     COMPATIBILITY SameMajorVersion
     ${extra_version_file_args}
@@ -208,16 +208,16 @@ WRITE_BASIC_PACKAGE_VERSION_FILE (
 
 # Install the generated package version file and the main package file.
 INSTALL (FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/msgpackcxx-config.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/msgpackcxx-config-version.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/msgpack-config.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/msgpack-config-version.cmake"
     DESTINATION "${cmake_config_path}"
-    COMPONENT msgpack::msgpackcxx
+    COMPONENT msgpack::cxx
 )
 
 # This installs package in install tree for using installed targets.
 INSTALL (
-    EXPORT msgpackcxx-targets
-    FILE msgpackcxx-targets.cmake
+    EXPORT msgpackc-cxx-targets
+    FILE msgpackc-cxx-targets.cmake
     DESTINATION "${cmake_config_path}"
-    COMPONENT msgpack::msgpackcxx
+    COMPONENT msgpack::cxx
 )
