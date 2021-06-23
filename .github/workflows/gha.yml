@@ -11,12 +11,19 @@ on:
 
 jobs:
   macos:
+    name: ${{ format('macOS {0} arch={1} cxx{2} san={3} api={4} char={5} x3={6}', matrix.compiler, matrix.arch, matrix.cxx, matrix.sanitize, matrix.api, matrix.char_sign, matrix.x3_parse) }}
     runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
-        pattern: [0, 1, 2, 3]
-        cxx: [17]
+        action: ["ci/build_cmake.sh"]
+        compiler: ["clang++"]
+        arch: [64]
+        cxx: [98, 11, 17, 20]
+        sanitize: ["no", "undefined"]
+        api: [1, 2, 3]
+        char_sign: ["unsigned", "signed"]
+        x3_parse: ["OFF"]
     steps:
     - uses: actions/checkout@v1
 
@@ -29,16 +36,32 @@ jobs:
 
     - name: Build boost
       if: steps.cache-boost.outputs.cache-hit != 'true'
-      run: ./.github/depends/boost.sh -b 64 -t clang -p $HOME/boost-prefix/
+      run: ./.github/depends/boost.sh -b ${{ matrix.arch }} -t clang -p $HOME/boost-prefix/
+
+    - name: Cache zlib
+      id: cache-zlib
+      uses: actions/cache@v1
+      with:
+        path: ~/zlib-prefix/
+        key: ${{ runner.os }}-zlib-${{ matrix.arch }}-1-2-11-20210623
+
+    - name: Build zlib
+      if: steps.cache-zlib.outputs.cache-hit != 'true'
+      run: ./.github/depends/zlib.sh -b ${{ matrix.arch }} -p $HOME/zlib-prefix/
 
     - name: Build and test
-      env:
-        CXX: clang++
       shell: bash
       run: |
         BASE=`pwd`;
 
-        if [ "${{ matrix.cxx }}" == "0" ]; then
+        export ACTION="${{ matrix.action }}"
+        export CXX="${{ matrix.compiler }}"
+        export ARCH="${{ matrix.arch }}"
+        export API_VERSION="${{ matrix.api }}"
+        export CHAR_SIGN="${{ matrix.char_sign }}"
+        export X3_PARSE="${{ matrix.x3_parse }}"
+
+        if [ "${{ matrix.cxx }}" == "98" ]; then
           export MSGPACK_CXX_VERSION="MSGPACK_CXX11=OFF"
         elif [ "${{ matrix.cxx }}" == "11" ]; then
           export MSGPACK_CXX_VERSION="MSGPACK_CXX11=ON"
@@ -51,42 +74,15 @@ jobs:
           exit 1
         fi
 
-        # matrix config
-        if [ ${{ matrix.pattern }} == 0 ]; then
-          ACTION="ci/build_cmake.sh"
-          export ARCH="64"
-          export CHAR_SIGN="unsigned"
-          export API_VERSION="1"
-          export SANITIZE="-fsanitize=undefined -fno-sanitize-recover=all"
-        fi
-        if [ ${{ matrix.pattern }} == 1 ]; then
-          ACTION="ci/build_cmake.sh"
-          export ARCH="64"
-          export CHAR_SIGN="signed"
-          export API_VERSION="3"
-          export SANITIZE="-fsanitize=undefined -fno-sanitize-recover=all"
-        fi
-        if [ ${{ matrix.pattern }} == 2 ]; then
-          ACTION="ci/build_cmake.sh"
-          export ARCH="64"
-          export CHAR_SIGN="signed"
-          export API_VERSION="2"
-          export SANITIZE="-fsanitize=undefined -fno-sanitize-recover=all"
-        fi
-        if [ ${{ matrix.pattern }} == 3 ]; then
-          ACTION="ci/build_cmake.sh"
-          export ARCH="64"
-          export CHAR_SIGN="unsigned"
-          export API_VERSION="2"
-          export SANITIZE="-fsanitize=undefined -fno-sanitize-recover=all"
+        if [ "${{ matrix.sanitize }}" != "no" ]; then
+          export SANITIZE="-fsanitize=${{ matrix.sanitize }} -fno-sanitize-recover=all"
         fi
 
-        # build and test
         CMAKE_CXX_COMPILER="${CXX}" CXXFLAGS="-Werror -g ${SANITIZE}" ${ACTION}
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
 
   linux:
-    name: ${{ format('{0} arch={1} cxx{2} san={3} api={4} char={5} x3={6}', matrix.compiler, matrix.arch, matrix.cxx, matrix.sanitize, matrix.api, matrix.char_sign, matrix.x3_parse) }}
+    name: ${{ format('Linux {0} arch={1} cxx{2} san={3} api={4} char={5} x3={6}', matrix.compiler, matrix.arch, matrix.cxx, matrix.sanitize, matrix.api, matrix.char_sign, matrix.x3_parse) }}
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
@@ -94,7 +90,7 @@ jobs:
         action: ["ci/build_cmake.sh"]
         compiler: ["g++-10", "clang++-10"]
         arch: [32, 64]
-        cxx: [98, 11, 17, 20]  # 0 stands for C++03 or lower
+        cxx: [98, 11, 17, 20]
         sanitize: ["no", "undefined"]
         api: [1, 2, 3]
         char_sign: ["unsigned", "signed"]
@@ -142,6 +138,9 @@ jobs:
         export ACTION="${{ matrix.action }}"
         export CXX="${{ matrix.compiler }}"
         export ARCH="${{ matrix.arch }}"
+        export API_VERSION="${{ matrix.api }}"
+        export CHAR_SIGN="${{ matrix.char_sign }}"
+        export X3_PARSE="${{ matrix.x3_parse }}"
 
         if [ "${{ matrix.cxx }}" == "98" ]; then
           export MSGPACK_CXX_VERSION="MSGPACK_CXX11=OFF"
@@ -160,20 +159,17 @@ jobs:
           export SANITIZE="-fsanitize=${{ matrix.sanitize }} -fno-sanitize-recover=all"
         fi
 
-        export API_VERSION="${{ matrix.api }}"
-        export CHAR_SIGN="${{ matrix.char_sign }}"
-        export X3_PARSE="${{ matrix.x3_parse }}"
-
         # build and test
         CMAKE_CXX_COMPILER="${CXX}" CXXFLAGS="-Werror -g ${SANITIZE}" ${ACTION}
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
 
   windows:
+    name: ${{ format('Windows MSVC cxx{0}', matrix.cxx) }}
     runs-on: windows-2016
     strategy:
       fail-fast: false
       matrix:
-        pattern: [98, 11, 17, 20]
+        cxx: [98, 11, 17, 20]
     steps:
     - uses: actions/checkout@v1
 
@@ -196,16 +192,16 @@ jobs:
     - name: Build and test
       shell: powershell
       run: |
-        if (${{ matrix.pattern }} -eq 20) {
+        if (${{ matrix.cxx }} -eq 20) {
           $CPPVER="-DMSGPACK_CXX20=ON"
         }
-        if (${{ matrix.pattern }} -eq 17) {
+        if (${{ matrix.cxx }} -eq 17) {
           $CPPVER="-DMSGPACK_CXX17=ON"
         }
-        if (${{ matrix.pattern }} -eq 11) {
+        if (${{ matrix.cxx }} -eq 11) {
           $CPPVER="-DMSGPACK_CXX11=ON"
         }
-        if (${{ matrix.pattern }} -eq 98) {
+        if (${{ matrix.cxx }} -eq 98) {
           $CPPVER="-DMSGPACK_CXX11=OFF"
         }
 
