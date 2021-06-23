@@ -1,5 +1,5 @@
 FIND_PACKAGE (Threads REQUIRED)
-FIND_PACKAGE (Boost REQUIRED COMPONENTS system filesystem)
+FIND_PACKAGE (Boost REQUIRED COMPONENTS system filesystem unit_test_framework)
 
 LIST (APPEND check_PROGRAMS
     regression_runner.cpp
@@ -12,10 +12,11 @@ FOREACH (source_file ${check_PROGRAMS})
         ${source_file}
     )
     TARGET_LINK_LIBRARIES (${source_file_we}
-        msgpackcxx
+        msgpackc-cxx
         Threads::Threads
         Boost::filesystem
         Boost::system
+        Boost::unit_test_framework
     )
     ADD_TEST (${source_file_we} ${source_file_we})
     IF ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
