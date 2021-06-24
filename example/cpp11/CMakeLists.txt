@@ -1,4 +1,4 @@
-IF (MSGPACK_CXX11 OR MSGPACK_CXX17)
+IF (MSGPACK_CXX11 OR MSGPACK_CXX14 OR MSGPACK_CXX17)
     LIST (APPEND exec_PROGRAMS
         container.cpp
         non_def_con_class.cpp

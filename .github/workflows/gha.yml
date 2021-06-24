@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         arch: [64]
-        cxx: [98, 11, 17, 20]
+        cxx: [98, 11, 14, 17, 20]
         sanitize: ["no", "undefined"]
         api: [1, 2, 3]
         char_sign: ["unsigned", "signed"]
@@ -50,8 +50,8 @@ jobs:
     - name: Build and test
       shell: bash
       run: |
-        if [ "${{ matrix.cxx }}" == "98" && "${{ matrix.x3_parse }}" == "ON" ]; then
-          echo "X3 parse is only supported with C++11 or newer - skip this configuration"
+        if [ ${{ matrix.cxx }} < 14 && "${{ matrix.x3_parse }}" == "ON" ]; then
+          echo "X3 parse is only supported with C++14 or newer - skip this configuration"
           exit 0
         fi
 
@@ -62,15 +62,8 @@ jobs:
 
         if [ "${{ matrix.cxx }}" == "98" ]; then
           export MSGPACK_CXX_VERSION="MSGPACK_CXX11=OFF"
-        elif [ "${{ matrix.cxx }}" == "11" ]; then
-          export MSGPACK_CXX_VERSION="MSGPACK_CXX11=ON"
-        elif [ "${{ matrix.cxx }}" == "17" ]; then
-          export MSGPACK_CXX_VERSION="MSGPACK_CXX17=ON"
-        elif [ "${{ matrix.cxx }}" == "20" ]; then
-          export MSGPACK_CXX_VERSION="MSGPACK_CXX20=ON"
         else
-          echo "Unsupported C++ version"
-          exit 1
+          export MSGPACK_CXX_VERSION="MSGPACK_CXX${{ matrix.cxx }}=ON"
         fi
 
         if [ "${{ matrix.sanitize }}" != "no" ]; then
@@ -90,7 +83,7 @@ jobs:
       fail-fast: false
       matrix:
         arch: [32, 64]
-        cxx: [98, 11, 17, 20]
+        cxx: [98, 11, 14, 17, 20]
         sanitize: ["no", "undefined"]
         api: [1, 2, 3]
         char_sign: ["unsigned", "signed"]
@@ -133,8 +126,8 @@ jobs:
     - name: Build and test
       shell: bash
       run: |
-        if [ "${{ matrix.cxx }}" == "98" && "${{ matrix.x3_parse }}" == "ON" ]; then
-          echo "X3 parse is only supported with C++11 or newer - skip this configuration"
+        if [ ${{ matrix.cxx }} < 14 && "${{ matrix.x3_parse }}" == "ON" ]; then
+          echo "X3 parse is only supported with C++14 or newer - skip this configuration"
           exit 0
         fi
 
@@ -145,15 +138,8 @@ jobs:
 
         if [ "${{ matrix.cxx }}" == "98" ]; then
           export MSGPACK_CXX_VERSION="MSGPACK_CXX11=OFF"
-        elif [ "${{ matrix.cxx }}" == "11" ]; then
-          export MSGPACK_CXX_VERSION="MSGPACK_CXX11=ON"
-        elif [ "${{ matrix.cxx }}" == "17" ]; then
-          export MSGPACK_CXX_VERSION="MSGPACK_CXX17=ON"
-        elif [ "${{ matrix.cxx }}" == "20" ]; then
-          export MSGPACK_CXX_VERSION="MSGPACK_CXX20=ON"
         else
-          echo "Unsupported C++ version"
-          exit 1
+          export MSGPACK_CXX_VERSION="MSGPACK_CXX${{ matrix.cxx }}=ON"
         fi
 
         if [ "${{ matrix.sanitize }}" != "no" ]; then
@@ -178,7 +164,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        cxx: [98, 11, 17, 20]
+        cxx: [98, 11, 14, 17, 20]
     steps:
     - uses: actions/checkout@v1
 
@@ -200,17 +186,11 @@ jobs:
     - name: Build and test
       shell: powershell
       run: |
-        if (${{ matrix.cxx }} -eq 20) {
-          $CPPVER="MSGPACK_CXX20=ON"
-        }
-        if (${{ matrix.cxx }} -eq 17) {
-          $CPPVER="MSGPACK_CXX17=ON"
-        }
-        if (${{ matrix.cxx }} -eq 11) {
-          $CPPVER="MSGPACK_CXX11=ON"
-        }
         if (${{ matrix.cxx }} -eq 98) {
           $CPPVER="MSGPACK_CXX11=OFF"
+        }
+        else {
+          $CPPVER="MSGPACK_CXX${{ matrix.cxx }}=ON"
         }
 
         md build

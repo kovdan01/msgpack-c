@@ -6,7 +6,7 @@ LIST (APPEND exec_PROGRAMS
     msgpack_variant_mapbased.cpp
 )
 
-IF (MSGPACK_CXX11 OR MSGPACK_CXX17 OR MSGPACK_CXX20)
+IF (MSGPACK_CXX11 OR MSGPACK_CXX14 OR MSGPACK_CXX17 OR MSGPACK_CXX20)
     LIST (APPEND exec_PROGRAMS
         asio_send_recv.cpp
         asio_send_recv_zlib.cpp
