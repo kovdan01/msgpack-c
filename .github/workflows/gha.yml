@@ -186,11 +186,6 @@ jobs:
     - name: Build and test
       shell: powershell
       run: |
-        if ((${{ matrix.cxx }} -lt 14) -and ("${{ matrix.x3_parse }}" -eq "ON")) {
-          echo "X3 parse is only supported with C++14 or newer - skip this configuration"
-          $host.SetShouldExit(0)
-        }
-
         if (${{ matrix.cxx }} -eq 98) {
           $CPPVER="MSGPACK_CXX11=OFF"
         }
@@ -199,13 +194,13 @@ jobs:
         }
 
         md build
-        cmake \
-            -A x64 \
-            -D CMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" \
-            -D MSGPACK_BUILD_TESTS=ON \
-            -D $CPPVER \
-            -D CMAKE_CXX_FLAGS="/D_VARIADIC_MAX=10 /EHsc /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING" \
-            -B build \
+        cmake `
+            -A x64 `
+            -D CMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" `
+            -D MSGPACK_BUILD_TESTS=ON `
+            -D $CPPVER `
+            -D CMAKE_CXX_FLAGS="/D_VARIADIC_MAX=10 /EHsc /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING" `
+            -B build `
             -S .
         if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
