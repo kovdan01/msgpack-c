@@ -159,7 +159,7 @@ jobs:
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
 
   windows:
-    name: ${{ format('Windows MSVC cxx{0}', matrix.cxx) }}
+    name: ${{ format('Windows cxx{0}', matrix.cxx) }}
     runs-on: windows-2016
     strategy:
       fail-fast: false
@@ -207,5 +207,5 @@ jobs:
         cmake --build build --config Release
         if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
-        ctest -VV --build-dir build -C Release
+        ctest -VV --test-dir build -C Release
         if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
