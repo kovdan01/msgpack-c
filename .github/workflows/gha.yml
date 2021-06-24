@@ -73,7 +73,7 @@ jobs:
         fi
 
         # build and test
-        CXX="clang++"
+        export CXX="clang++"
         CMAKE_CXX_COMPILER="$CXX" CXXFLAGS="-Werror -g ${SANITIZE}" ci/build_cmake.sh
 
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
@@ -154,11 +154,11 @@ jobs:
         # build and test
 
         # g++
-        CXX="g++-10"
+        export CXX="g++-10"
         CMAKE_CXX_COMPILER="$CXX" CXXFLAGS="-Werror -g ${SANITIZE}" ci/build_cmake.sh
 
         # clang++
-        CXX="clang++-10"
+        export CXX="clang++-10"
         CMAKE_CXX_COMPILER="$CXX" CXXFLAGS="-Werror -g ${SANITIZE}" ci/build_cmake.sh
 
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
