@@ -1,7 +1,7 @@
 #!/bin/bash
 
-mkdir build  || exit 1
-mkdir prefix || exit 1
+mkdir $CXX-build  || exit 1
+mkdir $CXX-prefix || exit 1
 
 if [ "${ARCH}" == "32" ]
 then
@@ -21,17 +21,17 @@ cmake \
     -D MSGPACK_DEFAULT_API_VERSION=${API_VERSION} \
     -D MSGPACK_USE_X3_PARSE=${X3_PARSE} \
     -D CMAKE_CXX_FLAGS="${CXXFLAGS} ${ARCH_FLAG}" \
-    -D CMAKE_INSTALL_PREFIX=`pwd`/prefix \
-    -B build \
+    -D CMAKE_INSTALL_PREFIX=`pwd`/$CXX-prefix \
+    -B $CXX-build \
     -S . || exit 1
 
-cmake --build build --target install || exit 1
+cmake --build $CXX-build --target install || exit 1
 
-ctest -VV --test-dir build || exit 1
+ctest -VV --test-dir $CXX-build || exit 1
 
 if [ "${ARCH}" != "32" ] && [ `uname` = "Linux" ]
 then
-    ctest -T memcheck --test-dir build | tee memcheck.log
+    ctest -T memcheck --test-dir $CXX-build | tee memcheck.log
 
     ret=${PIPESTATUS[0]}
     if [ $ret -ne 0 ]
@@ -48,12 +48,14 @@ fi
 
 if [ "${ARCH}" != "32" ]
 then
-    cd test-install    || exit 1
+    cd test-install || exit 1
 
-    cmake -DCMAKE_PREFIX_PATH="`pwd`/../prefix;$HOME/boost-prefix" . || exit 1
-    cmake --build . --target all || exit 1
+    mkdir $CXX-build
+    cmake \
+        -D CMAKE_PREFIX_PATH="`pwd`/../$CXX-prefix;$HOME/boost-prefix" \
+        -B $CXX-build \
+        -S . || exit 1
+    cmake --build $CXX-build --target all || exit 1
 
     ./test-install || exit 1
 fi
-
-exit 0

@@ -7,6 +7,11 @@
 #include "config.h"
 #endif
 
+// For C++ standards lower than C++20
+BOOST_AUTO_TEST_CASE(dummy)
+{
+}
+
 // Some compilers still do not set __cplusplus to 202002
 #if !defined(MSGPACK_USE_CPP03) && __cplusplus > 201703
 

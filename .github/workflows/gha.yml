@@ -11,19 +11,17 @@ on:
 
 jobs:
   macos:
-    name: ${{ format('macOS {0} arch={1} cxx{2} san={3} api={4} char={5} x3={6}', matrix.compiler, matrix.arch, matrix.cxx, matrix.sanitize, matrix.api, matrix.char_sign, matrix.x3_parse) }}
+    name: ${{ format('macOS arch={0} cxx{1} san={2} api={3} char={4} x3={5}', matrix.arch, matrix.cxx, matrix.sanitize, matrix.api, matrix.char_sign, matrix.x3_parse) }}
     runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
-        action: ["ci/build_cmake.sh"]
-        compiler: ["clang++"]
         arch: [64]
         cxx: [98, 11, 17, 20]
         sanitize: ["no", "undefined"]
         api: [1, 2, 3]
         char_sign: ["unsigned", "signed"]
-        x3_parse: ["OFF"]
+        x3_parse: ["OFF", "ON"]
     steps:
     - uses: actions/checkout@v1
 
@@ -52,10 +50,6 @@ jobs:
     - name: Build and test
       shell: bash
       run: |
-        BASE=`pwd`;
-
-        export ACTION="${{ matrix.action }}"
-        export CXX="${{ matrix.compiler }}"
         export ARCH="${{ matrix.arch }}"
         export API_VERSION="${{ matrix.api }}"
         export CHAR_SIGN="${{ matrix.char_sign }}"
@@ -78,7 +72,7 @@ jobs:
           export SANITIZE="-fsanitize=${{ matrix.sanitize }} -fno-sanitize-recover=all"
         fi
 
-        CMAKE_CXX_COMPILER="${CXX}" CXXFLAGS="-Werror -g ${SANITIZE}" ${ACTION}
+        CMAKE_CXX_COMPILER="clang++" CXXFLAGS="-Werror -g ${SANITIZE}" ci/build_cmake.sh
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
 
   linux:
@@ -87,14 +81,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        action: ["ci/build_cmake.sh"]
-        compiler: ["g++-10", "clang++-10"]
         arch: [32, 64]
         cxx: [98, 11, 17, 20]
         sanitize: ["no", "undefined"]
         api: [1, 2, 3]
         char_sign: ["unsigned", "signed"]
-        x3_parse: ["OFF"]
+        x3_parse: ["OFF", "ON"]
     steps:
     - uses: actions/checkout@v2
 
@@ -133,9 +125,6 @@ jobs:
     - name: Build and test
       shell: bash
       run: |
-        BASE=`pwd`;
-
-        export ACTION="${{ matrix.action }}"
         export CXX="${{ matrix.compiler }}"
         export ARCH="${{ matrix.arch }}"
         export API_VERSION="${{ matrix.api }}"
@@ -160,7 +149,12 @@ jobs:
         fi
 
         # build and test
-        CMAKE_CXX_COMPILER="${CXX}" CXXFLAGS="-Werror -g ${SANITIZE}" ${ACTION}
+
+        # g++
+        CMAKE_CXX_COMPILER="g++-10" CXXFLAGS="-Werror -g ${SANITIZE}" ci/build_cmake.sh
+        # clang++
+        CMAKE_CXX_COMPILER="clang++-10" CXXFLAGS="-Werror -g ${SANITIZE}" ci/build_cmake.sh
+
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
 
   windows:
@@ -185,7 +179,6 @@ jobs:
       shell: powershell
       run: |
         vcpkg update
-        vcpkg install gtest:x64-windows
         vcpkg install zlib:x64-windows
         vcpkg install boost:x64-windows
 
@@ -193,26 +186,31 @@ jobs:
       shell: powershell
       run: |
         if (${{ matrix.cxx }} -eq 20) {
-          $CPPVER="-DMSGPACK_CXX20=ON"
+          $CPPVER="MSGPACK_CXX20=ON"
         }
         if (${{ matrix.cxx }} -eq 17) {
-          $CPPVER="-DMSGPACK_CXX17=ON"
+          $CPPVER="MSGPACK_CXX17=ON"
         }
         if (${{ matrix.cxx }} -eq 11) {
-          $CPPVER="-DMSGPACK_CXX11=ON"
+          $CPPVER="MSGPACK_CXX11=ON"
         }
         if (${{ matrix.cxx }} -eq 98) {
-          $CPPVER="-DMSGPACK_CXX11=OFF"
+          $CPPVER="MSGPACK_CXX11=OFF"
         }
 
-        $CUR=(Get-Location).Path
         md build
-        cd build
-        cmake -A x64 -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" -DMSGPACK_BUILD_TESTS=ON $CPPVER "-DCMAKE_CXX_FLAGS=/D_VARIADIC_MAX=10 /EHsc /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING" ..
+        cmake \
+            -A x64 \
+            -D CMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" \
+            -D MSGPACK_BUILD_TESTS=ON \
+            -D $CPPVER \
+            -D CMAKE_CXX_FLAGS="/D_VARIADIC_MAX=10 /EHsc /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING" \
+            -B build \
+            -S .
         if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-        cmake --build . --config Release
-        $pathbak="$env:PATH"
-        $env:PATH="C:\vcpkg\installed\x64-windows\bin;$CUR\build\Release;$pathbak"
-        ctest -VV -C Release
+
+        cmake --build build --config Release
         if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-        $env:PATH=$pathbak
+
+        ctest -VV --build-dir build -C Release
+        if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
