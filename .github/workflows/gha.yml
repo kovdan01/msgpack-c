@@ -72,7 +72,10 @@ jobs:
           export SANITIZE="-fsanitize=${{ matrix.sanitize }} -fno-sanitize-recover=all"
         fi
 
-        CMAKE_CXX_COMPILER="clang++" CXXFLAGS="-Werror -g ${SANITIZE}" ci/build_cmake.sh
+        # build and test
+        CXX="clang++"
+        CMAKE_CXX_COMPILER="$CXX" CXXFLAGS="-Werror -g ${SANITIZE}" ci/build_cmake.sh
+
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
 
   linux:
@@ -151,9 +154,12 @@ jobs:
         # build and test
 
         # g++
-        CMAKE_CXX_COMPILER="g++-10" CXXFLAGS="-Werror -g ${SANITIZE}" ci/build_cmake.sh
+        CXX="g++-10"
+        CMAKE_CXX_COMPILER="$CXX" CXXFLAGS="-Werror -g ${SANITIZE}" ci/build_cmake.sh
+
         # clang++
-        CMAKE_CXX_COMPILER="clang++-10" CXXFLAGS="-Werror -g ${SANITIZE}" ci/build_cmake.sh
+        CXX="clang++-10"
+        CMAKE_CXX_COMPILER="$CXX" CXXFLAGS="-Werror -g ${SANITIZE}" ci/build_cmake.sh
 
         cat Files.cmake| grep ".*\.[h|hpp]" | perl -pe 's/ //g' | sort > tmp1  && find include -name "*.h" -o -name "*.hpp" | sort > tmp2 && diff tmp1 tmp2
 
