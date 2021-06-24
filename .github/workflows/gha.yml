@@ -50,6 +50,11 @@ jobs:
     - name: Build and test
       shell: bash
       run: |
+        if [ "${{ matrix.cxx }}" == "98" && "${{ matrix.x3_parse }}" == "ON" ]; then
+          echo "X3 parse is only supported with C++11 or newer - skip this configuration"
+          exit 0
+        fi
+
         export ARCH="${{ matrix.arch }}"
         export API_VERSION="${{ matrix.api }}"
         export CHAR_SIGN="${{ matrix.char_sign }}"
@@ -128,7 +133,11 @@ jobs:
     - name: Build and test
       shell: bash
       run: |
-        export CXX="${{ matrix.compiler }}"
+        if [ "${{ matrix.cxx }}" == "98" && "${{ matrix.x3_parse }}" == "ON" ]; then
+          echo "X3 parse is only supported with C++11 or newer - skip this configuration"
+          exit 0
+        fi
+
         export ARCH="${{ matrix.arch }}"
         export API_VERSION="${{ matrix.api }}"
         export CHAR_SIGN="${{ matrix.char_sign }}"

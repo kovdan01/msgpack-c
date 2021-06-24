@@ -57,5 +57,5 @@ then
         -S . || exit 1
     cmake --build $CXX-build --target all || exit 1
 
-    ./test-install || exit 1
+    $CXX-build/test-install || exit 1
 fi
