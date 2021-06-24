@@ -1,6 +1,5 @@
 FIND_PACKAGE (Threads REQUIRED)
-FIND_PACKAGE (PkgConfig REQUIRED)
-pkg_check_modules(zlib REQUIRED IMPORTED_TARGET zlib)
+FIND_PACKAGE (ZLIB REQUIRED)
 
 LIST (APPEND exec_PROGRAMS
     msgpack_variant_capitalize.cpp
@@ -23,7 +22,7 @@ FOREACH (source_file ${exec_PROGRAMS})
     TARGET_LINK_LIBRARIES (${source_file_we}
         msgpackc-cxx
         Threads::Threads
-        PkgConfig::zlib
+        ZLIB::ZLIB
     )
     IF ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         SET_PROPERTY (TARGET ${source_file_we} APPEND_STRING PROPERTY COMPILE_FLAGS " -Wall -Wextra")

@@ -1,6 +1,5 @@
 FIND_PACKAGE (Threads REQUIRED)
-FIND_PACKAGE (PkgConfig REQUIRED)
-pkg_check_modules(zlib REQUIRED IMPORTED_TARGET zlib)
+FIND_PACKAGE (ZLIB REQUIRED)
 FIND_PACKAGE (Boost REQUIRED COMPONENTS unit_test_framework system)
 
 LIST (APPEND check_PROGRAMS
@@ -80,7 +79,7 @@ FOREACH (source_file ${check_PROGRAMS})
         Boost::system
         Boost::unit_test_framework
         Threads::Threads
-        PkgConfig::zlib
+        ZLIB::ZLIB
     )
     ADD_TEST (NAME ${source_file_we} COMMAND ${source_file_we})
 
