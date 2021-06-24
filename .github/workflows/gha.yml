@@ -186,7 +186,7 @@ jobs:
     - name: Build and test
       shell: powershell
       run: |
-        if (${{ matrix.cxx }} -lt 14 && "${{ matrix.x3_parse }}" -eq "ON") {
+        if ((${{ matrix.cxx }} -lt 14) -and ("${{ matrix.x3_parse }}" -eq "ON")) {
           echo "X3 parse is only supported with C++14 or newer - skip this configuration"
           $host.SetShouldExit(0)
         }
