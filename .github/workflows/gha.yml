@@ -50,7 +50,7 @@ jobs:
     - name: Build and test
       shell: bash
       run: |
-        if [[ "${{ matrix.cxx }}" -lt "14" && "${{ matrix.x3_parse }}" == "ON" ]]; then
+        if [[ ${{ matrix.cxx }} -lt 14 && "${{ matrix.x3_parse }}" == "ON" ]]; then
           echo "X3 parse is only supported with C++14 or newer - skip this configuration"
           exit 0
         fi
@@ -126,7 +126,7 @@ jobs:
     - name: Build and test
       shell: bash
       run: |
-        if [[ "${{ matrix.cxx }}" -lt "14" && "${{ matrix.x3_parse }}" == "ON" ]]; then
+        if [[ ${{ matrix.cxx }} -lt 14 && "${{ matrix.x3_parse }}" == "ON" ]]; then
           echo "X3 parse is only supported with C++14 or newer - skip this configuration"
           exit 0
         fi
@@ -204,14 +204,14 @@ jobs:
             -S .
         echo $LastExitCode
         echo "LAST EXIT CODE"
-        if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+        if ($LastExitCode -ne 0) { exit $LastExitCode }
 
         cmake --build build --config Release
         echo $LastExitCode
         echo "LAST EXIT CODE"
-        if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+        if ($LastExitCode -ne 0) { exit $LastExitCode }
 
         ctest -VV --test-dir build -C Release
         echo $LastExitCode
         echo "LAST EXIT CODE"
-        if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+        if ($LastExitCode -ne 0) { exit $LastExitCode }
