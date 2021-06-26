@@ -44,7 +44,7 @@ ENDIF ()
 IF (MSGPACK_CXX11 OR MSGPACK_CXX14 OR MSGPACK_CXX17 OR MSGPACK_CXX20)
     LIST (APPEND check_PROGRAMS
         iterator_cpp11.cpp
-        # msgpack_cpp11.cpp
+        msgpack_cpp11.cpp
         reference_cpp11.cpp
         reference_wrapper_cpp11.cpp
         shared_ptr_cpp11.cpp
