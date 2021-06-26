@@ -202,9 +202,13 @@ jobs:
             -D CMAKE_CXX_FLAGS="/D_VARIADIC_MAX=10 /EHsc /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING" `
             -B build `
             -S .
+        echo $LastExitCode
+        echo "LAST EXIT CODE"
         if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
         cmake --build build --config Release
+        echo $LastExitCode
+        echo "LAST EXIT CODE"
         if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
         ctest -VV --test-dir build -C Release
