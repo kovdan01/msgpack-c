@@ -291,7 +291,7 @@ BOOST_AUTO_TEST_CASE(string)
 
 #if MSGPACK_DEFAULT_API_VERSION == 1
 
-TEST(object_without_zone, string)
+BOOST_AUTO_TEST_CASE(without_zone_string)
 {
     std::string v = "abc";
     msgpack::zone z;
@@ -354,7 +354,7 @@ BOOST_AUTO_TEST_CASE(complex_double)
 
 #if MSGPACK_DEFAULT_API_VERSION == 1
 
-TEST(object_without_zone, char_ptr)
+BOOST_AUTO_TEST_CASE(without_zone_char_ptr)
 {
     char v[] = "abc";
     msgpack::zone z;

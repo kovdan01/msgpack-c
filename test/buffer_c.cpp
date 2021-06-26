@@ -3,18 +3,10 @@
 #include <msgpack/sbuffer.h>
 #include <msgpack/vrefbuffer.h>
 
-#if defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wconversion"
-#endif //defined(__GNUC__)
+#define BOOST_TEST_MODULE buffer
+#include <boost/test/unit_test.hpp>
 
-#include <gtest/gtest.h>
-
-#if defined(__GNUC__)
-#pragma GCC diagnostic pop
-#endif //defined(__GNUC__)
-
-#include <string.h>
+#include <cstring>
 
 #if defined(unix) || defined(__unix) || defined(__linux__) || defined(__APPLE__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__QNX__) || defined(__QNXTO__) || defined(__HAIKU__)
 #define HAVE_SYS_UIO_H 1
@@ -22,7 +14,7 @@
 #define HAVE_SYS_UIO_H 0
 #endif
 
-TEST(buffer, zbuffer_c)
+BOOST_AUTO_TEST_CASE(zbuffer_c)
 {
     msgpack_zbuffer zbuf;
     BOOST_CHECK(msgpack_zbuffer_init(&zbuf, 1, MSGPACK_ZBUFFER_INIT_SIZE));
@@ -36,7 +28,7 @@ TEST(buffer, zbuffer_c)
     msgpack_zbuffer_destroy(&zbuf);
 }
 
-TEST(buffer, fbuffer_c)
+BOOST_AUTO_TEST_CASE(fbuffer_c)
 {
 #if defined(_MSC_VER)
     FILE* file;
@@ -63,7 +55,7 @@ TEST(buffer, fbuffer_c)
     fclose(file);
 }
 
-TEST(buffer, sbuffer_c)
+BOOST_AUTO_TEST_CASE(sbuffer_c)
 {
     msgpack_sbuffer *sbuf;
     char *data;
@@ -85,7 +77,7 @@ TEST(buffer, sbuffer_c)
     msgpack_sbuffer_free(sbuf);
 }
 
-TEST(buffer, vrefbuffer_c)
+BOOST_AUTO_TEST_CASE(vrefbuffer_c)
 {
     const char *raw = "I was about to sail away in a junk,"
                       "When suddenly I heard"
