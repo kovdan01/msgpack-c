@@ -199,19 +199,13 @@ jobs:
             -D CMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" `
             -D MSGPACK_BUILD_TESTS=ON `
             -D $CPPVER `
-            -D CMAKE_CXX_FLAGS="/D_VARIADIC_MAX=10 /EHsc /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING" `
+            -D CMAKE_CXX_FLAGS="/D_VARIADIC_MAX=10 /EHsc /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING /WX-" `
             -B build `
             -S .
-        echo $LastExitCode
-        echo "LAST EXIT CODE"
         if ($LastExitCode -ne 0) { exit $LastExitCode }
 
         cmake --build build --config Release
-        echo $LastExitCode
-        echo "LAST EXIT CODE"
         if ($LastExitCode -ne 0) { exit $LastExitCode }
 
         ctest -VV --test-dir build -C Release
-        echo $LastExitCode
-        echo "LAST EXIT CODE"
         if ($LastExitCode -ne 0) { exit $LastExitCode }
