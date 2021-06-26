@@ -3,7 +3,6 @@
 
 #define BOOST_TEST_MODULE size_equal_only
 #include <boost/test/unit_test.hpp>
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::vector<int>)
 
 BOOST_AUTO_TEST_CASE(array)
 {
@@ -61,14 +60,14 @@ BOOST_AUTO_TEST_CASE(vector)
 
     std::vector<int> ret_buf1;
     oh.get().convert(ret_buf1);
-    BOOST_CHECK_EQUAL(buf, ret_buf1);
+    BOOST_CHECK(buf == ret_buf1);
 
 
     std::vector<int> ret_buf2;
     ret_buf2.resize(3);
     msgpack::type::size_equal_only<std::vector<int> > ret_seo2(ret_buf2);
     oh.get().convert(ret_seo2);
-    BOOST_CHECK_EQUAL(buf, ret_buf2);
+    BOOST_CHECK(buf == ret_buf2);
 
     std::vector<int> ret_buf3;
     ret_buf2.resize(4);
@@ -140,9 +139,6 @@ BOOST_AUTO_TEST_CASE(msgpack_tuple)
 
 #if !defined(MSGPACK_USE_CPP03)
 
-typedef std::tuple<int, bool, std::string> tuple_int_bool_string;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(tuple_int_bool_string)
-
 BOOST_AUTO_TEST_CASE(tuple)
 {
     std::stringstream ss;
@@ -156,12 +152,12 @@ BOOST_AUTO_TEST_CASE(tuple)
 
     std::tuple<int, bool, std::string> ret_buf1;
     oh.get().convert(ret_buf1);
-    BOOST_CHECK_EQUAL(buf, ret_buf1);
+    BOOST_CHECK(buf == ret_buf1);
 
     std::tuple<int, bool, std::string> ret_buf2;
     auto ret_seo2 = msgpack::type::make_size_equal_only(ret_buf2);
     oh.get().convert(ret_seo2);
-    BOOST_CHECK_EQUAL(buf, ret_buf2);
+    BOOST_CHECK(buf == ret_buf2);
 
     std::tuple<int, bool, std::string, int> ret_buf3;
     oh.get().convert(ret_buf3);

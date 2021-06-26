@@ -30,8 +30,6 @@ public:
 
 MSGPACK_ADD_ENUM(TestEnumClassMemberClass::TestEnumClassType);
 
-BOOST_TEST_DONT_PRINT_LOG_VALUE(TestEnumClassMemberClass::TestEnumClassType)
-
 using namespace std;
 
 const unsigned int kLoop = 10000;
@@ -39,9 +37,6 @@ const unsigned int kElements = 100;
 
 
 // C++11
-
-typedef std::tuple<bool, std::string, double> tuple_bool_string_double;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(tuple_bool_string_double)
 
 BOOST_AUTO_TEST_CASE(simple_tuple)
 {
@@ -51,11 +46,8 @@ BOOST_AUTO_TEST_CASE(simple_tuple)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::tuple<bool, std::string, double> val2 = oh.get().as<std::tuple<bool, std::string, double> >();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef std::tuple<> tuple_empty;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(tuple_empty)
 
 BOOST_AUTO_TEST_CASE(simple_tuple_empty)
 {
@@ -65,13 +57,8 @@ BOOST_AUTO_TEST_CASE(simple_tuple_empty)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::tuple<> val2 = oh.get().as<std::tuple<> >();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef std::tuple<bool, std::string, int> tuple_bool_string_int;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(tuple_bool_string_int)
-typedef std::tuple<bool, std::string, double, int> tuple_bool_string_double_int;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(tuple_bool_string_double_int)
 
 BOOST_AUTO_TEST_CASE(simple_tuple_size_greater_than_as)
 {
@@ -99,9 +86,6 @@ BOOST_AUTO_TEST_CASE(simple_tuple_size_greater_than_convert)
     BOOST_CHECK_EQUAL(std::get<1>(val1), std::get<1>(val2));
     BOOST_CHECK_EQUAL(std::get<2>(val1), std::get<2>(val2));
 }
-
-typedef std::tuple<bool, std::string> tuple_bool_string;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(tuple_bool_string)
 
 BOOST_AUTO_TEST_CASE(simple_tuple_size_less_than_as)
 {
@@ -290,9 +274,6 @@ struct allocator : std::allocator<T> {
 
 } // namespace test
 
-typedef std::forward_list<int, test::allocator<int>> forward_list_int_test_allocator;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(forward_list_int_test_allocator)
-
 BOOST_AUTO_TEST_CASE(simple_buffer_forward_list)
 {
     using type = forward_list<int, test::allocator<int>>;
@@ -305,7 +286,7 @@ BOOST_AUTO_TEST_CASE(simple_buffer_forward_list)
         msgpack::object_handle oh =
             msgpack::unpack(sbuf.data(), sbuf.size());
         type val2 = oh.get().as<type >();
-        BOOST_CHECK_EQUAL(val1, val2);
+        BOOST_CHECK(val1 == val2);
     }
 }
 
@@ -318,11 +299,8 @@ BOOST_AUTO_TEST_CASE(simple_buffer_forward_list_empty)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     type val2 = oh.get().as<type >();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef std::unordered_map<int, int, test::hash<int>, test::equal_to<int>, test::map_allocator<int, int>> unordered_map_int_int_test;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(unordered_map_int_int_test)
 
 BOOST_AUTO_TEST_CASE(simple_buffer_unordered_map)
 {
@@ -336,7 +314,7 @@ BOOST_AUTO_TEST_CASE(simple_buffer_unordered_map)
         msgpack::object_handle oh =
             msgpack::unpack(sbuf.data(), sbuf.size());
         type val2 = oh.get().as<type >();
-        BOOST_CHECK_EQUAL(val1, val2);
+        BOOST_CHECK(val1 == val2);
     }
 }
 
@@ -349,11 +327,8 @@ BOOST_AUTO_TEST_CASE(simple_buffer_unordered_map_empty)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     type val2 = oh.get().as<type >();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef unordered_multimap<int, int, test::hash<int>, test::equal_to<int>, test::map_allocator<int, int>> unordered_multimap_int_int_test;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(unordered_multimap_int_int_test)
 
 BOOST_AUTO_TEST_CASE(simple_buffer_unordered_multimap)
 {
@@ -371,7 +346,7 @@ BOOST_AUTO_TEST_CASE(simple_buffer_unordered_multimap)
             msgpack::unpack(sbuf.data(), sbuf.size());
         type val2 = oh.get().as<type >();
 
-        BOOST_CHECK_EQUAL(val1, val2);
+        BOOST_CHECK(val1 == val2);
     }
 }
 
@@ -385,11 +360,8 @@ BOOST_AUTO_TEST_CASE(simple_buffer_unordered_multimap_empty)
         msgpack::unpack(sbuf.data(), sbuf.size());
     type val2 = oh.get().as<type >();
 
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef unordered_set<int, test::hash<int>, test::equal_to<int>, test::set_allocator<int>> unordered_set_int_test;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(unordered_set_int_test)
 
 BOOST_AUTO_TEST_CASE(simple_buffer_unordered_set)
 {
@@ -403,7 +375,7 @@ BOOST_AUTO_TEST_CASE(simple_buffer_unordered_set)
         msgpack::object_handle oh =
             msgpack::unpack(sbuf.data(), sbuf.size());
         type val2 = oh.get().as<type>();
-        BOOST_CHECK_EQUAL(val1, val2);
+        BOOST_CHECK(val1 == val2);
     }
 }
 
@@ -416,11 +388,8 @@ BOOST_AUTO_TEST_CASE(simple_buffer_unordered_set_empty)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     type val2 = oh.get().as<type>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef unordered_multiset<int, test::hash<int>, test::equal_to<int>, test::set_allocator<int>> unordered_multiset_int_test;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(unordered_multiset_int_test)
 
 BOOST_AUTO_TEST_CASE(simple_buffer_unordered_multiset)
 {
@@ -434,7 +403,7 @@ BOOST_AUTO_TEST_CASE(simple_buffer_unordered_multiset)
         msgpack::object_handle oh =
             msgpack::unpack(sbuf.data(), sbuf.size());
         type val2 = oh.get().as<type >();
-        BOOST_CHECK_EQUAL(val1, val2);
+        BOOST_CHECK(val1 == val2);
     }
 }
 
@@ -447,7 +416,7 @@ BOOST_AUTO_TEST_CASE(simple_buffer_unordered_multiset_empty)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     type val2 = oh.get().as<type >();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
 
 BOOST_AUTO_TEST_CASE(simple_buffer_enum_class_member)
@@ -458,9 +427,9 @@ BOOST_AUTO_TEST_CASE(simple_buffer_enum_class_member)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     TestEnumClassMemberClass val2 = oh.get().as<TestEnumClassMemberClass>();
-    BOOST_CHECK_EQUAL(val1.t1, val2.t1);
-    BOOST_CHECK_EQUAL(val1.t2, val2.t2);
-    BOOST_CHECK_EQUAL(val1.t3, val2.t3);
+    BOOST_CHECK(val1.t1 == val2.t1);
+    BOOST_CHECK(val1.t2 == val2.t2);
+    BOOST_CHECK(val1.t3 == val2.t3);
 }
 
 struct no_def_con {
@@ -469,8 +438,6 @@ struct no_def_con {
     int i;
     MSGPACK_DEFINE(i);
 };
-
-BOOST_TEST_DONT_PRINT_LOG_VALUE(no_def_con)
 
 inline bool operator==(no_def_con const& lhs, no_def_con const& rhs) {
     return lhs.i == rhs.i;
@@ -516,7 +483,7 @@ BOOST_AUTO_TEST_CASE(no_def_con_simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
 
     no_def_con val2 = oh.get().as<no_def_con>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
 
 struct no_def_con_composite {
@@ -526,8 +493,6 @@ struct no_def_con_composite {
     no_def_con ndc;
     MSGPACK_DEFINE(ndc);
 };
-
-BOOST_TEST_DONT_PRINT_LOG_VALUE(no_def_con_composite)
 
 inline bool operator==(no_def_con_composite const& lhs, no_def_con_composite const& rhs) {
     return lhs.ndc == rhs.ndc;
@@ -564,7 +529,7 @@ BOOST_AUTO_TEST_CASE(no_def_con_composite_simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     no_def_con_composite val2 = oh.get().as<no_def_con_composite>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
 
 struct no_def_con_inherit : no_def_con {
@@ -572,8 +537,6 @@ struct no_def_con_inherit : no_def_con {
     no_def_con_inherit(no_def_con const& a):no_def_con(a) {}
     MSGPACK_DEFINE(MSGPACK_BASE(no_def_con));
 };
-
-BOOST_TEST_DONT_PRINT_LOG_VALUE(no_def_con_inherit)
 
 namespace msgpack {
 MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {
@@ -598,10 +561,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_inherit_simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     no_def_con_inherit val2 = oh.get().as<no_def_con_inherit>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::vector<no_def_con>)
 
 BOOST_AUTO_TEST_CASE(no_def_con_vector_simple_buffer)
 {
@@ -611,10 +572,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_vector_simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::vector<no_def_con> val2 = oh.get().as<std::vector<no_def_con>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::list<no_def_con>)
 
 BOOST_AUTO_TEST_CASE(no_def_con_list_simple_buffer)
 {
@@ -624,10 +583,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_list_simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::list<no_def_con> val2 = oh.get().as<std::list<no_def_con>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::set<no_def_con>)
 
 BOOST_AUTO_TEST_CASE(no_def_con_set_simple_buffer)
 {
@@ -637,10 +594,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_set_simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::set<no_def_con> val2 = oh.get().as<std::set<no_def_con>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::multiset<no_def_con>)
 
 BOOST_AUTO_TEST_CASE(no_def_con_multiset_simple_buffer)
 {
@@ -650,11 +605,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_multiset_simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::multiset<no_def_con> val2 = oh.get().as<std::multiset<no_def_con>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef msgpack::type::assoc_vector<no_def_con, no_def_con_composite> assoc_vector_no_def_con_no_def_con_composite;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(assoc_vector_no_def_con_no_def_con_composite)
 
 BOOST_AUTO_TEST_CASE(no_def_con_assoc_vector_simple_buffer)
 {
@@ -665,11 +617,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_assoc_vector_simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     msgpack::type::assoc_vector<no_def_con, no_def_con_composite> val2
         = oh.get().as<msgpack::type::assoc_vector<no_def_con, no_def_con_composite>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef msgpack::type::assoc_vector<no_def_con, int> assoc_vector_no_def_con_int;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(assoc_vector_no_def_con_int)
 
 BOOST_AUTO_TEST_CASE(no_def_con_def_con_assoc_vector_simple_buffer)
 {
@@ -680,11 +629,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_def_con_assoc_vector_simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     msgpack::type::assoc_vector<no_def_con, int> val2
         = oh.get().as<msgpack::type::assoc_vector<no_def_con, int>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef std::map<no_def_con, no_def_con_composite> map_no_def_con_no_def_con_composite;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(map_no_def_con_no_def_con_composite)
 
 BOOST_AUTO_TEST_CASE(no_def_con_map_simple_buffer)
 {
@@ -695,11 +641,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_map_simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::map<no_def_con, no_def_con_composite> val2
         = oh.get().as<std::map<no_def_con, no_def_con_composite>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef std::map<no_def_con, int> map_no_def_con_int;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(map_no_def_con_int)
 
 BOOST_AUTO_TEST_CASE(no_def_con_def_con_map_simple_buffer)
 {
@@ -710,11 +653,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_def_con_map_simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::map<no_def_con, int> val2
         = oh.get().as<std::map<no_def_con, int>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef std::multimap<no_def_con, no_def_con_composite> multimap_no_def_con_no_def_con_composite;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(multimap_no_def_con_no_def_con_composite)
 
 BOOST_AUTO_TEST_CASE(no_def_con_multimap_simple_buffer)
 {
@@ -725,11 +665,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_multimap_simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::multimap<no_def_con, no_def_con_composite> val2
         = oh.get().as<std::multimap<no_def_con, no_def_con_composite>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef std::multimap<no_def_con, int> multimap_no_def_con_int;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(multimap_no_def_con_int)
 
 BOOST_AUTO_TEST_CASE(no_def_con_def_con_multimap_simple_buffer)
 {
@@ -740,10 +677,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_def_con_multimap_simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::multimap<no_def_con, int> val2
         = oh.get().as<std::multimap<no_def_con, int>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::deque<no_def_con>)
 
 BOOST_AUTO_TEST_CASE(no_def_con_deque_simple_buffer)
 {
@@ -753,11 +688,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_deque_simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::deque<no_def_con> val2 = oh.get().as<std::deque<no_def_con>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef std::pair<no_def_con, no_def_con_composite> pair_no_def_con_no_def_con_composite;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(pair_no_def_con_no_def_con_composite)
 
 BOOST_AUTO_TEST_CASE(no_def_con_pair_simple_buffer)
 {
@@ -768,11 +700,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_pair_simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::pair<no_def_con, no_def_con_composite> val2
         = oh.get().as<std::pair<no_def_con, no_def_con_composite>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef std::pair<no_def_con, int> pair_no_def_con_int;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(pair_no_def_con_int)
 
 BOOST_AUTO_TEST_CASE(no_def_con_def_con_pair_simple_buffer)
 {
@@ -783,11 +712,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_def_con_pair_simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::pair<no_def_con, int> val2
         = oh.get().as<std::pair<no_def_con, int>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef std::tuple<no_def_con, no_def_con, no_def_con_composite> tuple_no_def_con3;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(tuple_no_def_con3)
 
 BOOST_AUTO_TEST_CASE(no_def_con_tuple_simple_buffer)
 {
@@ -798,11 +724,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_tuple_simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::tuple<no_def_con, no_def_con, no_def_con_composite> val2
         = oh.get().as<std::tuple<no_def_con, no_def_con, no_def_con_composite>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef std::tuple<no_def_con, no_def_con, int> tuple_no_def_con2;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(tuple_no_def_con2)
 
 BOOST_AUTO_TEST_CASE(no_def_con_def_con_tuple_simple_buffer)
 {
@@ -813,11 +736,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_def_con_tuple_simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::tuple<no_def_con, no_def_con, int> val2
         = oh.get().as<std::tuple<no_def_con, no_def_con, int>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef msgpack::type::tuple<no_def_con, no_def_con, no_def_con_composite> msgpack_tuple_no_def_con3;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(msgpack_tuple_no_def_con3)
 
 BOOST_AUTO_TEST_CASE(no_def_con_msgpack_tuple_simple_buffer)
 {
@@ -828,11 +748,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_msgpack_tuple_simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     msgpack::type::tuple<no_def_con, no_def_con, no_def_con_composite> val2
         = oh.get().as<msgpack::type::tuple<no_def_con, no_def_con, no_def_con_composite>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef msgpack::type::tuple<no_def_con, no_def_con, int> msgpack_tuple_no_def_con2;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(msgpack_tuple_no_def_con2)
 
 BOOST_AUTO_TEST_CASE(no_def_con_def_con_msgpack_tuple_simple_buffer)
 {
@@ -843,10 +760,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_def_con_msgpack_tuple_simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     msgpack::type::tuple<no_def_con, no_def_con, int> val2
         = oh.get().as<msgpack::type::tuple<no_def_con, no_def_con, int>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::forward_list<no_def_con>)
 
 BOOST_AUTO_TEST_CASE(no_def_forward_list_simple_buffer)
 {
@@ -859,8 +774,6 @@ BOOST_AUTO_TEST_CASE(no_def_forward_list_simple_buffer)
     BOOST_CHECK(val1 == val2);
 }
 
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::unordered_set<no_def_con>)
-
 BOOST_AUTO_TEST_CASE(no_def_con_unordered_set_simple_buffer)
 {
     std::unordered_set<no_def_con> val1 { 1, 2, 3 };
@@ -869,10 +782,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_unordered_set_simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::unordered_set<no_def_con> val2 = oh.get().as<std::unordered_set<no_def_con>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::unordered_multiset<no_def_con>)
 
 BOOST_AUTO_TEST_CASE(no_def_con_unordered_multiset_simple_buffer)
 {
@@ -882,11 +793,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_unordered_multiset_simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::unordered_multiset<no_def_con> val2 = oh.get().as<std::unordered_multiset<no_def_con>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef std::unordered_map<no_def_con, no_def_con_composite> unordered_map_no_def_con_no_def_con_composite;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(unordered_map_no_def_con_no_def_con_composite)
 
 BOOST_AUTO_TEST_CASE(no_def_con_unordered_map_simple_buffer)
 {
@@ -897,11 +805,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_unordered_map_simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::unordered_map<no_def_con, no_def_con_composite> val2
         = oh.get().as<std::unordered_map<no_def_con, no_def_con_composite>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef std::unordered_map<no_def_con, int> unordered_map_no_def_con_int;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(unordered_map_no_def_con_int)
 
 BOOST_AUTO_TEST_CASE(no_def_con_def_con_unordered_map_simple_buffer)
 {
@@ -912,11 +817,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_def_con_unordered_map_simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::unordered_map<no_def_con, int> val2
         = oh.get().as<std::unordered_map<no_def_con, int>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef std::unordered_multimap<no_def_con, no_def_con_composite> unordered_multimap_no_def_con_no_def_con_composite;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(unordered_multimap_no_def_con_no_def_con_composite)
 
 BOOST_AUTO_TEST_CASE(no_def_con_unordered_multimap_simple_buffer)
 {
@@ -927,11 +829,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_unordered_multimap_simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::unordered_multimap<no_def_con, no_def_con_composite> val2
         = oh.get().as<std::unordered_multimap<no_def_con, no_def_con_composite>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef std::unordered_multimap<no_def_con, int> unordered_multimap_no_def_con_int;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(unordered_multimap_no_def_con_int)
 
 BOOST_AUTO_TEST_CASE(no_def_con_def_con_unordered_multimap_simple_buffer)
 {
@@ -942,11 +841,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_def_con_unordered_multimap_simple_buffer)
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::unordered_multimap<no_def_con, int> val2
         = oh.get().as<std::unordered_multimap<no_def_con, int>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-typedef std::array<no_def_con, 3> array_no_def_con_3;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(array_no_def_con_3)
 
 BOOST_AUTO_TEST_CASE(no_def_con_array_simple_buffer)
 {
@@ -956,10 +852,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_array_simple_buffer)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::array<no_def_con, 3> val2 = oh.get().as<std::array<no_def_con, 3>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
-
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::chrono::system_clock::time_point)
 
 BOOST_AUTO_TEST_CASE(system_clock)
 {
@@ -970,11 +864,11 @@ BOOST_AUTO_TEST_CASE(system_clock)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::system_clock::time_point val2 = oh.get().as<std::chrono::system_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::system_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 BOOST_AUTO_TEST_CASE(system_clock_32)
@@ -995,11 +889,11 @@ BOOST_AUTO_TEST_CASE(system_clock_32)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::system_clock::time_point val2 = oh.get().as<std::chrono::system_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::system_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 BOOST_AUTO_TEST_CASE(system_clock_32_max)
@@ -1020,11 +914,11 @@ BOOST_AUTO_TEST_CASE(system_clock_32_max)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::system_clock::time_point val2 = oh.get().as<std::chrono::system_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::system_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 
@@ -1041,11 +935,11 @@ BOOST_AUTO_TEST_CASE(system_clock_64)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::system_clock::time_point val2 = oh.get().as<std::chrono::system_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::system_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 BOOST_AUTO_TEST_CASE(system_clock_64_max)
@@ -1092,11 +986,11 @@ BOOST_AUTO_TEST_CASE(system_clock_64_max)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::system_clock::time_point val2 = oh.get().as<std::chrono::system_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::system_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 BOOST_AUTO_TEST_CASE(system_clock_impl_min)
@@ -1108,11 +1002,11 @@ BOOST_AUTO_TEST_CASE(system_clock_impl_min)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::system_clock::time_point val2 = oh.get().as<std::chrono::system_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::system_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 BOOST_AUTO_TEST_CASE(system_clock_impl_max)
@@ -1125,11 +1019,11 @@ BOOST_AUTO_TEST_CASE(system_clock_impl_max)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::system_clock::time_point val2 = oh.get().as<std::chrono::system_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::system_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 BOOST_AUTO_TEST_CASE(system_clock_impl_now)
@@ -1142,14 +1036,12 @@ BOOST_AUTO_TEST_CASE(system_clock_impl_now)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::system_clock::time_point val2 = oh.get().as<std::chrono::system_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::system_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
-
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::chrono::steady_clock::time_point)
 
 BOOST_AUTO_TEST_CASE(steady_clock)
 {
@@ -1160,11 +1052,11 @@ BOOST_AUTO_TEST_CASE(steady_clock)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::steady_clock::time_point val2 = oh.get().as<std::chrono::steady_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::steady_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 BOOST_AUTO_TEST_CASE(steady_clock_32)
@@ -1185,11 +1077,11 @@ BOOST_AUTO_TEST_CASE(steady_clock_32)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::steady_clock::time_point val2 = oh.get().as<std::chrono::steady_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::steady_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 BOOST_AUTO_TEST_CASE(steady_clock_32_max)
@@ -1210,11 +1102,11 @@ BOOST_AUTO_TEST_CASE(steady_clock_32_max)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::steady_clock::time_point val2 = oh.get().as<std::chrono::steady_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::steady_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 
@@ -1231,11 +1123,11 @@ BOOST_AUTO_TEST_CASE(steady_clock_64)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::steady_clock::time_point val2 = oh.get().as<std::chrono::steady_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::steady_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 BOOST_AUTO_TEST_CASE(steady_clock_64_max)
@@ -1282,11 +1174,11 @@ BOOST_AUTO_TEST_CASE(steady_clock_64_max)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::steady_clock::time_point val2 = oh.get().as<std::chrono::steady_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::steady_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 BOOST_AUTO_TEST_CASE(steady_clock_impl_min)
@@ -1298,11 +1190,11 @@ BOOST_AUTO_TEST_CASE(steady_clock_impl_min)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::steady_clock::time_point val2 = oh.get().as<std::chrono::steady_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::steady_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 BOOST_AUTO_TEST_CASE(steady_clock_impl_max)
@@ -1315,11 +1207,11 @@ BOOST_AUTO_TEST_CASE(steady_clock_impl_max)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::steady_clock::time_point val2 = oh.get().as<std::chrono::steady_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::steady_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 BOOST_AUTO_TEST_CASE(steady_clock_impl_now)
@@ -1332,11 +1224,11 @@ BOOST_AUTO_TEST_CASE(steady_clock_impl_now)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::steady_clock::time_point val2 = oh.get().as<std::chrono::steady_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::steady_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 
@@ -1349,11 +1241,11 @@ BOOST_AUTO_TEST_CASE(high_resolution_clock)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::high_resolution_clock::time_point val2 = oh.get().as<std::chrono::high_resolution_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::high_resolution_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 BOOST_AUTO_TEST_CASE(high_resolution_clock_32)
@@ -1374,11 +1266,11 @@ BOOST_AUTO_TEST_CASE(high_resolution_clock_32)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::high_resolution_clock::time_point val2 = oh.get().as<std::chrono::high_resolution_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::high_resolution_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 BOOST_AUTO_TEST_CASE(high_resolution_clock_32_max)
@@ -1399,11 +1291,11 @@ BOOST_AUTO_TEST_CASE(high_resolution_clock_32_max)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::high_resolution_clock::time_point val2 = oh.get().as<std::chrono::high_resolution_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::high_resolution_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 
@@ -1420,11 +1312,11 @@ BOOST_AUTO_TEST_CASE(high_resolution_clock_64)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::high_resolution_clock::time_point val2 = oh.get().as<std::chrono::high_resolution_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::high_resolution_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 BOOST_AUTO_TEST_CASE(high_resolution_clock_64_max)
@@ -1471,11 +1363,11 @@ BOOST_AUTO_TEST_CASE(high_resolution_clock_64_max)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::high_resolution_clock::time_point val2 = oh.get().as<std::chrono::high_resolution_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::high_resolution_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 BOOST_AUTO_TEST_CASE(high_resolution_clock_impl_min)
@@ -1487,11 +1379,11 @@ BOOST_AUTO_TEST_CASE(high_resolution_clock_impl_min)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::high_resolution_clock::time_point val2 = oh.get().as<std::chrono::high_resolution_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::high_resolution_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 BOOST_AUTO_TEST_CASE(high_resolution_clock_impl_max)
@@ -1504,11 +1396,11 @@ BOOST_AUTO_TEST_CASE(high_resolution_clock_impl_max)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::high_resolution_clock::time_point val2 = oh.get().as<std::chrono::high_resolution_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::high_resolution_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 BOOST_AUTO_TEST_CASE(high_resolution_clock_impl_now)
@@ -1521,11 +1413,11 @@ BOOST_AUTO_TEST_CASE(high_resolution_clock_impl_now)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size());
     std::chrono::high_resolution_clock::time_point val2 = oh.get().as<std::chrono::high_resolution_clock::time_point>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     std::chrono::high_resolution_clock::time_point val3;
     oh.get().convert(val3);
-    BOOST_CHECK_EQUAL(val1, val3);
+    BOOST_CHECK(val1 == val3);
 }
 
 

@@ -6,17 +6,6 @@
 #define BOOST_TEST_MODULE MSGPACK_BOOST
 #include <boost/test/unit_test.hpp>
 
-BOOST_TEST_DONT_PRINT_LOG_VALUE(msgpack::v1::type::ext)
-BOOST_TEST_DONT_PRINT_LOG_VALUE(msgpack::v1::type::ext_ref)
-BOOST_TEST_DONT_PRINT_LOG_VALUE(msgpack::v1::type::raw_ref)
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::vector<char>)
-typedef std::multimap<msgpack::type::variant, msgpack::type::variant> multimap_variant_t;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(multimap_variant_t)
-typedef std::multimap<msgpack::type::variant_ref, msgpack::type::variant_ref> multimap_variant_ref_t;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(multimap_variant_ref_t)
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::vector<msgpack::type::variant>)
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::vector<msgpack::type::variant_ref>)
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -368,7 +357,7 @@ BOOST_AUTO_TEST_CASE(pack_convert_variant_bin)
     v.push_back('c');
     msgpack::type::variant val1 = v;
     BOOST_CHECK(val1.is_vector_char());
-    BOOST_CHECK_EQUAL(val1.as_vector_char(), v);
+    BOOST_CHECK(val1.as_vector_char() == v);
 
     msgpack::pack(ss, val1);
 
@@ -377,7 +366,7 @@ BOOST_AUTO_TEST_CASE(pack_convert_variant_bin)
         msgpack::unpack(str.data(), str.size());
     msgpack::type::variant val2 = oh.get().as<msgpack::type::variant>();
     BOOST_CHECK(val2.is_vector_char());
-    BOOST_CHECK_EQUAL(val2.as_vector_char(), v);
+    BOOST_CHECK(val2.as_vector_char() == v);
     BOOST_CHECK_NO_THROW(boost::get<std::vector<char> >(val2));
     BOOST_CHECK(val1 == val2);
 }
@@ -393,11 +382,11 @@ BOOST_AUTO_TEST_CASE(object_with_zone_variant_bin)
     v.push_back('c');
     msgpack::type::variant val1 = v;
     BOOST_CHECK(val1.is_vector_char());
-    BOOST_CHECK_EQUAL(val1.as_vector_char(), v);
+    BOOST_CHECK(val1.as_vector_char() == v);
     msgpack::object obj(val1, z);
     msgpack::type::variant val2 = obj.as<msgpack::type::variant>();
     BOOST_CHECK(val2.is_vector_char());
-    BOOST_CHECK_EQUAL(val2.as_vector_char(), v);
+    BOOST_CHECK(val2.as_vector_char() == v);
     BOOST_CHECK_NO_THROW(boost::get<std::vector<char> >(val2));
     BOOST_CHECK(val1 == val2);
 }
@@ -415,12 +404,12 @@ BOOST_AUTO_TEST_CASE(object_with_zone_variant_raw_ref)
     msgpack::type::raw_ref rr(&v.front(), static_cast<uint32_t>(v.size()));
     msgpack::type::variant val1 = rr;
     BOOST_CHECK(val1.is_raw_ref());
-    BOOST_CHECK_EQUAL(val1.as_raw_ref(), msgpack::type::raw_ref(&v.front(), static_cast<uint32_t>(v.size())));
+    BOOST_CHECK(val1.as_raw_ref() == msgpack::type::raw_ref(&v.front(), static_cast<uint32_t>(v.size())));
     msgpack::object obj(val1, z);
     msgpack::type::variant val2 = obj.as<msgpack::type::variant>();
     // Converted as std::vector<char>.
     BOOST_CHECK(val2.is_vector_char());
-    BOOST_CHECK_EQUAL(val2.as_vector_char(), v);
+    BOOST_CHECK(val2.as_vector_char() == v);
     BOOST_CHECK_NO_THROW(boost::get<std::vector<char> >(val2));
      // msgpack::type::raw_ref and std::vector<char> are different.
     BOOST_CHECK(!(val1 == val2));
@@ -440,7 +429,7 @@ BOOST_AUTO_TEST_CASE(pack_convert_variant_ext)
     msgpack::type::ext e(42, v.data(), static_cast<uint32_t>(v.size()));
     msgpack::type::variant val1(e);
     BOOST_CHECK(val1.is_ext());
-    BOOST_CHECK_EQUAL(val1.as_ext(), e);
+    BOOST_CHECK(val1.as_ext() == e);
 
     msgpack::pack(ss, val1);
 
@@ -449,7 +438,7 @@ BOOST_AUTO_TEST_CASE(pack_convert_variant_ext)
         msgpack::unpack(str.data(), str.size());
     msgpack::type::variant val2 = oh.get().as<msgpack::type::variant>();
     BOOST_CHECK(val2.is_ext());
-    BOOST_CHECK_EQUAL(val2.as_ext(), e);
+    BOOST_CHECK(val2.as_ext() == e);
     BOOST_CHECK_NO_THROW(boost::get<msgpack::type::ext>(val2));
     BOOST_CHECK(val1 == val2);
 }
@@ -464,11 +453,11 @@ BOOST_AUTO_TEST_CASE(object_with_zone_variant_ext)
     msgpack::type::ext e(42, v.data(), static_cast<uint32_t>(v.size()));
     msgpack::type::variant val1(e);
     BOOST_CHECK(val1.is_ext());
-    BOOST_CHECK_EQUAL(val1.as_ext(), e);
+    BOOST_CHECK(val1.as_ext() == e);
     msgpack::object obj(val1, z);
     msgpack::type::variant val2 = obj.as<msgpack::type::variant>();
     BOOST_CHECK(val2.is_ext());
-    BOOST_CHECK_EQUAL(val2.as_ext(), e);
+    BOOST_CHECK(val2.as_ext() == e);
     BOOST_CHECK_NO_THROW(boost::get<msgpack::type::ext>(val2));
     BOOST_CHECK(val1 == val2);
 }
@@ -484,12 +473,12 @@ BOOST_AUTO_TEST_CASE(object_with_zone_variant_ext_ref)
     msgpack::type::ext_ref e(v.data(), static_cast<uint32_t>(v.size()));
     msgpack::type::variant val1(e);
     BOOST_CHECK(val1.is_ext_ref());
-    BOOST_CHECK_EQUAL(val1.as_ext_ref(), e);
+    BOOST_CHECK(val1.as_ext_ref() == e);
     msgpack::object obj(val1, z);
     msgpack::type::variant val2 = obj.as<msgpack::type::variant>();
     // Converted as msgpack::type::ext.
     BOOST_CHECK(val2.is_ext());
-    BOOST_CHECK_EQUAL(val2.as_ext(), msgpack::type::ext(e));
+    BOOST_CHECK(val2.as_ext() == msgpack::type::ext(e));
     BOOST_CHECK_NO_THROW(boost::get<msgpack::type::ext>(val2));
      // msgpack::type::ext_ref and msgpack::type::ext are different.
     BOOST_CHECK(!(val1 == val2));
@@ -506,7 +495,7 @@ BOOST_AUTO_TEST_CASE(pack_convert_variant_array)
     v.push_back(msgpack::type::variant("ABC"));
     msgpack::type::variant val1 = v;
     BOOST_CHECK(val1.is_vector());
-    BOOST_CHECK_EQUAL(val1.as_vector(), v);
+    BOOST_CHECK(val1.as_vector() == v);
 
     msgpack::pack(ss, val1);
 
@@ -515,7 +504,7 @@ BOOST_AUTO_TEST_CASE(pack_convert_variant_array)
         msgpack::unpack(str.data(), str.size());
     msgpack::type::variant val2 = oh.get().as<msgpack::type::variant>();
     BOOST_CHECK(val2.is_vector());
-    BOOST_CHECK_EQUAL(val2.as_vector(), v);
+    BOOST_CHECK(val2.as_vector() == v);
     BOOST_CHECK_NO_THROW(boost::get<std::vector<msgpack::type::variant> >(val2));
     BOOST_CHECK(val1 == val2);
 }
@@ -529,11 +518,11 @@ BOOST_AUTO_TEST_CASE(object_with_zone_variant_array)
     v.push_back(msgpack::type::variant("ABC"));
     msgpack::type::variant val1 = v;
     BOOST_CHECK(val1.is_vector());
-    BOOST_CHECK_EQUAL(val1.as_vector(), v);
+    BOOST_CHECK(val1.as_vector() == v);
     msgpack::object obj(val1, z);
     msgpack::type::variant val2 = obj.as<msgpack::type::variant>();
     BOOST_CHECK(val2.is_vector());
-    BOOST_CHECK_EQUAL(val2.as_vector(), v);
+    BOOST_CHECK(val2.as_vector() == v);
     BOOST_CHECK_NO_THROW(boost::get<std::vector<msgpack::type::variant> >(val2));
     BOOST_CHECK(val1 == val2);
 }
@@ -549,7 +538,7 @@ BOOST_AUTO_TEST_CASE(pack_convert_variant_map)
     v.insert(multimap_t::value_type(msgpack::type::variant("ABC"), msgpack::type::variant("DEF")));
     msgpack::type::variant val1 = v;
     BOOST_CHECK(val1.is_multimap());
-    BOOST_CHECK_EQUAL(val1.as_multimap(), v);
+    BOOST_CHECK(val1.as_multimap() == v);
 
     msgpack::pack(ss, val1);
 
@@ -558,7 +547,7 @@ BOOST_AUTO_TEST_CASE(pack_convert_variant_map)
         msgpack::unpack(str.data(), str.size());
     msgpack::type::variant val2 = oh.get().as<msgpack::type::variant>();
     BOOST_CHECK(val2.is_multimap());
-    BOOST_CHECK_EQUAL(val2.as_multimap(), v);
+    BOOST_CHECK(val2.as_multimap() == v);
     BOOST_CHECK_NO_THROW(boost::get<multimap_t>(val2));
     BOOST_CHECK(val1 == val2);
 }
@@ -572,11 +561,11 @@ BOOST_AUTO_TEST_CASE(object_with_zone_variant_map)
     v.insert(multimap_t::value_type(msgpack::type::variant("ABC"), msgpack::type::variant("DEF")));
     msgpack::type::variant val1 = v;
     BOOST_CHECK(val1.is_multimap());
-    BOOST_CHECK_EQUAL(val1.as_multimap(), v);
+    BOOST_CHECK(val1.as_multimap() == v);
     msgpack::object obj(val1, z);
     msgpack::type::variant val2 = obj.as<msgpack::type::variant>();
     BOOST_CHECK(val2.is_multimap());
-    BOOST_CHECK_EQUAL(val2.as_multimap(), v);
+    BOOST_CHECK(val2.as_multimap() == v);
     BOOST_CHECK_NO_THROW(boost::get<multimap_t>(val2));
     BOOST_CHECK(val1 == val2);
 }
@@ -640,7 +629,7 @@ BOOST_AUTO_TEST_CASE(pack_convert_variant_ref_bin)
     msgpack::type::raw_ref rr(v.data(), static_cast<uint32_t>(v.size()));
     msgpack::type::variant_ref val1 = rr;
     BOOST_CHECK(val1.is_raw_ref());
-    BOOST_CHECK_EQUAL(val1.as_raw_ref(), rr);
+    BOOST_CHECK(val1.as_raw_ref() == rr);
 
     msgpack::pack(ss, val1);
 
@@ -649,7 +638,7 @@ BOOST_AUTO_TEST_CASE(pack_convert_variant_ref_bin)
         msgpack::unpack(str.data(), str.size());
     msgpack::type::variant_ref val2 = oh.get().as<msgpack::type::variant_ref>();
     BOOST_CHECK(val2.is_raw_ref());
-    BOOST_CHECK_EQUAL(val2.as_raw_ref(), rr);
+    BOOST_CHECK(val2.as_raw_ref() == rr);
     BOOST_CHECK_NO_THROW(boost::get<msgpack::type::raw_ref>(val2));
     BOOST_CHECK(val1 == val2);
 }
@@ -666,11 +655,11 @@ BOOST_AUTO_TEST_CASE(object_with_zone_variant_ref_bin)
     msgpack::type::raw_ref rr(v.data(), static_cast<uint32_t>(v.size()));
     msgpack::type::variant_ref val1 = rr;
     BOOST_CHECK(val1.is_raw_ref());
-    BOOST_CHECK_EQUAL(val1.as_raw_ref(), rr);
+    BOOST_CHECK(val1.as_raw_ref() == rr);
     msgpack::object obj(val1, z);
     msgpack::type::variant_ref val2 = obj.as<msgpack::type::variant_ref>();
     BOOST_CHECK(val2.is_raw_ref());
-    BOOST_CHECK_EQUAL(val2.as_raw_ref(), rr);
+    BOOST_CHECK(val2.as_raw_ref() == rr);
     BOOST_CHECK_NO_THROW(boost::get<msgpack::type::raw_ref>(val2));
     BOOST_CHECK(val1 == val2);
 }
@@ -688,7 +677,7 @@ BOOST_AUTO_TEST_CASE(pack_convert_variant_ref_ext)
     msgpack::type::ext_ref er(v.data(), static_cast<uint32_t>(v.size()));
     msgpack::type::variant_ref val1(er);
     BOOST_CHECK(val1.is_ext_ref());
-    BOOST_CHECK_EQUAL(val1.as_ext_ref(), er);
+    BOOST_CHECK(val1.as_ext_ref() == er);
 
     msgpack::pack(ss, val1);
 
@@ -698,7 +687,7 @@ BOOST_AUTO_TEST_CASE(pack_convert_variant_ref_ext)
     msgpack::type::variant_ref val2 = oh.get().as<msgpack::type::variant_ref>();
     BOOST_CHECK_NO_THROW(boost::get<msgpack::type::ext_ref>(val2));
     BOOST_CHECK(val2.is_ext_ref());
-    BOOST_CHECK_EQUAL(val2.as_ext_ref(), er);
+    BOOST_CHECK(val2.as_ext_ref() == er);
     BOOST_CHECK(val1 == val2);
 }
 
@@ -714,11 +703,11 @@ BOOST_AUTO_TEST_CASE(object_with_zone_variant_ref_ext)
     msgpack::type::ext_ref er(v.data(), static_cast<uint32_t>(v.size()));
     msgpack::type::variant_ref val1(er);
     BOOST_CHECK(val1.is_ext_ref());
-    BOOST_CHECK_EQUAL(val1.as_ext_ref(), er);
+    BOOST_CHECK(val1.as_ext_ref() == er);
     msgpack::object obj(val1, z);
     msgpack::type::variant_ref val2 = obj.as<msgpack::type::variant_ref>();
     BOOST_CHECK(val2.is_ext_ref());
-    BOOST_CHECK_EQUAL(val2.as_ext_ref(), er);
+    BOOST_CHECK(val2.as_ext_ref() == er);
     BOOST_CHECK_NO_THROW(boost::get<msgpack::type::ext_ref>(val2));
     BOOST_CHECK(val1 == val2);
 }
@@ -739,7 +728,7 @@ BOOST_AUTO_TEST_CASE(pack_convert_variant_ref_array)
 #endif // (BOOST_VERSION / 100000) >= 1 && ((BOOST_VERSION / 100) % 1000) >= 53
     msgpack::type::variant_ref val1 = v;
     BOOST_CHECK(val1.is_vector());
-    BOOST_CHECK_EQUAL(val1.as_vector(), v);
+    BOOST_CHECK(val1.as_vector() == v);
 
     msgpack::pack(ss, val1);
 
@@ -748,7 +737,7 @@ BOOST_AUTO_TEST_CASE(pack_convert_variant_ref_array)
         msgpack::unpack(str.data(), str.size());
     msgpack::type::variant_ref val2 = oh.get().as<msgpack::type::variant_ref>();
     BOOST_CHECK(val2.is_vector());
-    BOOST_CHECK_EQUAL(val2.as_vector(), v);
+    BOOST_CHECK(val2.as_vector() == v);
     BOOST_CHECK_NO_THROW(boost::get<std::vector<msgpack::type::variant_ref> >(val2));
     BOOST_CHECK(val1 == val2);
 }
@@ -767,11 +756,11 @@ BOOST_AUTO_TEST_CASE(object_with_zone_variant_ref_array)
 #endif // (BOOST_VERSION / 100000) >= 1 && ((BOOST_VERSION / 100) % 1000) >= 53
     msgpack::type::variant_ref val1 = v;
     BOOST_CHECK(val1.is_vector());
-    BOOST_CHECK_EQUAL(val1.as_vector(), v);
+    BOOST_CHECK(val1.as_vector() == v);
     msgpack::object obj(val1, z);
     msgpack::type::variant_ref val2 = obj.as<msgpack::type::variant_ref>();
     BOOST_CHECK(val2.is_vector());
-    BOOST_CHECK_EQUAL(val2.as_vector(), v);
+    BOOST_CHECK(val2.as_vector() == v);
     BOOST_CHECK_NO_THROW(boost::get<std::vector<msgpack::type::variant_ref> >(val2));
     BOOST_CHECK(val1 == val2);
 }
@@ -793,7 +782,7 @@ BOOST_AUTO_TEST_CASE(pack_convert_variant_ref_map)
 #endif // (BOOST_VERSION / 100000) >= 1 && ((BOOST_VERSION / 100) % 1000) >= 53
     msgpack::type::variant_ref val1 = v;
     BOOST_CHECK(val1.is_multimap());
-    BOOST_CHECK_EQUAL(val1.as_multimap(), v);
+    BOOST_CHECK(val1.as_multimap() == v);
 
     msgpack::pack(ss, val1);
 
@@ -802,7 +791,7 @@ BOOST_AUTO_TEST_CASE(pack_convert_variant_ref_map)
         msgpack::unpack(str.data(), str.size());
     msgpack::type::variant_ref val2 = oh.get().as<msgpack::type::variant_ref>();
     BOOST_CHECK(val2.is_multimap());
-    BOOST_CHECK_EQUAL(val2.as_multimap(), v);
+    BOOST_CHECK(val2.as_multimap() == v);
     BOOST_CHECK_NO_THROW(boost::get<multimap_t>(val2));
     BOOST_CHECK(val1 == val2);
 }
@@ -822,11 +811,11 @@ BOOST_AUTO_TEST_CASE(object_with_zone_variant_ref_map)
 #endif // (BOOST_VERSION / 100000) >= 1 && ((BOOST_VERSION / 100) % 1000) >= 53
     msgpack::type::variant_ref val1 = v;
     BOOST_CHECK(val1.is_multimap());
-    BOOST_CHECK_EQUAL(val1.as_multimap(), v);
+    BOOST_CHECK(val1.as_multimap() == v);
     msgpack::object obj(val1, z);
     msgpack::type::variant_ref val2 = obj.as<msgpack::type::variant_ref>();
     BOOST_CHECK(val2.is_multimap());
-    BOOST_CHECK_EQUAL(val2.as_multimap(), v);
+    BOOST_CHECK(val2.as_multimap() == v);
     BOOST_CHECK_NO_THROW(boost::get<multimap_t>(val2));
     BOOST_CHECK(val1 == val2);
 }

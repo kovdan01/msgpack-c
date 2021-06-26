@@ -7,14 +7,6 @@
 #define BOOST_TEST_MODULE MSGPACK_X3_PARSE
 #include <boost/test/unit_test.hpp>
 
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::vector<char>)
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::vector<int>)
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::vector<unsigned int>)
-using map_int_int = std::map<int, int>;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(map_int_int)
-using map_uint_uint = std::map<unsigned int, unsigned int>;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(map_uint_uint)
-
 // To avoid link error
 BOOST_AUTO_TEST_CASE(dummy)
 {
@@ -263,7 +255,7 @@ BOOST_AUTO_TEST_CASE(array_1)
     msgpack::pack(ss, v);
 
     auto oh = msgpack::unpack(ss.str().begin(), ss.str().end());
-    BOOST_CHECK_EQUAL(v, oh.get().as<std::vector<int> >());
+    BOOST_CHECK(v == oh.get().as<std::vector<int> >());
 }
 
 BOOST_AUTO_TEST_CASE(array_2)
@@ -274,7 +266,7 @@ BOOST_AUTO_TEST_CASE(array_2)
     msgpack::pack(ss, v);
 
     auto oh = msgpack::unpack(ss.str().begin(), ss.str().end());
-    BOOST_CHECK_EQUAL(v, oh.get().as<std::vector<int> >());
+    BOOST_CHECK(v == oh.get().as<std::vector<int> >());
 }
 
 BOOST_AUTO_TEST_CASE(array_3)
@@ -285,7 +277,7 @@ BOOST_AUTO_TEST_CASE(array_3)
     msgpack::pack(ss, v);
 
     auto oh = msgpack::unpack(ss.str().begin(), ss.str().end());
-    BOOST_CHECK_EQUAL(v, oh.get().as<std::vector<int> >());
+    BOOST_CHECK(v == oh.get().as<std::vector<int> >());
 }
 
 BOOST_AUTO_TEST_CASE(array_4)
@@ -296,7 +288,7 @@ BOOST_AUTO_TEST_CASE(array_4)
     msgpack::pack(ss, v);
 
     auto oh = msgpack::unpack(ss.str().begin(), ss.str().end());
-    BOOST_CHECK_EQUAL(v, oh.get().as<std::vector<int> >());
+    BOOST_CHECK(v == oh.get().as<std::vector<int> >());
 }
 
 BOOST_AUTO_TEST_CASE(array_5)
@@ -307,7 +299,7 @@ BOOST_AUTO_TEST_CASE(array_5)
     msgpack::pack(ss, v);
 
     auto oh = msgpack::unpack(ss.str().begin(), ss.str().end());
-    BOOST_CHECK_EQUAL(v, oh.get().as<std::vector<uint32_t> >());
+    BOOST_CHECK(v == oh.get().as<std::vector<uint32_t> >());
 }
 
 BOOST_AUTO_TEST_CASE(map_1)
@@ -317,7 +309,7 @@ BOOST_AUTO_TEST_CASE(map_1)
     msgpack::pack(ss, v);
 
     auto oh = msgpack::unpack(ss.str().begin(), ss.str().end());
-    BOOST_CHECK_EQUAL(v, (oh.get().as<std::map<int, int> >()));
+    BOOST_CHECK(v == (oh.get().as<std::map<int, int> >()));
 }
 
 BOOST_AUTO_TEST_CASE(map_2)
@@ -328,7 +320,7 @@ BOOST_AUTO_TEST_CASE(map_2)
     msgpack::pack(ss, v);
 
     auto oh = msgpack::unpack(ss.str().begin(), ss.str().end());
-    BOOST_CHECK_EQUAL(v, (oh.get().as<std::map<int, int> >()));
+    BOOST_CHECK(v == (oh.get().as<std::map<int, int> >()));
 }
 
 BOOST_AUTO_TEST_CASE(map_3)
@@ -339,7 +331,7 @@ BOOST_AUTO_TEST_CASE(map_3)
     msgpack::pack(ss, v);
 
     auto oh = msgpack::unpack(ss.str().begin(), ss.str().end());
-    BOOST_CHECK_EQUAL(v, (oh.get().as<std::map<int, int> >()));
+    BOOST_CHECK(v == (oh.get().as<std::map<int, int> >()));
 }
 
 BOOST_AUTO_TEST_CASE(map_4)
@@ -350,7 +342,7 @@ BOOST_AUTO_TEST_CASE(map_4)
     msgpack::pack(ss, v);
 
     auto oh = msgpack::unpack(ss.str().begin(), ss.str().end());
-    BOOST_CHECK_EQUAL(v, (oh.get().as<std::map<int, int> >()));
+    BOOST_CHECK(v == (oh.get().as<std::map<int, int> >()));
 }
 
 BOOST_AUTO_TEST_CASE(map_5)
@@ -361,7 +353,7 @@ BOOST_AUTO_TEST_CASE(map_5)
     msgpack::pack(ss, v);
 
     auto oh = msgpack::unpack(ss.str().begin(), ss.str().end());
-    BOOST_CHECK_EQUAL(v, (oh.get().as<std::map<uint32_t, uint32_t> >()));
+    BOOST_CHECK(v == (oh.get().as<std::map<uint32_t, uint32_t> >()));
 }
 
 BOOST_AUTO_TEST_CASE(float_1)
@@ -522,7 +514,7 @@ BOOST_AUTO_TEST_CASE(bin_1)
     msgpack::pack(ss, v);
 
     auto oh = msgpack::unpack(ss.str().begin(), ss.str().end());
-    BOOST_CHECK_EQUAL(v, oh.get().as<std::vector<char>>());
+    BOOST_CHECK(v == oh.get().as<std::vector<char>>());
 }
 
 BOOST_AUTO_TEST_CASE(bin_2)
@@ -535,7 +527,7 @@ BOOST_AUTO_TEST_CASE(bin_2)
     msgpack::pack(ss, v);
 
     auto oh = msgpack::unpack(ss.str().begin(), ss.str().end());
-    BOOST_CHECK_EQUAL(v, oh.get().as<std::vector<char>>());
+    BOOST_CHECK(v == oh.get().as<std::vector<char>>());
 }
 
 BOOST_AUTO_TEST_CASE(bin_3)
@@ -548,7 +540,7 @@ BOOST_AUTO_TEST_CASE(bin_3)
     msgpack::pack(ss, v);
 
     auto oh = msgpack::unpack(ss.str().begin(), ss.str().end());
-    BOOST_CHECK_EQUAL(v, oh.get().as<std::vector<char>>());
+    BOOST_CHECK(v == oh.get().as<std::vector<char>>());
 }
 
 BOOST_AUTO_TEST_CASE(bin_4)
@@ -561,7 +553,7 @@ BOOST_AUTO_TEST_CASE(bin_4)
     msgpack::pack(ss, v);
 
     auto oh = msgpack::unpack(ss.str().begin(), ss.str().end());
-    BOOST_CHECK_EQUAL(v, oh.get().as<std::vector<char>>());
+    BOOST_CHECK(v == oh.get().as<std::vector<char>>());
 }
 
 BOOST_AUTO_TEST_CASE(bin_5)
@@ -574,7 +566,7 @@ BOOST_AUTO_TEST_CASE(bin_5)
     msgpack::pack(ss, v);
 
     auto oh = msgpack::unpack(ss.str().begin(), ss.str().end());
-    BOOST_CHECK_EQUAL(v, oh.get().as<std::vector<char>>());
+    BOOST_CHECK(v == oh.get().as<std::vector<char>>());
 }
 
 BOOST_AUTO_TEST_CASE(bin_6)
@@ -587,7 +579,7 @@ BOOST_AUTO_TEST_CASE(bin_6)
     msgpack::pack(ss, v);
 
     auto oh = msgpack::unpack(ss.str().begin(), ss.str().end());
-    BOOST_CHECK_EQUAL(v, oh.get().as<std::vector<char>>());
+    BOOST_CHECK(v == oh.get().as<std::vector<char>>());
 }
 
 BOOST_AUTO_TEST_CASE(fixext1)

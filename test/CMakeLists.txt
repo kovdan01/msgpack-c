@@ -17,13 +17,13 @@ LIST (APPEND check_PROGRAMS
     inc_adaptor_define.cpp
     json.cpp
     limit.cpp
-    # msgpack_basic.cpp
+    msgpack_basic.cpp
     msgpack_container.cpp
     msgpack_stream.cpp
     msgpack_tuple.cpp
     msgpack_vref.cpp
     object.cpp
-    # object_with_zone.cpp
+    object_with_zone.cpp
     pack_unpack.cpp
     raw.cpp
     reference.cpp

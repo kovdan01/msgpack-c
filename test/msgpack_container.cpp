@@ -14,7 +14,6 @@
 
 #define BOOST_TEST_MODULE MSGPACK_STL
 #include <boost/test/unit_test.hpp>
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::wstring)
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -88,10 +87,10 @@ BOOST_AUTO_TEST_CASE(simple_buffer_wstring)
             msgpack::unpack(sbuf.data(), sbuf.size());
         BOOST_CHECK_EQUAL(oh.get().type, msgpack::type::ARRAY);
         wstring val2 = oh.get().as<wstring>();
-        BOOST_CHECK_EQUAL(val1, val2);
+        BOOST_CHECK(val1 == val2);
         wstring val3;
         oh.get().convert(val3);
-        BOOST_CHECK_EQUAL(val1, val3);
+        BOOST_CHECK(val1 == val3);
     }
 }
 

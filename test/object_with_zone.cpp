@@ -2,7 +2,6 @@
 
 #define BOOST_TEST_MODULE object_with_zone
 #include <boost/test/unit_test.hpp>
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::wstring)
 
 #include <cmath>
 
@@ -310,9 +309,9 @@ BOOST_AUTO_TEST_CASE(wstring)
     std::wstring v = L"abc";
     msgpack::zone z;
     msgpack::object obj(v, z);
-    BOOST_CHECK_EQUAL(obj.as<std::wstring>(), v);
+    BOOST_CHECK(obj.as<std::wstring>() == v);
     v[0] = 'd';
-    BOOST_CHECK_EQUAL(obj.as<std::wstring>()[0], L'a');
+    BOOST_CHECK(obj.as<std::wstring>()[0] == L'a');
 }
 
 // char*
@@ -478,7 +477,7 @@ BOOST_AUTO_TEST_CASE(msgpack_tuple_empty)
 #include "msgpack/adaptor/tr1/unordered_map.hpp"
 BOOST_AUTO_TEST_CASE(tr1_unordered_map)
 {
-    typedef tr1::unordered_map<int, int> test_t;
+    typedef std::tr1::unordered_map<int, int> test_t;
     for (unsigned int k = 0; k < kLoop; k++) {
         test_t v1;
         for (unsigned int i = 0; i < kElements; i++)
@@ -498,23 +497,23 @@ BOOST_AUTO_TEST_CASE(tr1_unordered_map)
 
 BOOST_AUTO_TEST_CASE(tr1_unordered_multimap)
 {
-    typedef tr1::unordered_multimap<int, int> test_t;
+    typedef std::tr1::unordered_multimap<int, int> test_t;
     for (unsigned int k = 0; k < kLoop; k++) {
         test_t v1;
         for (unsigned int i = 0; i < kElements; i++) {
             int i1 = rand();
-            v1.insert(make_pair(i1, rand()));
-            v1.insert(make_pair(i1, rand()));
+            v1.insert(std::make_pair(i1, rand()));
+            v1.insert(std::make_pair(i1, rand()));
         }
         msgpack::zone z;
         msgpack::object obj(v1, z);
         test_t v2 = obj.as<test_t>();
-        vector<pair<int, int> > vec1, vec2;
-        tr1::unordered_multimap<int, int>::const_iterator it;
+        std::vector<std::pair<int, int> > vec1, vec2;
+        std::tr1::unordered_multimap<int, int>::const_iterator it;
         for (it = v1.begin(); it != v1.end(); ++it)
-            vec1.push_back(make_pair(it->first, it->second));
+            vec1.push_back(std::make_pair(it->first, it->second));
         for (it = v2.begin(); it != v2.end(); ++it)
-            vec2.push_back(make_pair(it->first, it->second));
+            vec2.push_back(std::make_pair(it->first, it->second));
         BOOST_CHECK_EQUAL(v1.size(), v2.size());
         BOOST_CHECK_EQUAL(vec1.size(), vec2.size());
         sort(vec1.begin(), vec1.end());
@@ -529,7 +528,7 @@ BOOST_AUTO_TEST_CASE(tr1_unordered_multimap)
 #include "msgpack/adaptor/tr1/unordered_set.hpp"
 BOOST_AUTO_TEST_CASE(tr1_unordered_set)
 {
-    typedef tr1::unordered_set<int> test_t;
+    typedef std::tr1::unordered_set<int> test_t;
     for (unsigned int k = 0; k < kLoop; k++) {
         test_t v1;
         for (unsigned int i = 0; i < kElements; i++)
@@ -538,7 +537,7 @@ BOOST_AUTO_TEST_CASE(tr1_unordered_set)
         msgpack::object obj(v1, z);
         test_t v2 = obj.as<test_t>();
         BOOST_CHECK_EQUAL(v1.size(), v2.size());
-        tr1::unordered_set<int>::const_iterator it;
+        std::tr1::unordered_set<int>::const_iterator it;
         for (it = v1.begin(); it != v1.end(); ++it)
             BOOST_CHECK(v2.find(*it) != v2.end());
     }
@@ -546,7 +545,7 @@ BOOST_AUTO_TEST_CASE(tr1_unordered_set)
 
 BOOST_AUTO_TEST_CASE(tr1_unordered_multiset)
 {
-    typedef tr1::unordered_set<int> test_t;
+    typedef std::tr1::unordered_set<int> test_t;
     for (unsigned int k = 0; k < kLoop; k++) {
         test_t v1;
         for (unsigned int i = 0; i < kElements; i++) {
@@ -557,8 +556,8 @@ BOOST_AUTO_TEST_CASE(tr1_unordered_multiset)
         msgpack::zone z;
         msgpack::object obj(v1, z);
         test_t v2 = obj.as<test_t>();
-        vector<int> vec1, vec2;
-        tr1::unordered_multiset<int>::const_iterator it;
+        std::vector<int> vec1, vec2;
+        std::tr1::unordered_multiset<int>::const_iterator it;
         for (it = v1.begin(); it != v1.end(); ++it)
             vec1.push_back(*it);
         for (it = v2.begin(); it != v2.end(); ++it)

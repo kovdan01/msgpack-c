@@ -11,6 +11,7 @@
 
 #define BOOST_TEST_MODULE MSGPACK
 #include <boost/test/unit_test.hpp>
+#include <boost/mpl/list.hpp>
 
 #if defined(_MSC_VER) || defined(__MINGW32__)
 #define msgpack_rand() ((double)rand() / RAND_MAX)
@@ -198,12 +199,12 @@ struct TypePair {
 };
 } // namespace
 
-template <typename T>
-class IntegerToFloatingPointTest : public testing::Test {
-};
-TYPED_TEST_CASE_P(IntegerToFloatingPointTest);
+typedef boost::mpl::list<TypePair<float, signed long long>,
+                         TypePair<float, unsigned long long>,
+                         TypePair<double, signed long long>,
+                         TypePair<double, unsigned long long> > IntegerToFloatingPointTestTypes;
 
-TYPED_TEST_P(IntegerToFloatingPointTest, simple_buffer)
+BOOST_AUTO_TEST_CASE_TEMPLATE(simple_buffer, TypeParam, IntegerToFloatingPointTestTypes)
 {
     typedef typename TypeParam::float_type float_type;
     typedef typename TypeParam::integer_type integer_type;
@@ -225,17 +226,6 @@ TYPED_TEST_P(IntegerToFloatingPointTest, simple_buffer)
         BOOST_CHECK(fabs(val2 - static_cast<float_type>(val1)) <= kEPS);
     }
 }
-
-REGISTER_TYPED_TEST_CASE_P(IntegerToFloatingPointTest,
-                           simple_buffer);
-
-typedef testing::Types<TypePair<float, signed long long>,
-                       TypePair<float, unsigned long long>,
-                       TypePair<double, signed long long>,
-                       TypePair<double, unsigned long long> > IntegerToFloatingPointTestTypes;
-INSTANTIATE_TYPED_TEST_CASE_P(IntegerToFloatingPointTestInstance,
-                              IntegerToFloatingPointTest,
-                              IntegerToFloatingPointTestTypes);
 
 #if !defined(_MSC_VER) || _MSC_VER >=1800
 

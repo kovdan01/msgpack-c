@@ -2,12 +2,6 @@
 
 #define BOOST_TEST_MODULE MSGPACK_CPP17
 #include <boost/test/unit_test.hpp>
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::byte)
-BOOST_TEST_DONT_PRINT_LOG_VALUE(std::vector<std::byte>)
-typedef std::array<std::byte, 5> array_byte_5;
-typedef std::array<std::byte, 0> array_byte_0;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(array_byte_5)
-BOOST_TEST_DONT_PRINT_LOG_VALUE(array_byte_0)
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -241,7 +235,7 @@ BOOST_AUTO_TEST_CASE(byte_pack_convert)
     std::string const& str = ss.str();
     msgpack::unpack(oh, str.data(), str.size());
     std::byte val2 = oh.get().as<std::byte>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
 
 BOOST_AUTO_TEST_CASE(byte_object)
@@ -249,7 +243,7 @@ BOOST_AUTO_TEST_CASE(byte_object)
     std::byte val1{0x00};
     msgpack::object obj(val1);
     std::byte val2 = obj.as<std::byte>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
 
 BOOST_AUTO_TEST_CASE(byte_object_with_zone)
@@ -258,7 +252,7 @@ BOOST_AUTO_TEST_CASE(byte_object_with_zone)
     std::byte val1{80};
     msgpack::object obj(val1, z);
     std::byte val2 = obj.as<std::byte>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
 
 BOOST_AUTO_TEST_CASE(vector_byte_pack_convert)
@@ -280,7 +274,7 @@ BOOST_AUTO_TEST_CASE(vector_byte_pack_convert)
     msgpack::object_handle oh;
     msgpack::unpack(oh, str.data(), str.size());
     std::vector<std::byte> val2 = oh.get().as<std::vector<std::byte>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
 
 BOOST_AUTO_TEST_CASE(vector_byte_object)
@@ -293,7 +287,7 @@ BOOST_AUTO_TEST_CASE(vector_byte_object)
     msgpack::object obj(val1);
 
     std::vector<std::byte> val2 = obj.as<std::vector<std::byte>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
 
 BOOST_AUTO_TEST_CASE(vector_byte_object_with_zone)
@@ -305,7 +299,7 @@ BOOST_AUTO_TEST_CASE(vector_byte_object_with_zone)
     msgpack::object obj(val1, z);
 
     std::vector<std::byte> val2 = obj.as<std::vector<std::byte>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 }
 
 BOOST_AUTO_TEST_CASE(array_byte_pack_convert)
@@ -328,7 +322,7 @@ BOOST_AUTO_TEST_CASE(array_byte_pack_convert)
         msgpack::object_handle oh;
         msgpack::unpack(oh, str.data(), str.size());
         auto val2 = oh.get().as<std::array<std::byte, 5>>();
-        BOOST_CHECK_EQUAL(val1, val2);
+        BOOST_CHECK(val1 == val2);
     }
     {
         msgpack::object_handle oh;
@@ -349,7 +343,7 @@ BOOST_AUTO_TEST_CASE(array_byte_object)
     msgpack::object obj(val1);
 
     auto val2 = obj.as<std::array<std::byte, 5>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     BOOST_CHECK_THROW((obj.as<std::array<std::byte, 0>>()),    msgpack::type_error);
     BOOST_CHECK_THROW((obj.as<std::array<std::byte, 1>>()),    msgpack::type_error);
@@ -365,7 +359,7 @@ BOOST_AUTO_TEST_CASE(array_byte_object_with_zone)
     msgpack::object obj(val1, z);
 
     auto val2 = obj.as<std::array<std::byte, 5>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     BOOST_CHECK_THROW((obj.as<std::array<std::byte, 0>>()),    msgpack::type_error);
     BOOST_CHECK_THROW((obj.as<std::array<std::byte, 1>>()),    msgpack::type_error);
@@ -390,7 +384,7 @@ BOOST_AUTO_TEST_CASE(array_byte_empty_pack_convert)
         msgpack::object_handle oh;
         msgpack::unpack(oh, str.data(), str.size());
         auto val2 = oh.get().as<std::array<std::byte, 0>>();
-        BOOST_CHECK_EQUAL(val1, val2);
+        BOOST_CHECK(val1 == val2);
     }
     {
         msgpack::object_handle oh;
@@ -408,7 +402,7 @@ BOOST_AUTO_TEST_CASE(array_byte_empty_object)
     msgpack::object obj(val1);
 
     auto val2 = obj.as<std::array<std::byte, 0>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     BOOST_CHECK_THROW((obj.as<std::array<std::byte, 1>>()),    msgpack::type_error);
     BOOST_CHECK_THROW((obj.as<std::array<std::byte, 8192>>()), msgpack::type_error);
@@ -421,7 +415,7 @@ BOOST_AUTO_TEST_CASE(array_byte_empty_object_with_zone)
     msgpack::object obj(val1, z);
 
     auto val2 = obj.as<std::array<std::byte, 0>>();
-    BOOST_CHECK_EQUAL(val1, val2);
+    BOOST_CHECK(val1 == val2);
 
     BOOST_CHECK_THROW((obj.as<std::array<std::byte, 1>>()),    msgpack::type_error);
     BOOST_CHECK_THROW((obj.as<std::array<std::byte, 8192>>()), msgpack::type_error);
@@ -448,7 +442,7 @@ BOOST_AUTO_TEST_CASE(carray_byte_pack_convert)
     std::byte val2[sizeof(val1)];
     oh.get().convert(val2);
     for (size_t i = 0; i != sizeof(val1); ++i) {
-        BOOST_CHECK_EQUAL(val1[i], val2[i]);
+        BOOST_CHECK(val1[i] == val2[i]);
     }
 }
 
@@ -463,7 +457,7 @@ BOOST_AUTO_TEST_CASE(carray_byte_object_with_zone)
     std::byte val2[sizeof(val1)];
     obj.convert(val2);
     for (size_t i = 0; i != sizeof(val1); ++i) {
-        BOOST_CHECK_EQUAL(val1[i], val2[i]);
+        BOOST_CHECK(val1[i] == val2[i]);
     }
 }
 
