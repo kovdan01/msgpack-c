@@ -50,7 +50,7 @@ jobs:
     - name: Build and test
       shell: bash
       run: |
-        if [[ ${{ matrix.cxx }} -lt 14 && "${{ matrix.x3_parse }}" == "ON" ]]; then
+        if [[ (${{ matrix.cxx }} -eq 98 || ${{ matrix.cxx }} -lt 14) && "${{ matrix.x3_parse }}" == "ON" ]]; then
           echo "X3 parse is only supported with C++14 or newer - skip this configuration"
           exit 0
         fi
@@ -126,7 +126,7 @@ jobs:
     - name: Build and test
       shell: bash
       run: |
-        if [[ ${{ matrix.cxx }} -lt 14 && "${{ matrix.x3_parse }}" == "ON" ]]; then
+        if [[ (${{ matrix.cxx }} -eq 98 || ${{ matrix.cxx }} -lt 14) && "${{ matrix.x3_parse }}" == "ON" ]]; then
           echo "X3 parse is only supported with C++14 or newer - skip this configuration"
           exit 0
         fi

@@ -2,6 +2,8 @@
 
 #define BOOST_TEST_MODULE MSGPACK_CPP11
 #include <boost/test/unit_test.hpp>
+typedef std::tuple<bool, std::string, double> tuple_bool_string_double;
+BOOST_TEST_DONT_PRINT_LOG_VALUE(tuple_bool_string_double)
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

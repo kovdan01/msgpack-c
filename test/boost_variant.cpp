@@ -10,6 +10,12 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE(msgpack::v1::type::ext)
 BOOST_TEST_DONT_PRINT_LOG_VALUE(msgpack::v1::type::ext_ref)
 BOOST_TEST_DONT_PRINT_LOG_VALUE(msgpack::v1::type::raw_ref)
 BOOST_TEST_DONT_PRINT_LOG_VALUE(std::vector<char>)
+typedef std::multimap<msgpack::type::variant, msgpack::type::variant> multimap_variant_t;
+BOOST_TEST_DONT_PRINT_LOG_VALUE(multimap_variant_t)
+typedef std::multimap<msgpack::type::variant_ref, msgpack::type::variant_ref> multimap_variant_ref_t;
+BOOST_TEST_DONT_PRINT_LOG_VALUE(multimap_variant_ref_t)
+BOOST_TEST_DONT_PRINT_LOG_VALUE(std::vector<msgpack::type::variant>)
+BOOST_TEST_DONT_PRINT_LOG_VALUE(std::vector<msgpack::type::variant_ref>)
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

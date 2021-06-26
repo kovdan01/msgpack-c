@@ -8,7 +8,7 @@ LIST (APPEND check_PROGRAMS
     boost_optional.cpp
     boost_string_ref.cpp
     boost_string_view.cpp
-    # boost_variant.cpp
+    boost_variant.cpp
     buffer.cpp
     carray.cpp
     cases.cpp
@@ -18,16 +18,16 @@ LIST (APPEND check_PROGRAMS
     json.cpp
     limit.cpp
     # msgpack_basic.cpp
-    # msgpack_container.cpp
+    msgpack_container.cpp
     msgpack_stream.cpp
     msgpack_tuple.cpp
     msgpack_vref.cpp
-    # object.cpp
+    object.cpp
     # object_with_zone.cpp
     pack_unpack.cpp
     raw.cpp
-    # reference.cpp
-    # size_equal_only.cpp
+    reference.cpp
+    size_equal_only.cpp
     streaming.cpp
     user_class.cpp
     version.cpp

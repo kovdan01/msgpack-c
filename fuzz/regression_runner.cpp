@@ -1,5 +1,9 @@
 #include <boost/filesystem.hpp>
 
+// Use parameterized tests instead of modern data-driven test cases
+// because BOOST_DATA_TEST_CASE requires C++11 or newer. See:
+// - https://www.boost.org/doc/libs/1_76_0/libs/test/doc/html/boost_test/tests_organization/test_cases/param_test.html
+// - https://www.boost.org/doc/libs/1_76_0/libs/test/doc/html/boost_test/tests_organization/test_cases/test_case_generation.html
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/parameterized_test.hpp>
 

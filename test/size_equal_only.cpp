@@ -4,8 +4,6 @@
 #define BOOST_TEST_MODULE size_equal_only
 #include <boost/test/unit_test.hpp>
 BOOST_TEST_DONT_PRINT_LOG_VALUE(std::vector<int>)
-typedef std::tuple<int, bool, std::string> tuple_int_bool_string;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(tuple_int_bool_string)
 
 BOOST_AUTO_TEST_CASE(array)
 {
@@ -141,6 +139,9 @@ BOOST_AUTO_TEST_CASE(msgpack_tuple)
 }
 
 #if !defined(MSGPACK_USE_CPP03)
+
+typedef std::tuple<int, bool, std::string> tuple_int_bool_string;
+BOOST_TEST_DONT_PRINT_LOG_VALUE(tuple_int_bool_string)
 
 BOOST_AUTO_TEST_CASE(tuple)
 {

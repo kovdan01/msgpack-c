@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE(unpack_int_sized_ref)
     msgpack::object_handle oh =
         msgpack::unpack(sbuf.data(), sbuf.size(), referenced, never_called, &sbuf);
     BOOST_CHECK(!referenced);
-    BOOST_CHECK_EQUAL(MSGPACK_NULLPTR, s_p);
+    BOOST_CHECK(MSGPACK_NULLPTR == s_p);
 }
 
 BOOST_AUTO_TEST_CASE(unpack_string_sized_ref_4)
@@ -339,7 +339,7 @@ BOOST_AUTO_TEST_CASE(unpacker_int_sized_ref)
     bool b = unp.next(oh, referenced);
     BOOST_CHECK(b);
     BOOST_CHECK(!referenced);
-    BOOST_CHECK_EQUAL(MSGPACK_NULLPTR, s_p);
+    BOOST_CHECK(MSGPACK_NULLPTR == s_p);
 }
 
 BOOST_AUTO_TEST_CASE(unpacker_string_sized_ref_4)

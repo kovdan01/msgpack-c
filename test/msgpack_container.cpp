@@ -647,7 +647,7 @@ struct tr1_hash : std::tr1::hash<Key> {
 #ifdef MSGPACK_HAS_STD_TR1_UNORDERED_MAP
 #include <tr1/unordered_map>
 #include "msgpack/adaptor/tr1/unordered_map.hpp"
-TEST(MSGPACK_TR1, simple_buffer_tr1_unordered_map)
+BOOST_AUTO_TEST_CASE(simple_buffer_tr1_unordered_map)
 {
     typedef tr1::unordered_map<int, int, test::tr1_hash<int>, test::equal_to<int>, test::allocator<std::pair<const int, int> > > type;
     for (unsigned int k = 0; k < kLoop; k++) {
@@ -668,7 +668,7 @@ TEST(MSGPACK_TR1, simple_buffer_tr1_unordered_map)
     }
 }
 
-TEST(MSGPACK_TR1, simple_buffer_tr1_unordered_map_empty)
+BOOST_AUTO_TEST_CASE(simple_buffer_tr1_unordered_map_empty)
 {
     typedef tr1::unordered_map<int, int, test::tr1_hash<int>, test::equal_to<int>, test::allocator<std::pair<const int, int> > > type;
     type val1;
@@ -680,7 +680,7 @@ TEST(MSGPACK_TR1, simple_buffer_tr1_unordered_map_empty)
     BOOST_CHECK_EQUAL(val1.size(), val2.size());
 }
 
-TEST(MSGPACK_TR1, simple_buffer_tr1_unordered_multimap)
+BOOST_AUTO_TEST_CASE(simple_buffer_tr1_unordered_multimap)
 {
     typedef tr1::unordered_multimap<int, int, test::tr1_hash<int>, test::equal_to<int>, test::allocator<std::pair<const int, int> > > type;
     for (unsigned int k = 0; k < kLoop; k++) {
@@ -710,7 +710,7 @@ TEST(MSGPACK_TR1, simple_buffer_tr1_unordered_multimap)
     }
 }
 
-TEST(MSGPACK_TR1, simple_buffer_tr1_unordered_multimap_empty)
+BOOST_AUTO_TEST_CASE(simple_buffer_tr1_unordered_multimap_empty)
 {
     typedef tr1::unordered_multimap<int, int, test::tr1_hash<int>, test::equal_to<int>, test::allocator<std::pair<const int, int> > > type;
     type val1;
@@ -727,7 +727,7 @@ TEST(MSGPACK_TR1, simple_buffer_tr1_unordered_multimap_empty)
 #ifdef MSGPACK_HAS_STD_TR1_UNORDERED_SET
 #include <tr1/unordered_set>
 #include "msgpack/adaptor/tr1/unordered_set.hpp"
-TEST(MSGPACK_TR1, simple_buffer_tr1_unordered_set)
+BOOST_AUTO_TEST_CASE(simple_buffer_tr1_unordered_set)
 {
     typedef tr1::unordered_set<int, test::tr1_hash<int>, test::equal_to<int>, test::allocator<int> > type;
     for (unsigned int k = 0; k < kLoop; k++) {
@@ -746,7 +746,7 @@ TEST(MSGPACK_TR1, simple_buffer_tr1_unordered_set)
     }
 }
 
-TEST(MSGPACK_TR1, simple_buffer_tr1_unordered_set_empty)
+BOOST_AUTO_TEST_CASE(simple_buffer_tr1_unordered_set_empty)
 {
     typedef tr1::unordered_set<int, test::tr1_hash<int>, test::equal_to<int>, test::allocator<int> > type;
     type val1;
@@ -758,7 +758,7 @@ TEST(MSGPACK_TR1, simple_buffer_tr1_unordered_set_empty)
     BOOST_CHECK_EQUAL(val1.size(), val2.size());
 }
 
-TEST(MSGPACK_TR1, simple_buffer_tr1_unordered_multiset)
+BOOST_AUTO_TEST_CASE(simple_buffer_tr1_unordered_multiset)
 {
     typedef tr1::unordered_multiset<int, test::tr1_hash<int>, test::equal_to<int>, test::allocator<int> > type;
     for (unsigned int k = 0; k < kLoop; k++) {
@@ -785,7 +785,7 @@ TEST(MSGPACK_TR1, simple_buffer_tr1_unordered_multiset)
     }
 }
 
-TEST(MSGPACK_TR1, simple_buffer_tr1_unordered_multiset_empty)
+BOOST_AUTO_TEST_CASE(simple_buffer_tr1_unordered_multiset_empty)
 {
     typedef tr1::unordered_multiset<int, test::tr1_hash<int>, test::equal_to<int>, test::allocator<int> > type;
     type val1;
@@ -816,7 +816,7 @@ struct hash : std::hash<Key> {
 #ifdef MSGPACK_HAS_STD_UNORDERED_MAP
 #include <unordered_map>
 #include "msgpack/adaptor/tr1/unordered_map.hpp"
-TEST(MSGPACK_TR1, simple_buffer_unordered_map)
+BOOST_AUTO_TEST_CASE(simple_buffer_unordered_map)
 {
     typedef unordered_map<int, int, test::hash<int>, test::equal_to<int>, test::allocator<std::pair<const int, int> > > type;
     for (unsigned int k = 0; k < kLoop; k++) {
@@ -837,7 +837,7 @@ TEST(MSGPACK_TR1, simple_buffer_unordered_map)
     }
 }
 
-TEST(MSGPACK_TR1, simple_buffer_unordered_map_empty)
+BOOST_AUTO_TEST_CASE(simple_buffer_unordered_map_empty)
 {
     typedef unordered_map<int, int, test::hash<int>, test::equal_to<int>, test::allocator<std::pair<const int, int> > > type;
     type val1;
@@ -849,7 +849,7 @@ TEST(MSGPACK_TR1, simple_buffer_unordered_map_empty)
     BOOST_CHECK_EQUAL(val1.size(), val2.size());
 }
 
-TEST(MSGPACK_TR1, simple_buffer_unordered_multimap)
+BOOST_AUTO_TEST_CASE(simple_buffer_unordered_multimap)
 {
     typedef unordered_multimap<int, int, test::hash<int>, test::equal_to<int>, test::allocator<std::pair<const int, int> > > type;
     for (unsigned int k = 0; k < kLoop; k++) {
@@ -879,7 +879,7 @@ TEST(MSGPACK_TR1, simple_buffer_unordered_multimap)
     }
 }
 
-TEST(MSGPACK_TR1, simple_buffer_unordered_multimap_empty)
+BOOST_AUTO_TEST_CASE(simple_buffer_unordered_multimap_empty)
 {
     typedef unordered_multimap<int, int, test::hash<int>, test::equal_to<int>, test::allocator<std::pair<const int, int> > > type;
     type val1;
@@ -897,7 +897,7 @@ TEST(MSGPACK_TR1, simple_buffer_unordered_multimap_empty)
 
 #include <unordered_set>
 #include "msgpack/adaptor/tr1/unordered_set.hpp"
-TEST(MSGPACK_TR1, simple_buffer_unordered_set)
+BOOST_AUTO_TEST_CASE(simple_buffer_unordered_set)
 {
     typedef unordered_set<int, test::hash<int>, test::equal_to<int>, test::allocator<int> > type;
     for (unsigned int k = 0; k < kLoop; k++) {
@@ -916,7 +916,7 @@ TEST(MSGPACK_TR1, simple_buffer_unordered_set)
     }
 }
 
-TEST(MSGPACK_TR1, simple_buffer_unordered_set_empty)
+BOOST_AUTO_TEST_CASE(simple_buffer_unordered_set_empty)
 {
     typedef unordered_set<int, test::hash<int>, test::equal_to<int>, test::allocator<int> > type;
     type val1;
@@ -928,7 +928,7 @@ TEST(MSGPACK_TR1, simple_buffer_unordered_set_empty)
     BOOST_CHECK_EQUAL(val1.size(), val2.size());
 }
 
-TEST(MSGPACK_TR1, simple_buffer_unordered_multiset)
+BOOST_AUTO_TEST_CASE(simple_buffer_unordered_multiset)
 {
     typedef unordered_multiset<int, test::hash<int>, test::equal_to<int>, test::allocator<int> > type;
     for (unsigned int k = 0; k < kLoop; k++) {
@@ -955,7 +955,7 @@ TEST(MSGPACK_TR1, simple_buffer_unordered_multiset)
     }
 }
 
-TEST(MSGPACK_TR1, simple_buffer_unordered_multiset_empty)
+BOOST_AUTO_TEST_CASE(simple_buffer_unordered_multiset_empty)
 {
     typedef unordered_multiset<int, test::hash<int>, test::equal_to<int>, test::allocator<int> > type;
     type val1;

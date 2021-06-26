@@ -2,6 +2,7 @@
 
 #define BOOST_TEST_MODULE object
 #include <boost/test/unit_test.hpp>
+#include <boost/test/tools/output_test_stream.hpp>
 
 enum enum_test {
     elem
@@ -223,7 +224,9 @@ BOOST_AUTO_TEST_CASE(cross_zone_copy_construct_ext)
 BOOST_AUTO_TEST_CASE(print)
 {
     msgpack::object obj;
-    std::cout << obj << std::endl;
+    boost::test_tools::output_test_stream output;
+    output << obj;
+    BOOST_CHECK(output.is_equal("null"));
 }
 
 
@@ -527,6 +530,8 @@ BOOST_AUTO_TEST_CASE(raw_ref)
     BOOST_CHECK(obj.as<msgpack::type::raw_ref>() == v);
 }
 
+#if __cplusplus >= 201703
+
 BOOST_AUTO_TEST_CASE(array_char)
 {
     typedef std::array<char, kElements> test_t;
@@ -560,3 +565,5 @@ BOOST_AUTO_TEST_CASE(array_unsigned_char)
         BOOST_CHECK_EQUAL(obj.as<test_t>().front(), 42);
     }
 }
+
+#endif // __cplusplus >= 201703
