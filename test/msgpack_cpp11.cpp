@@ -715,6 +715,10 @@ BOOST_AUTO_TEST_CASE(no_def_con_def_con_pair_simple_buffer)
     BOOST_CHECK(val1 == val2);
 }
 
+// MSVC2015's std::tuple requires default constructor during 'as' process.
+// It doesn't support Expression SFINAE, then 'as' is fallbacked to 'convert'.
+#if !defined(_MSC_VER) || (_MSC_VER > 1900)
+
 BOOST_AUTO_TEST_CASE(no_def_con_tuple_simple_buffer)
 {
     std::tuple<no_def_con, no_def_con, no_def_con_composite> val1 {1, 2, 3};
@@ -762,6 +766,8 @@ BOOST_AUTO_TEST_CASE(no_def_con_def_con_msgpack_tuple_simple_buffer)
         = oh.get().as<msgpack::type::tuple<no_def_con, no_def_con, int>>();
     BOOST_CHECK(val1 == val2);
 }
+
+#endif // !defined(_MSC_VER) || (_MSC_VER > 1900)
 
 BOOST_AUTO_TEST_CASE(no_def_forward_list_simple_buffer)
 {
