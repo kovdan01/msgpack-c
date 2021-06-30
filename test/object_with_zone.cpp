@@ -516,8 +516,8 @@ BOOST_AUTO_TEST_CASE(tr1_unordered_multimap)
             vec2.push_back(std::make_pair(it->first, it->second));
         BOOST_CHECK_EQUAL(v1.size(), v2.size());
         BOOST_CHECK_EQUAL(vec1.size(), vec2.size());
-        sort(vec1.begin(), vec1.end());
-        sort(vec2.begin(), vec2.end());
+        std::sort(vec1.begin(), vec1.end());
+        std::sort(vec2.begin(), vec2.end());
         BOOST_CHECK(vec1 == vec2);
     }
 }
@@ -564,8 +564,8 @@ BOOST_AUTO_TEST_CASE(tr1_unordered_multiset)
             vec2.push_back(*it);
         BOOST_CHECK_EQUAL(v1.size(), v2.size());
         BOOST_CHECK_EQUAL(vec1.size(), vec2.size());
-        sort(vec1.begin(), vec1.end());
-        sort(vec2.begin(), vec2.end());
+        std::sort(vec1.begin(), vec1.end());
+        std::sort(vec2.begin(), vec2.end());
         BOOST_CHECK(vec1 == vec2);
     }
 }
@@ -576,7 +576,7 @@ BOOST_AUTO_TEST_CASE(tr1_unordered_multiset)
 #include "msgpack/adaptor/tr1/unordered_map.hpp"
 BOOST_AUTO_TEST_CASE(unordered_map)
 {
-    typedef unordered_map<int, int> test_t;
+    typedef std::unordered_map<int, int> test_t;
     for (unsigned int k = 0; k < kLoop; k++) {
         test_t v1;
         for (unsigned int i = 0; i < kElements; i++)
@@ -595,23 +595,23 @@ BOOST_AUTO_TEST_CASE(unordered_map)
 
 BOOST_AUTO_TEST_CASE(unordered_multimap)
 {
-   typedef unordered_multimap<int, int> test_t;
+   typedef std::unordered_multimap<int, int> test_t;
     for (unsigned int k = 0; k < kLoop; k++) {
         test_t v1;
         for (unsigned int i = 0; i < kElements; i++) {
             int i1 = rand();
-            v1.insert(make_pair(i1, rand()));
-            v1.insert(make_pair(i1, rand()));
+            v1.insert(std::make_pair(i1, rand()));
+            v1.insert(std::make_pair(i1, rand()));
         }
         msgpack::zone z;
         msgpack::object obj(v1, z);
         test_t v2 = obj.as<test_t>();
-        vector<pair<int, int> > vec1, vec2;
-        unordered_multimap<int, int>::const_iterator it;
+        std::vector<std::pair<int, int> > vec1, vec2;
+        std::unordered_multimap<int, int>::const_iterator it;
         for (it = v1.begin(); it != v1.end(); ++it)
-            vec1.push_back(make_pair(it->first, it->second));
+            vec1.push_back(std::make_pair(it->first, it->second));
         for (it = v2.begin(); it != v2.end(); ++it)
-            vec2.push_back(make_pair(it->first, it->second));
+            vec2.push_back(std::make_pair(it->first, it->second));
         BOOST_CHECK_EQUAL(v1.size(), v2.size());
         BOOST_CHECK_EQUAL(vec1.size(), vec2.size());
         sort(vec1.begin(), vec1.end());
@@ -662,8 +662,8 @@ BOOST_AUTO_TEST_CASE(unordered_multiset)
             vec2.push_back(*it);
         BOOST_CHECK_EQUAL(v1.size(), v2.size());
         BOOST_CHECK_EQUAL(vec1.size(), vec2.size());
-        sort(vec1.begin(), vec1.end());
-        sort(vec2.begin(), vec2.end());
+        std::sort(vec1.begin(), vec1.end());
+        std::sort(vec2.begin(), vec2.end());
         BOOST_CHECK(vec1 == vec2);
     }
 }
