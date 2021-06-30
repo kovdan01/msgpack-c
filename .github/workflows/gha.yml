@@ -198,6 +198,7 @@ jobs:
         md build
         cmake `
             -A x64 `
+            -G "Visual Studio 16 2019" `
             -D CMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" `
             -D MSGPACK_BUILD_TESTS=ON `
             -D $CPPVER `
