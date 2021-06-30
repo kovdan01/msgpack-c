@@ -162,7 +162,7 @@ jobs:
 
   windows:
     name: ${{ format('Windows cxx{0}', matrix.cxx) }}
-    runs-on: windows-2016
+    runs-on: windows-2019
     strategy:
       fail-fast: false
       matrix:
