@@ -151,14 +151,14 @@ public:
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #endif // defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7)) && !defined(__clang__)
-        msgpack::type::tuple<bool, msgpack::object> tuple(false, msgpack::object());
+        msgpack::type::tuple<bool, msgpack::object> tuple;
         o.convert(tuple);
 
         is_double = tuple.get<0>();
         if (is_double)
-            tuple.get<1>().convert(value.f);
+            tuple.get<1>().convert<double>(value.f);
         else
-            tuple.get<1>().convert(value.i);
+            tuple.get<1>().convert<int>(value.i);
 #if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7)) && !defined(__clang__)
 #pragma GCC diagnostic pop
 #endif // defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7)) && !defined(__clang__)
