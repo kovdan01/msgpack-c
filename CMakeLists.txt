@@ -23,9 +23,9 @@ OPTION (MSGPACK_CXX20 "Using c++20 compiler" OFF)
 
 OPTION (MSGPACK_32BIT           "32bit compile"             OFF)
 OPTION (MSGPACK_USE_X3_PARSE    "Use Boost X3 parse"        OFF)
-OPTION (MSGPACK_BUILD_TESTS     "Build tests"                ON)
+OPTION (MSGPACK_BUILD_TESTS     "Build tests"               OFF)
 OPTION (MSGPACK_FUZZ_REGRESSION "Enable regression testing" OFF)
-OPTION (MSGPACK_BUILD_EXAMPLES  "Build msgpack examples"     ON)
+OPTION (MSGPACK_BUILD_EXAMPLES  "Build msgpack examples"    OFF)
 OPTION (MSGPACK_GEN_COVERAGE    "Generate coverage report"  OFF)
 
 SET (CMAKE_CXX_STANDARD_REQUIRED ON)
