@@ -176,7 +176,7 @@ jobs:
       uses: actions/cache@v1.0.3
       with:
         path: C:/vcpkg/installed/x64-windows
-        key: ${{ runner.os }}-vcpkg
+        key: ${{ runner.os }}-vcpkg-01072021
 
     - name: Build dependencies
       if: steps.cache-vcpkg.outputs.cache-hit != 'true'
