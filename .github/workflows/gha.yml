@@ -166,7 +166,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        cxx: [98, 11, 14, 17, 20]
+        # MSVC2019 only supports /std:c++14, /std:c++17 and /std:c++latest
+        cxx: [14, 17, 20]
     steps:
     - uses: actions/checkout@v1
 
@@ -188,13 +189,6 @@ jobs:
     - name: Build and test
       shell: powershell
       run: |
-        if (${{ matrix.cxx }} -eq 98) {
-          $CPPVER="MSGPACK_CXX11=OFF"
-        }
-        else {
-          $CPPVER="MSGPACK_CXX${{ matrix.cxx }}=ON"
-        }
-
         md build
         cmake `
             -A x64 `

@@ -31,7 +31,8 @@ BOOST_AUTO_TEST_CASE(non_member_get)
     BOOST_CHECK_EQUAL("DEFG", msgpack::type::get<2>(t1));
 }
 
-#if __cplusplus >= 201103L
+#if MSGPACK_CPP_VERSION >= 201103L
+
 BOOST_AUTO_TEST_CASE(std_non_member_get)
 {
     msgpack::type::tuple<int, bool, std::string> t1(42, true, "ABC");
@@ -101,4 +102,5 @@ BOOST_AUTO_TEST_CASE(swap)
     BOOST_CHECK(!t1.get<1>());
     BOOST_CHECK_EQUAL("DEFG", t1.get<2>());
 }
-#endif
+
+#endif // MSGPACK_CPP_VERSION >= 201103L

@@ -12,7 +12,7 @@ BOOST_AUTO_TEST_CASE(dummy)
 {
 }
 
-#if !defined(MSGPACK_USE_CPP03) && __cplusplus >= 201703
+#if MSGPACK_CPP_VERSION >= 201703
 
 // C++17
 
@@ -461,4 +461,4 @@ BOOST_AUTO_TEST_CASE(carray_byte_object_with_zone)
     }
 }
 
-#endif // !defined(MSGPACK_USE_CPP03) && __cplusplus >= 201703
+#endif // MSGPACK_CPP_VERSION >= 201703

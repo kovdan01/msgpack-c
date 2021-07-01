@@ -12,8 +12,8 @@ BOOST_AUTO_TEST_CASE(dummy)
 {
 }
 
-// Some compilers still do not set __cplusplus to 202002
-#if !defined(MSGPACK_USE_CPP03) && __cplusplus > 201703
+// Some compilers still do not set the corresponding macro to 202002
+#if MSGPACK_CPP_VERSION > 201703
 
 #if MSGPACK_HAS_INCLUDE(<span>)
 
@@ -128,4 +128,4 @@ MSGPACK_TEST_SPAN_BYTE(unsigned char, unsigned_char)
 
 #endif // MSGPACK_HAS_INCLUDE(<span>)
 
-#endif // !defined(MSGPACK_USE_CPP03) && __cplusplus > 201703
+#endif // MSGPACK_CPP_VERSION > 201703

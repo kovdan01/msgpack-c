@@ -525,7 +525,7 @@ BOOST_AUTO_TEST_CASE(raw_ref)
     BOOST_CHECK(obj.as<msgpack::type::raw_ref>() == v);
 }
 
-#if __cplusplus >= 201703
+#if MSGPACK_CPP_VERSION >= 201703
 
 BOOST_AUTO_TEST_CASE(array_char)
 {
@@ -561,4 +561,4 @@ BOOST_AUTO_TEST_CASE(array_unsigned_char)
     }
 }
 
-#endif // __cplusplus >= 201703
+#endif // MSGPACK_CPP_VERSION >= 201703
