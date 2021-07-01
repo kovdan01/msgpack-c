@@ -626,7 +626,7 @@ BOOST_AUTO_TEST_CASE(unordered_multimap)
 #include "msgpack/adaptor/tr1/unordered_set.hpp"
 BOOST_AUTO_TEST_CASE(unordered_set)
 {
-    typedef unordered_set<int> test_t;
+    typedef std::unordered_set<int> test_t;
     for (unsigned int k = 0; k < kLoop; k++) {
         test_t v1;
         for (unsigned int i = 0; i < kElements; i++)
@@ -635,7 +635,7 @@ BOOST_AUTO_TEST_CASE(unordered_set)
         msgpack::object obj(v1, z);
         test_t v2 = obj.as<test_t>();
         BOOST_CHECK_EQUAL(v1.size(), v2.size());
-        unordered_set<int>::const_iterator it;
+        std::unordered_set<int>::const_iterator it;
         for (it = v1.begin(); it != v1.end(); ++it)
             BOOST_CHECK(v2.find(*it) != v2.end());
     }
@@ -643,7 +643,7 @@ BOOST_AUTO_TEST_CASE(unordered_set)
 
 BOOST_AUTO_TEST_CASE(unordered_multiset)
 {
-    typedef unordered_set<int> test_t;
+    typedef std::unordered_set<int> test_t;
     for (unsigned int k = 0; k < kLoop; k++) {
         test_t v1;
         for (unsigned int i = 0; i < kElements; i++) {
@@ -654,8 +654,8 @@ BOOST_AUTO_TEST_CASE(unordered_multiset)
         msgpack::zone z;
         msgpack::object obj(v1, z);
         test_t v2 = obj.as<test_t>();
-        vector<int> vec1, vec2;
-        unordered_multiset<int>::const_iterator it;
+        std::vector<int> vec1, vec2;
+        std::unordered_multiset<int>::const_iterator it;
         for (it = v1.begin(); it != v1.end(); ++it)
             vec1.push_back(*it);
         for (it = v2.begin(); it != v2.end(); ++it)
