@@ -2,7 +2,6 @@
 
 #define BOOST_TEST_MODULE object
 #include <boost/test/unit_test.hpp>
-#include <boost/test/tools/output_test_stream.hpp>
 
 enum enum_test {
     elem
@@ -224,18 +223,16 @@ BOOST_AUTO_TEST_CASE(cross_zone_copy_construct_ext)
 BOOST_AUTO_TEST_CASE(print)
 {
     msgpack::object obj;
-    boost::test_tools::output_test_stream output;
+    std::stringstream output;
     output << obj;
-    BOOST_CHECK(output.is_equal("null"));
+    BOOST_CHECK_EQUAL(output.str(), "null");
 }
-
 
 BOOST_AUTO_TEST_CASE(is_nil)
 {
     msgpack::object obj;
     BOOST_CHECK(obj.is_nil());
 }
-
 
 BOOST_AUTO_TEST_CASE(type_error)
 {
@@ -247,7 +244,6 @@ BOOST_AUTO_TEST_CASE(type_error)
     BOOST_CHECK_EQUAL(1u, obj.as<unsigned int>());
     BOOST_CHECK_EQUAL(1u, obj.as<unsigned long>());
 }
-
 
 BOOST_AUTO_TEST_CASE(equal_primitive)
 {
@@ -266,7 +262,6 @@ BOOST_AUTO_TEST_CASE(equal_primitive)
     BOOST_CHECK_EQUAL(obj_bool, msgpack::object(true));
     BOOST_CHECK_EQUAL(obj_bool, true);
 }
-
 
 BOOST_AUTO_TEST_CASE(construct_primitive)
 {
