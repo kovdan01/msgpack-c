@@ -34,15 +34,16 @@ build_script:
       cd zlib-1.2.11
       md build
       md prefix
+      cd build
       cmake `
           -G $env:msvc `
           -D CMAKE_INSTALL_PREFIX="$env:APPVEYOR_BUILD_FOLDER\zlib-1.2.11\prefix" `
-          -B build `
-          -S .
-      cmake --build build --target install --config Release
-      cd ..
+          ..
+      cmake --build . --target install --config Release
+      cd ..\..
 
       md build
+      cd build
       cmake `
           -G $env:msvc `
           $env:cpp11 `
@@ -51,10 +52,10 @@ build_script:
           -D CMAKE_EXE_LINKER_FLAGS=/LIBPATH:"$env:boost_prefix\$env:boost_subdir" `
           -D CMAKE_PREFIX_PATH="$env:boost_prefix;$env:APPVEYOR_BUILD_FOLDER\zlib-1.2.11\prefix" `
           -D CMAKE_CXX_FLAGS="/D_VARIADIC_MAX=10 /EHsc /DBOOST_ALL_DYN_LINK" `
-          -B build `
-          -S .
-      cmake --build build --config Release -v
+          ..
+      cmake --build . --config Release -v
+      cd ..
 
 test_script:
 - set PATH=%PATH%;%APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\Release;%APPVEYOR_BUILD_FOLDER%\build\release
-- ctest -V
+- ctest -VV --test-dir build
