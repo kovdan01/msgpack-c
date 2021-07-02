@@ -32,18 +32,24 @@ build_script:
       7z x zlib-1.2.11.tar.gz 2> $null
       7z x zlib-1.2.11.tar 2> $null
       cd zlib-1.2.11
+
       md build
       md prefix
       cd build
+
       cmake `
           -G $env:msvc `
           -D CMAKE_INSTALL_PREFIX="$env:APPVEYOR_BUILD_FOLDER\zlib-1.2.11\prefix" `
           ..
+      if ($LastExitCode -ne 0) { exit $LastExitCode }
+
       cmake --build . --target install --config Release
+      if ($LastExitCode -ne 0) { exit $LastExitCode }
       cd ..\..
 
       md build
       cd build
+
       cmake `
           -G $env:msvc `
           $env:cpp11 `
@@ -53,7 +59,11 @@ build_script:
           -D CMAKE_PREFIX_PATH="$env:boost_prefix;$env:APPVEYOR_BUILD_FOLDER\zlib-1.2.11\prefix" `
           -D CMAKE_CXX_FLAGS="/D_VARIADIC_MAX=10 /EHsc /DBOOST_ALL_DYN_LINK" `
           ..
+      if ($LastExitCode -ne 0) { exit $LastExitCode }
+
       cmake --build . --config Release -v
+      if ($LastExitCode -ne 0) { exit $LastExitCode }
+
       cd ..
 
 test_script:
