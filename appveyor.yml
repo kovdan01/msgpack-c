@@ -68,4 +68,4 @@ build_script:
 
 test_script:
 - set PATH=%PATH%;%APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\Release;%APPVEYOR_BUILD_FOLDER%\build\release
-- ctest -VV --test-dir build
+- ctest -VV --test-dir %APPVEYOR_BUILD_FOLDER%\build
