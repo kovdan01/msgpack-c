@@ -48,6 +48,7 @@ build_script:
       cd ..\..
 
       md build
+      md prefix
       cd build
 
       cmake `
@@ -57,6 +58,7 @@ build_script:
           -D MSGPACK_BUILD_TESTS=ON `
           -D CMAKE_EXE_LINKER_FLAGS=/LIBPATH:"$env:boost_prefix\$env:boost_subdir" `
           -D CMAKE_PREFIX_PATH="$env:boost_prefix;$env:APPVEYOR_BUILD_FOLDER\zlib-1.2.11\prefix" `
+          -D CMAKE_INSTALL_PREFIX="$env:APPVEYOR_BUILD_FOLDER\prefix" `
           -D CMAKE_CXX_FLAGS="/D_VARIADIC_MAX=10 /EHsc /DBOOST_ALL_DYN_LINK" `
           ..
       if ($LastExitCode -ne 0) { exit $LastExitCode }
@@ -64,8 +66,6 @@ build_script:
       cmake --build . --config Release -v
       if ($LastExitCode -ne 0) { exit $LastExitCode }
 
-      cd ..
-
 test_script:
 - set PATH=%PATH%;%APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\Release;%APPVEYOR_BUILD_FOLDER%\build\release
-- ctest -VV --test-dir %APPVEYOR_BUILD_FOLDER%\build
+- ctest -VV
