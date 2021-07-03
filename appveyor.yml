@@ -63,7 +63,7 @@ build_script:
           ..
       if ($LastExitCode -ne 0) { exit $LastExitCode }
 
-      cmake --build . --config Release -v
+      cmake --build . --config Release
       if ($LastExitCode -ne 0) { exit $LastExitCode }
 
 test_script:
