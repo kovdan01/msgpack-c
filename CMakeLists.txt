@@ -178,7 +178,7 @@ INSTALL (TARGETS msgpackc-cxx
 
 # Install headers from source tree.
 INSTALL (DIRECTORY include/
-         TYPE INCLUDE
+         DESTINATION include
          COMPONENT msgpackc-cxx
 )
 
