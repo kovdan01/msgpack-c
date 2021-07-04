@@ -67,8 +67,5 @@ build_script:
       if ($LastExitCode -ne 0) { exit $LastExitCode }
 
 test_script:
-- set PATH=%PATH%;%APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\Release;%APPVEYOR_BUILD_FOLDER%\build\release
+- set PATH=%PATH%;%APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\Release;%APPVEYOR_BUILD_FOLDER%\build\release;%boost_prefix%\%boost_subdir
 - ctest -VV -C Release
-
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
