@@ -16,7 +16,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: install depends
+    - name: Install build dependencies
       run: |
         sudo apt-get update
         sudo apt-get install g++-10 cmake lcov -y
