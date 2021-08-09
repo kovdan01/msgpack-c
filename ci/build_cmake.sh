@@ -14,7 +14,7 @@ else
 fi
 
 cmake \
-    -D CMAKE_PREFIX_PATH="${HOME}/boost-prefix-${ARCH};${HOME}/zlib-prefix-${ARCH}" \
+    -D CMAKE_PREFIX_PATH="${HOME}/boost-prefix/${ARCH};${HOME}/zlib-prefix/${ARCH}" \
     -D MSGPACK_BUILD_TESTS=ON \
     -D ${MSGPACK_CXX_VERSION} \
     -D MSGPACK_32BIT=${BIT32} \
@@ -51,7 +51,7 @@ if [ "${ARCH}" != "32" ]; then
 
     mkdir $build_dir
     cmake \
-        -D CMAKE_PREFIX_PATH="$prefix_dir;${HOME}/boost-prefix-${ARCH}" \
+        -D CMAKE_PREFIX_PATH="$prefix_dir;${HOME}/boost-prefix/${ARCH}" \
         -B $build_dir \
         -S . || exit 1
     cmake --build $build_dir --target all || exit 1

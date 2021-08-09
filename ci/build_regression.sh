@@ -10,7 +10,7 @@ then
 fi
 
 cmake \
-    -D CMAKE_PREFIX_PATH="${HOME}/boost-prefix-${ARCH};${HOME}/zlib-prefix-${ARCH}" \
+    -D CMAKE_PREFIX_PATH="${HOME}/boost-prefix/${ARCH};${HOME}/zlib-prefix/${ARCH}" \
     -D MSGPACK_FUZZ_REGRESSION="ON" \
     -D ${MSGPACK_CXX_VERSION} \
     -D MSGPACK_CHAR_SIGN=${CHAR_SIGN} \
