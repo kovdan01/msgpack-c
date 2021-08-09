@@ -30,10 +30,10 @@ wget https://zlib.net/zlib-1.2.11.tar.gz || exit 1
 tar -xf zlib-1.2.11.tar.gz || exit 1
 cd zlib-1.2.11
 
-mkdir $prefix
+mkdir $prefix-${bit}
 cmake \
     -D CMAKE_BUILD_TYPE=Release \
-    -D CMAKE_INSTALL_PREFIX=$prefix \
+    -D CMAKE_INSTALL_PREFIX=$prefix-${bit} \
     -D CMAKE_C_FLAGS="-m${bit}" \
     -D CMAKE_SHARED_LINKER_FLAGS="-m${bit}" \
     -S .

@@ -25,22 +25,22 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/boost-prefix/
-        key: ${{ runner.os }}-boost-1-76-0-20210612
+        key: ${{ runner.os }}-boost-1-76-0-20210809
 
     - name: Build boost
       if: steps.cache-boost.outputs.cache-hit != 'true'
-      run: ./.github/depends/boost.sh -b ${{ matrix.arch }} -t clang -p $HOME/boost-prefix/
+      run: ./.github/depends/boost.sh -b both -t clang -p $HOME/boost-prefix/
 
     - name: Cache zlib
       id: cache-zlib
       uses: actions/cache@v2
       with:
         path: ~/zlib-prefix/
-        key: ${{ runner.os }}-zlib-${{ matrix.arch }}-1-2-11-20210623
+        key: ${{ runner.os }}-zlib-1-2-11-20210809
 
     - name: Build zlib
       if: steps.cache-zlib.outputs.cache-hit != 'true'
-      run: ./.github/depends/zlib.sh -b ${{ matrix.arch }} -p $HOME/zlib-prefix/
+      run: ./.github/depends/zlib.sh -b both -p $HOME/zlib-prefix/
 
     - name: Build and test
       shell: bash
@@ -100,22 +100,22 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/boost-prefix/
-        key: ${{ runner.os }}-boost-${{ matrix.arch }}-1-76-0-20210613
+        key: ${{ runner.os }}-boost-1-76-0-20210809
 
     - name: Build boost
       if: steps.cache-boost.outputs.cache-hit != 'true'
-      run: ./.github/depends/boost.sh -b ${{ matrix.arch }} -t gcc -p $HOME/boost-prefix/
+      run: ./.github/depends/boost.sh -b both -t gcc -p $HOME/boost-prefix/
 
     - name: Cache zlib
       id: cache-zlib
       uses: actions/cache@v2
       with:
         path: ~/zlib-prefix/
-        key: ${{ runner.os }}-zlib-${{ matrix.arch }}-1-2-11-20210613
+        key: ${{ runner.os }}-zlib-1-2-11-20210809
 
     - name: Build zlib
       if: steps.cache-zlib.outputs.cache-hit != 'true'
-      run: ./.github/depends/zlib.sh -b ${{ matrix.arch }} -p $HOME/zlib-prefix/
+      run: ./.github/depends/zlib.sh -b both -p $HOME/zlib-prefix/
 
     - name: Build and test
       shell: bash

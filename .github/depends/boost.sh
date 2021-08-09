@@ -11,11 +11,11 @@ EOL
 
 build_boost()
 {
-  mkdir $3 || exit 1
+  mkdir $3-$2 || exit 1
   ./b2 \
       -j4 \
       --toolset=$1 \
-      --prefix=$3 \
+      --prefix=$3-$2 \
       --with-test \
       --with-headers \
       --with-chrono \

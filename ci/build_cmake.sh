@@ -13,7 +13,7 @@ else
 fi
 
 cmake \
-    -D CMAKE_PREFIX_PATH="$HOME/boost-prefix;$HOME/zlib-prefix" \
+    -D CMAKE_PREFIX_PATH="$HOME/boost-prefix-${ARCH};$HOME/zlib-prefix-${ARCH}" \
     -D MSGPACK_BUILD_TESTS=ON \
     -D ${MSGPACK_CXX_VERSION} \
     -D MSGPACK_32BIT=${BIT32} \
