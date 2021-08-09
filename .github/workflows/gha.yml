@@ -29,7 +29,7 @@ jobs:
 
     - name: Build boost
       if: steps.cache-boost.outputs.cache-hit != 'true'
-      run: ./.github/depends/boost.sh -b both -t clang -p $HOME/boost-prefix/
+      run: ./.github/depends/boost.sh -b both -t clang -p $HOME/boost-prefix
 
     - name: Cache zlib
       id: cache-zlib
@@ -40,7 +40,7 @@ jobs:
 
     - name: Build zlib
       if: steps.cache-zlib.outputs.cache-hit != 'true'
-      run: ./.github/depends/zlib.sh -b both -p $HOME/zlib-prefix/
+      run: ./.github/depends/zlib.sh -b both -p $HOME/zlib-prefix
 
     - name: Build and test
       shell: bash
@@ -104,7 +104,7 @@ jobs:
 
     - name: Build boost
       if: steps.cache-boost.outputs.cache-hit != 'true'
-      run: ./.github/depends/boost.sh -b both -t gcc -p $HOME/boost-prefix/
+      run: ./.github/depends/boost.sh -b both -t gcc -p $HOME/boost-prefix
 
     - name: Cache zlib
       id: cache-zlib
@@ -115,7 +115,7 @@ jobs:
 
     - name: Build zlib
       if: steps.cache-zlib.outputs.cache-hit != 'true'
-      run: ./.github/depends/zlib.sh -b both -p $HOME/zlib-prefix/
+      run: ./.github/depends/zlib.sh -b both -p $HOME/zlib-prefix
 
     - name: Build and test
       shell: bash
