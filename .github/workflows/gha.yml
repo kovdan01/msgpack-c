@@ -126,7 +126,8 @@ jobs:
         export API_VERSION=3
         export CHAR_SIGN="signed"
         export X3_PARSE="OFF"
-        export SANITIZE="-fsanitize=undefined -fno-sanitize-recover=all"
+        export SANITIZE="-fsanitize=address,undefined -fno-sanitize-recover=all"
+        export ACTION="ci/build_cmake.sh"
 
         case ${{ matrix.pattern }} in
           0)
@@ -160,7 +161,7 @@ jobs:
             export X3_PARSE="ON"
             ;;
           10)
-            export SANITIZE=""
+            export ACTION="ci/build_regression.sh"
             ;;
           11)
             export ARCH=32

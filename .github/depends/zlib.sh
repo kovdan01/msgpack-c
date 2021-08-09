@@ -38,8 +38,9 @@ build()
     -D CMAKE_INSTALL_PREFIX=$2-$1 \
     -D CMAKE_C_FLAGS="-m$1" \
     -D CMAKE_SHARED_LINKER_FLAGS="-m$1" \
+    -B build$1 \
     -S .
-  cmake --build . --target install
+  cmake --build build$1 --target install
 }
 
 if [ "$bit" = "both" ]; then

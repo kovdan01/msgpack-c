@@ -13,7 +13,6 @@ build_boost()
 {
   mkdir $3-$2 || exit 1
   ./b2 \
-      -j4 \
       --toolset=$1 \
       --prefix=$3-$2 \
       --with-test \
