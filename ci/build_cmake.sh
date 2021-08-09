@@ -14,6 +14,7 @@ else
 fi
 
 cmake \
+    -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_PREFIX_PATH="${HOME}/boost-prefix/${ARCH};${HOME}/zlib-prefix/${ARCH}" \
     -D MSGPACK_BUILD_TESTS=ON \
     -D ${MSGPACK_CXX_VERSION} \
