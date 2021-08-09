@@ -201,7 +201,7 @@ jobs:
         path: C:/vcpkg/installed/x64-windows
         key: ${{ runner.os }}-vcpkg-01072021
 
-    - name: Install vspkg dependencies
+    - name: Install vcpkg dependencies
       if: steps.cache-vcpkg.outputs.cache-hit != 'true'
       shell: powershell
       run: |
