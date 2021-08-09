@@ -25,7 +25,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/boost-prefix/
-        key: ${{ runner.os }}-boost-1-76-0-20210809
+        key: ${{ runner.os }}-boost-1-76-0-2021-08-09
 
     - name: Build boost
       if: steps.cache-boost.outputs.cache-hit != 'true'
@@ -36,7 +36,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/zlib-prefix/
-        key: ${{ runner.os }}-zlib-1-2-11-20210809
+        key: ${{ runner.os }}-zlib-1-2-11-2021-08-09
 
     - name: Build zlib
       if: steps.cache-zlib.outputs.cache-hit != 'true'
@@ -100,7 +100,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/boost-prefix/
-        key: ${{ runner.os }}-boost-1-76-0-20210809
+        key: ${{ runner.os }}-boost-1-76-0-2021-08-09
 
     - name: Build boost
       if: steps.cache-boost.outputs.cache-hit != 'true'
@@ -111,7 +111,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/zlib-prefix/
-        key: ${{ runner.os }}-zlib-1-2-11-20210809
+        key: ${{ runner.os }}-zlib-1-2-11-2021-08-09
 
     - name: Build zlib
       if: steps.cache-zlib.outputs.cache-hit != 'true'
@@ -126,7 +126,7 @@ jobs:
         export API_VERSION=3
         export CHAR_SIGN="signed"
         export X3_PARSE="OFF"
-        export SANITIZE="-fsanitize=address,undefined -fno-sanitize-recover=all"
+        export SANITIZE="-fsanitize=undefined -fno-sanitize-recover=all"
         export ACTION="ci/build_cmake.sh"
 
         case ${{ matrix.pattern }} in
@@ -200,7 +200,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: C:/vcpkg/installed/x64-windows
-        key: ${{ runner.os }}-vcpkg-01072021
+        key: ${{ runner.os }}-vcpkg-2021-08-09
 
     - name: Install vcpkg dependencies
       if: steps.cache-vcpkg.outputs.cache-hit != 'true'

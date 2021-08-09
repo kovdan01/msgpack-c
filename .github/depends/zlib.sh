@@ -26,16 +26,16 @@ while getopts "b:t:p:" c; do
   esac
 done
 
+mkdir $prefix || exit 1
 wget https://zlib.net/zlib-1.2.11.tar.gz || exit 1
 tar -xf zlib-1.2.11.tar.gz || exit 1
 cd zlib-1.2.11
 
 build()
 {
-  mkdir $2-$1
   cmake \
     -D CMAKE_BUILD_TYPE=Release \
-    -D CMAKE_INSTALL_PREFIX=$2-$1 \
+    -D CMAKE_INSTALL_PREFIX=$2/$1 \
     -D CMAKE_C_FLAGS="-m$1" \
     -D CMAKE_SHARED_LINKER_FLAGS="-m$1" \
     -B build$1 \
