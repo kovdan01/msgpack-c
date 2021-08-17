@@ -66,18 +66,32 @@ See [`QUICKSTART-CPP.md`](./QUICKSTART-CPP.md) for more details.
 Dependency
 -----
 msgpack-c requires [boost library](https://www.boost.org/).
-msgpack-c itself is a header-only library and depends on only boost headers. Tests depend on boost unit test framework and are linked with it, so if you want to build them, you need to have this dependency installed.
+C++ version of msgpack-c itself is a header-only library and depends on only boost headers. Tests depend on boost unit test framework and are linked with it, so if you want to build them, you need to have this dependency installed.
 
 Usage
 -----
 
 ### C++ Header Only Library
 
-When you use msgpack on C++, you can just add
-msgpack-c/include to your include path:
+- If you build your project with cmake, you can find msgpack-c with a canonical cmake-way:
 
-    g++ -I msgpack-c/include -I path_to_boost your_source_file.cpp
+  ```cmake
+  # ...
+  find_package(msgpack REQUIRED)
+  # ...
+  target_link_libraries(your_target_name <PRIVATE/PUBLIC/INTERFACE> msgpackc-cxx)
+  # ...
+  ```
 
+  This will search for `msgpack` cmake package in a system prefix and in prefixes from `CMAKE_PREFIX_PATH`. Note that msgpack-c depends on boost headers, and `msgpack` cmake package depends on `Boost` cmake package. The library is header-only and `target_link_libraries` command just adds path to msgpack-c headers to your compiler's include path. 
+
+  A usage example can be found at [test-install](test-install) directory.
+
+- If you do not use cmake, you can just add path yo msgpack-c and boost headers to your include path:
+
+```bash
+g++ -I msgpack-c/include -I path_to_boost your_source_file.cpp
+```
 
 ### Building and Installing
 
@@ -92,26 +106,34 @@ You will need:
 
 C++03:
 
-    $ git clone https://github.com/msgpack/msgpack-c.git
-    $ cd msgpack-c
-    $ git checkout cpp_master
-    $ cmake .
-    $ cmake --build . --target all
-    $ sudo cmake --build . --target install
+```bash
+git clone https://github.com/msgpack/msgpack-c.git
+cd msgpack-c
+git checkout cpp_master
+cmake .
+cmake --build . --target all
+sudo cmake --build . --target install
+```
 
-If you want to build tests with different C++ version, you can use `MSGPACK_CXX11`, `MSGPACK_CXX14`, `MSGPACK_CXX17`, `MSGPACK_CXX20`. Just replace the line
+If you want to build tests with different C++ version, you can use `MSGPACK_CXX11`, `MSGPACK_CXX14`, `MSGPACK_CXX17`, `MSGPACK_CXX20` options. Just replace the line
 
-    $ cmake .
+```bash
+cmake .
+```
 
-with a line like
+with a line like that:
 
-    $ cmake -DMSGPACK_CXX20=ON .
+```bash
+cmake -DMSGPACK_CXX20=ON .
+```
 
 Note that these flags do not affect installation. They just switch test cases. All files are installed in every settings.
 
 If you don't have superuser permissions or don't want to install the library to a system-wide prefix, you can use `CMAKE_INSTALL_PREFIX` option like that:
 
-    $ cmake -DCMAKE_INSTALL_PREFIX=/your/custom/prefix .
+```bash
+cmake -DCMAKE_INSTALL_PREFIX=/your/custom/prefix .
+```
 
 
 #### GUI on Windows
