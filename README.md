@@ -95,14 +95,14 @@ Usage
 Building and Installing
 -----------------------
 
-## Install from git repository
+### Install from git repository
 
-### Using the Terminal (CLI)
+#### Using the Terminal (CLI)
 
 You will need:
 
- - `gcc >= 4.1.0`
- - `cmake >= 3.1.0`
+- `gcc >= 4.1.0`
+- `cmake >= 3.1.0`
 
 C++03:
 
@@ -111,7 +111,6 @@ git clone https://github.com/msgpack/msgpack-c.git
 cd msgpack-c
 git checkout cpp_master
 cmake .
-cmake --build . --target all
 sudo cmake --build . --target install
 ```
 
@@ -135,7 +134,14 @@ If you don't have superuser permissions or don't want to install the library to 
 cmake -DCMAKE_INSTALL_PREFIX=/your/custom/prefix .
 ```
 
-### GUI on Windows
+Other useful options:
+
+- `MSGPACK_BUILD_TESTS` (default `OFF`): build tests
+- `MSGPACK_BUILD_EXAMPLES` (default `OFF`): build examples
+- `MSGPACK_32BIT` (default `OFF`): 32bit compile
+- `MSGPACK_USE_X3_PARSE` (default `OFF`): use Boost X3 parse (note that it requires C++14 or newer)
+
+#### GUI on Windows
 
 Clone msgpack-c git repository.
 
