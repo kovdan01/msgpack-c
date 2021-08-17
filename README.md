@@ -66,7 +66,7 @@ See [`QUICKSTART-CPP.md`](./QUICKSTART-CPP.md) for more details.
 Dependency
 -----
 msgpack-c requires [boost library](https://www.boost.org/).
-msgpack-c depends on only boost headers. You don't need to link boost libraries.
+msgpack-c itself is a header-only library and depends on only boost headers. Tests depend on boost unit test framework and are linked with it, so if you want to build them, you need to have this dependency installed.
 
 Usage
 -----
@@ -88,7 +88,7 @@ msgpack-c/include to your include path:
 You will need:
 
  - `gcc >= 4.1.0`
- - `cmake >= 3.0.0`
+ - `cmake >= 3.1.0`
 
 C++03:
 
@@ -96,22 +96,22 @@ C++03:
     $ cd msgpack-c
     $ git checkout cpp_master
     $ cmake .
-    $ make
-    $ sudo make install
+    $ cmake --build . --target all
+    $ sudo cmake --build . --target install
 
-If you want to setup C++17 version of msgpack instead,
-execute the following commands:
+If you want to build tests with different C++ version, you can use `MSGPACK_CXX11`, `MSGPACK_CXX14`, `MSGPACK_CXX17`, `MSGPACK_CXX20`. Just replace the line
 
-    $ git clone https://github.com/msgpack/msgpack-c.git
-    $ cd msgpack-c
-    $ git checkout cpp_master
-    $ cmake -DMSGPACK_CXX17=ON .
-    $ make
-    $ sudo make install
+    $ cmake .
 
-For C++11, replace `-DMSGPACK_CXX17=ON` with `-DMSGPACK_CXX11=ON`.
+with a line like
 
-`MSGPACK_CXX11` and `MSGPACK_CXX17` flags do not affect installation. They just switch test cases. All files are installed in every settings.
+    $ cmake -DMSGPACK_CXX20=ON .
+
+Note that these flags do not affect installation. They just switch test cases. All files are installed in every settings.
+
+If you don't have superuser permissions or don't want to install the library to a system-wide prefix, you can use `CMAKE_INSTALL_PREFIX` option like that:
+
+    $ cmake -DCMAKE_INSTALL_PREFIX=/your/custom/prefix .
 
 
 #### GUI on Windows
