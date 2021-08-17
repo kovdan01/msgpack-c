@@ -67,12 +67,15 @@ Dependency
 ----------
 
 msgpack-c requires [boost library](https://www.boost.org/).
-C++ version of msgpack-c itself is a header-only library and depends on only boost headers. Tests depend on boost unit test framework and are linked with it, so if you want to build them, you need to have this dependency installed.
+C++ version of msgpack-c itself is a header-only library and depends only on
+boost headers. Tests depend on boost unit test framework and are linked with
+it, so if you want to build them, you need to have this dependency installed.
 
 Usage
 -----
 
-- If you build your project with cmake, you can find msgpack-c with a canonical cmake-way:
+- If you build your project with cmake, you can find msgpack-c with a
+  canonical cmake-way:
 
   ```cmake
   # ...
@@ -82,11 +85,16 @@ Usage
   # ...
   ```
 
-  This will search for `msgpack` cmake package in a system prefix and in prefixes from `CMAKE_PREFIX_PATH`. Note that msgpack-c depends on boost headers, and `msgpack` cmake package depends on `Boost` cmake package. The library is header-only and `target_link_libraries` command just adds path to msgpack-c headers to your compiler's include path. 
+  This will search for `msgpack` cmake package in a system prefix and in
+  prefixes from `CMAKE_PREFIX_PATH`. Note that msgpack-c depends on boost
+  headers, and `msgpack` cmake package depends on `Boost` cmake package. The
+  library is header-only and `target_link_libraries` command just adds path
+  to msgpack-c headers to your compiler's include path.
 
   A usage example can be found at [test-install](test-install) directory.
 
-- If you do not use cmake, you can just add path yo msgpack-c and boost headers to your include path:
+- If you do not use cmake, you can just add path yo msgpack-c and boost
+  headers to your include path:
 
   ```bash
   g++ -I msgpack-c/include -I path_to_boost your_source_file.cpp
@@ -114,7 +122,9 @@ cmake .
 sudo cmake --build . --target install
 ```
 
-If you want to build tests with different C++ version, you can use `MSGPACK_CXX11`, `MSGPACK_CXX14`, `MSGPACK_CXX17`, `MSGPACK_CXX20` options. Just replace the line
+If you want to build tests with different C++ version, you can use
+`MSGPACK_CXX11`, `MSGPACK_CXX14`, `MSGPACK_CXX17`, `MSGPACK_CXX20` options.
+Just replace the line
 
 ```bash
 cmake .
@@ -126,9 +136,11 @@ with a line like that:
 cmake -DMSGPACK_CXX20=ON .
 ```
 
-Note that these flags do not affect installation. They just switch test cases. All files are installed in every settings.
+Note that these flags do not affect installation. They just switch test cases.
+All files are installed in every settings.
 
-If you don't have superuser permissions or don't want to install the library to a system-wide prefix, you can use `CMAKE_INSTALL_PREFIX` option like that:
+If you don't have superuser permissions or don't want to install the library
+to a system-wide prefix, you can use `CMAKE_INSTALL_PREFIX` option like that:
 
 ```bash
 cmake -DCMAKE_INSTALL_PREFIX=/your/custom/prefix .
@@ -139,23 +151,27 @@ Other useful options:
 - `MSGPACK_BUILD_TESTS` (default `OFF`): build tests
 - `MSGPACK_BUILD_EXAMPLES` (default `OFF`): build examples
 - `MSGPACK_32BIT` (default `OFF`): 32bit compile
-- `MSGPACK_USE_X3_PARSE` (default `OFF`): use Boost X3 parse (note that it requires C++14 or newer)
+- `MSGPACK_USE_X3_PARSE` (default `OFF`): use Boost X3 parse
+  (note that it requires C++14 or newer)
 
 #### GUI on Windows
 
 Clone msgpack-c git repository.
 
-    $ git clone https://github.com/msgpack/msgpack-c.git
+```
+git clone https://github.com/msgpack/msgpack-c.git
+```
 
 or using GUI git client.
 
 e.g.) tortoise git https://code.google.com/p/tortoisegit/
 
-1. Checkout to cpp_master branch
+1. Checkout to `cpp_master` branch
 
 2. Launch [cmake GUI client](http://www.cmake.org/cmake/resources/software.html).
 
-3. Set 'Where is the source code:' text box and 'Where to build the binaries:' text box.
+3. Set 'Where is the source code:' text box and
+   'Where to build the binaries:' text box.
 
 4. Click 'Configure' button.
 
