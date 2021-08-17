@@ -64,14 +64,13 @@ int main()
 See [`QUICKSTART-CPP.md`](./QUICKSTART-CPP.md) for more details.
 
 Dependency
------
+----------
+
 msgpack-c requires [boost library](https://www.boost.org/).
 C++ version of msgpack-c itself is a header-only library and depends on only boost headers. Tests depend on boost unit test framework and are linked with it, so if you want to build them, you need to have this dependency installed.
 
 Usage
 -----
-
-### C++ Header Only Library
 
 - If you build your project with cmake, you can find msgpack-c with a canonical cmake-way:
 
@@ -89,15 +88,16 @@ Usage
 
 - If you do not use cmake, you can just add path yo msgpack-c and boost headers to your include path:
 
-```bash
-g++ -I msgpack-c/include -I path_to_boost your_source_file.cpp
-```
+  ```bash
+  g++ -I msgpack-c/include -I path_to_boost your_source_file.cpp
+  ```
 
-### Building and Installing
+Building and Installing
+-----------------------
 
-#### Install from git repository
+## Install from git repository
 
-##### Using the Terminal (CLI)
+### Using the Terminal (CLI)
 
 You will need:
 
@@ -135,8 +135,7 @@ If you don't have superuser permissions or don't want to install the library to 
 cmake -DCMAKE_INSTALL_PREFIX=/your/custom/prefix .
 ```
 
-
-#### GUI on Windows
+### GUI on Windows
 
 Clone msgpack-c git repository.
 
@@ -150,8 +149,7 @@ e.g.) tortoise git https://code.google.com/p/tortoisegit/
 
 2. Launch [cmake GUI client](http://www.cmake.org/cmake/resources/software.html).
 
-3. Set 'Where is the source code:' text box and 'Where to build
-the binaries:' text box.
+3. Set 'Where is the source code:' text box and 'Where to build the binaries:' text box.
 
 4. Click 'Configure' button.
 
@@ -163,7 +161,8 @@ the binaries:' text box.
 
 8. Build all.
 
-### Documentation
+Documentation
+-------------
 
 You can get additional information including the tutorial on the
 [wiki](https://github.com/msgpack/msgpack-c/wiki).
