@@ -156,15 +156,13 @@ Other useful options:
 
 #### GUI on Windows
 
-Clone msgpack-c git repository.
+Clone msgpack-c git repository with the command:
 
 ```
 git clone https://github.com/msgpack/msgpack-c.git
 ```
 
-or using GUI git client.
-
-e.g.) tortoise git https://code.google.com/p/tortoisegit/
+or using GUI git client (e.g. [tortoise git](https://code.google.com/p/tortoisegit/)).
 
 1. Checkout to `cpp_master` branch
 
