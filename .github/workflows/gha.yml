@@ -91,7 +91,8 @@ jobs:
       shell: bash
       run: |
         sudo apt-get update
-        sudo apt-get install g++-10 cmake valgrind -y
+        sudo apt-get upgrade
+        sudo apt-get install g++-10 clang-10 cmake valgrind -y
         sudo apt-get install g++-10-multilib -y  # for 32-bit compile
         ./ci/set_gcc_10.sh
 
